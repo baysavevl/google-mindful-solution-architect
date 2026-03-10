@@ -11,7 +11,9 @@
       "Bash(npx astro:*)",
       "Bash(npm run:*)",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(node -e \"console.log\\(require\\('./node_modules/astro/package.json'\\).version\\)\")",
+      "Bash(node -e \"const pkg = require\\('./node_modules/astro/package.json'\\); console.log\\(pkg.version\\)\")"
     ]
   }
 }

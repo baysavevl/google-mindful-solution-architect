@@ -1,0 +1,26 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  url: string;
+  featured?: boolean;
+}
+
+const { title, description, url, featured } = Astro.props;
+---
+
+<article class="rounded-lg border border-gray-200 p-5 transition-colors hover:border-gray-300">
+  <div class="flex items-center gap-2">
+    <h2 class="text-xl font-semibold">
+      <a href={url} class="text-gray-900 hover:text-blue-600 transition-colors">
+        {title}
+      </a>
+    </h2>
+    {featured && (
+      <span class="rounded-full bg-blue-50 px-2.5 py-0.5 text-xs font-medium text-blue-700">
+        Featured
+      </span>
+    )}
+  </div>
+  <p class="mt-2 text-gray-600 leading-relaxed">{description}</p>
+</article>

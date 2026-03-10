@@ -1,0 +1,28 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ProjectCard from "../../components/ProjectCard.astro";
+
+const projects = (await getCollection("projects")).sort((a, b) => {
+  // Featured first, then by pubDate descending
+  if (a.data.featured && !b.data.featured) return -1;
+  if (!a.data.featured && b.data.featured) return 1;
+  return b.data.pubDate.valueOf() - a.data.pubDate.valueOf();
+});
+---
+
+<BaseLayout title="Projects">
+  <h1 class="text-3xl font-bold text-gray-900">Projects</h1>
+  <div class="mt-8 grid gap-4">
+    {
+      projects.map((project) => (
+        <ProjectCard
+          title={project.data.title}
+          description={project.data.description}
+          url={`/projects/${project.id}`}
+          featured={project.data.featured}
+        />
+      ))
+    }
+  </div>
+</BaseLayout>
