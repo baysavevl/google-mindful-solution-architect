@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import TableOfContents from "../../components/TableOfContents.astro";
 
 export async function getStaticPaths() {
   const projects = await getCollection("projects");
@@ -11,16 +12,53 @@ export async function getStaticPaths() {
 }
 
 const { project } = Astro.props;
-const { Content } = await render(project);
+const { Content, headings } = await render(project);
+const hasHeadings = headings && headings.length > 0;
 ---
 
 <BaseLayout title={project.data.title} description={project.data.description}>
   <article>
     <header class="mb-8">
       <h1 class="text-3xl font-bold text-gray-900">{project.data.title}</h1>
+      {project.data.description && (
+        <p class="mt-2 text-lg text-gray-600">{project.data.description}</p>
+      )}
     </header>
-    <div class="prose prose-gray max-w-none">
-      <Content />
-    </div>
+
+    {hasHeadings ? (
+      <div class="project-layout">
+        <TableOfContents headings={headings} />
+        <div class="prose prose-gray max-w-none">
+          <Content />
+        </div>
+      </div>
+    ) : (
+      <div class="prose prose-gray max-w-none">
+        <Content />
+      </div>
+    )}
   </article>
 </BaseLayout>
+
+<style>
+  .project-layout {
+    display: flex;
+    gap: 2.5rem;
+    align-items: flex-start;
+  }
+
+  @media (max-width: 1023px) {
+    .project-layout {
+      display: block;
+    }
+  }
+</style>
+
+{hasHeadings && (
+  <style is:global>
+    main {
+      max-width: 60rem !important;
+    }
+  </style>
+)}
+
