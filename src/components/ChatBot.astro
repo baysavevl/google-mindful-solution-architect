@@ -2,46 +2,182 @@
 const base = import.meta.env.BASE_URL;
 ---
 
-<div class="gemini-chat" id="chatbot">
-  <div class="gemini-messages" id="chat-messages">
-    <!-- Rendered by JS -->
+<div class="gemini-wrap" id="chatbot">
+  <!-- Thread sidebar -->
+  <div class="g-sidebar" id="g-sidebar">
+    <button class="g-new-chat" id="g-new-chat">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      New chat
+    </button>
+    <div class="g-thread-list" id="g-thread-list">
+      <!-- Rendered by JS -->
+    </div>
+    <div class="g-sidebar-footer">
+      <span class="g-thread-count" id="g-thread-count"></span>
+    </div>
   </div>
 
-  <div class="gemini-input-fade">
-    <div class="gemini-input-bar">
-      <input
-        type="text"
-        id="chat-input"
-        placeholder="Enter a prompt here"
-        autocomplete="off"
-      />
-      <button id="chat-send" aria-label="Send">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="22" y1="2" x2="11" y2="13"></line>
-          <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-        </svg>
-      </button>
+  <!-- Chat area -->
+  <div class="gemini-chat">
+    <div class="gemini-messages" id="chat-messages">
+      <!-- Rendered by JS -->
     </div>
-    <p class="gemini-disclaimer">
-      Powered by a curated knowledge base &middot; <a href={`${base}projects/google-ads/`}>View complete guide</a>
-    </p>
+
+    <div class="gemini-input-fade">
+      <div class="gemini-input-bar">
+        <input
+          type="text"
+          id="chat-input"
+          placeholder="Enter a prompt here"
+          autocomplete="off"
+        />
+        <button id="chat-send" aria-label="Send">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+        </button>
+      </div>
+      <p class="gemini-disclaimer">
+        Powered by a curated knowledge base &middot; <a href={`${base}projects/google-ads/`}>View complete guide</a>
+      </p>
+    </div>
   </div>
 </div>
 
 <style>
-  .gemini-chat {
-    background: #fff;
+  /* --- Layout: sidebar + chat --- */
+  .gemini-wrap {
+    display: flex;
     border: 1px solid #e8eaed;
     border-radius: 20px;
     overflow: hidden;
+    height: 560px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
+    background: #fff;
+  }
+
+  /* --- Sidebar --- */
+  .g-sidebar {
+    width: 200px;
+    flex-shrink: 0;
+    background: #f8f9fa;
+    border-right: 1px solid #e8eaed;
     display: flex;
     flex-direction: column;
-    height: 540px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
+    padding: 0.75rem;
+    gap: 0.5rem;
+  }
+
+  .g-new-chat {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    background: #fff;
+    border: 1px solid #dadce0;
+    border-radius: 100px;
+    padding: 0.5rem 0.85rem;
+    font-size: 0.8rem;
+    font-family: var(--font-sans);
+    font-weight: 500;
+    color: #1a73e8;
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+
+  .g-new-chat:hover {
+    background: #e8f0fe;
+    border-color: #aecbfa;
+  }
+
+  .g-thread-list {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .g-thread-item {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.5rem 0.65rem;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.12s;
+    font-size: 0.78rem;
+    font-family: var(--font-sans);
+    color: #3c4043;
     position: relative;
   }
 
-  /* --- Scrollable message area --- */
+  .g-thread-item:hover {
+    background: #e8eaed;
+  }
+
+  .g-thread-item.active {
+    background: #e8f0fe;
+    color: #1a73e8;
+    font-weight: 500;
+  }
+
+  .g-thread-title {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    line-height: 1.3;
+  }
+
+  .g-thread-del {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: none;
+    background: transparent;
+    color: #80868b;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    opacity: 0;
+    transition: all 0.12s;
+    padding: 0;
+  }
+
+  .g-thread-item:hover .g-thread-del {
+    opacity: 1;
+  }
+
+  .g-thread-del:hover {
+    background: #dadce0;
+    color: #d93025;
+  }
+
+  .g-sidebar-footer {
+    padding-top: 0.35rem;
+    border-top: 1px solid #e8eaed;
+  }
+
+  .g-thread-count {
+    font-size: 0.68rem;
+    color: #80868b;
+    font-family: var(--font-sans);
+  }
+
+  /* --- Chat area --- */
+  .gemini-chat {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    position: relative;
+  }
+
   .gemini-messages {
     flex: 1;
     overflow-y: auto;
@@ -61,13 +197,8 @@ const base = import.meta.env.BASE_URL;
     animation: gFadeIn 0.3s ease;
   }
 
-  .g-msg + .g-msg {
-    border-top: 1px solid #f1f3f4;
-  }
-
-  .g-msg.user {
-    flex-direction: row-reverse;
-  }
+  .g-msg + .g-msg { border-top: 1px solid #f1f3f4; }
+  .g-msg.user { flex-direction: row-reverse; }
 
   @keyframes gFadeIn {
     from { opacity: 0; transform: translateY(4px); }
@@ -86,15 +217,8 @@ const base = import.meta.env.BASE_URL;
     margin-top: 2px;
   }
 
-  .g-ava.bot {
-    background: linear-gradient(135deg, #4285f4, #34a853);
-  }
-
-  .g-ava.bot svg {
-    width: 16px;
-    height: 16px;
-  }
-
+  .g-ava.bot { background: linear-gradient(135deg, #4285f4, #34a853); }
+  .g-ava.bot svg { width: 16px; height: 16px; }
   .g-ava.user {
     background: #5f6368;
     color: white;
@@ -103,7 +227,7 @@ const base = import.meta.env.BASE_URL;
     font-family: var(--font-sans);
   }
 
-  /* --- Text content --- */
+  /* --- Text --- */
   .g-text {
     flex: 1;
     font-size: 0.9rem;
@@ -113,18 +237,12 @@ const base = import.meta.env.BASE_URL;
     min-width: 0;
   }
 
-  .g-msg.user .g-text {
-    text-align: right;
-    color: #1f1f1f;
-  }
+  .g-msg.user .g-text { text-align: right; }
 
-  /* --- Rich text for bot --- */
   .g-text p { margin: 0 0 0.45rem; }
   .g-text p:last-child { margin-bottom: 0; }
-
   .g-text strong { font-weight: 600; color: #202124; }
   .g-text em { color: #5f6368; }
-
   .g-text code {
     font-family: var(--font-mono);
     font-size: 0.84em;
@@ -133,229 +251,129 @@ const base = import.meta.env.BASE_URL;
     border-radius: 4px;
     color: #d93025;
   }
-
-  .g-text ul, .g-text ol {
-    margin: 0.35rem 0;
-    padding-left: 1.15rem;
-  }
-
-  .g-text li {
-    margin-bottom: 0.2rem;
-    color: #3c4043;
-  }
-
+  .g-text ul, .g-text ol { margin: 0.35rem 0; padding-left: 1.15rem; }
+  .g-text li { margin-bottom: 0.2rem; color: #3c4043; }
   .g-text li:last-child { margin-bottom: 0; }
 
-  /* --- Links row --- */
-  .g-links {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.35rem;
-    margin-top: 0.55rem;
-  }
-
+  /* --- Links --- */
+  .g-links { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.55rem; }
   .g-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.25rem;
-    font-size: 0.78rem;
-    color: #1a73e8;
-    text-decoration: none;
-    font-weight: 500;
-    padding: 0.2rem 0.55rem;
-    border-radius: 6px;
-    background: #e8f0fe;
-    transition: background 0.15s;
+    display: inline-flex; align-items: center; gap: 0.25rem;
+    font-size: 0.78rem; color: #1a73e8; text-decoration: none;
+    font-weight: 500; padding: 0.2rem 0.55rem; border-radius: 6px;
+    background: #e8f0fe; transition: background 0.15s;
   }
-
   .g-link:hover { background: #d2e3fc; }
 
-  /* --- Related questions --- */
-  .g-related {
-    margin-top: 0.55rem;
-    padding-top: 0.5rem;
-    border-top: 1px solid #f1f3f4;
-  }
-
-  .g-related-label {
-    font-size: 0.7rem;
-    color: #80868b;
-    margin: 0 0 0.25rem;
-    font-weight: 500;
-  }
-
+  /* --- Related --- */
+  .g-related { margin-top: 0.55rem; padding-top: 0.5rem; border-top: 1px solid #f1f3f4; }
+  .g-related-label { font-size: 0.7rem; color: #80868b; margin: 0 0 0.25rem; font-weight: 500; }
   .g-related-btn {
-    display: block;
-    background: none;
-    border: none;
-    color: #1a73e8;
-    font-size: 0.8rem;
-    font-family: var(--font-sans);
-    cursor: pointer;
-    padding: 0.15rem 0;
-    text-align: left;
-    transition: opacity 0.15s;
+    display: block; background: none; border: none; color: #1a73e8;
+    font-size: 0.8rem; font-family: var(--font-sans); cursor: pointer;
+    padding: 0.15rem 0; text-align: left;
   }
-
   .g-related-btn:hover { opacity: 0.65; }
 
-  /* --- Suggestion chips --- */
-  .g-chips {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem;
-    margin-top: 0.65rem;
-  }
-
+  /* --- Chips --- */
+  .g-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.65rem; }
   .g-chip {
-    background: #f1f3f4;
-    border: 1px solid #dadce0;
-    border-radius: 100px;
-    padding: 0.35rem 0.8rem;
-    font-size: 0.78rem;
-    font-family: var(--font-sans);
-    color: #1a73e8;
-    cursor: pointer;
-    transition: all 0.15s;
-    font-weight: 500;
+    background: #f1f3f4; border: 1px solid #dadce0; border-radius: 100px;
+    padding: 0.35rem 0.8rem; font-size: 0.78rem; font-family: var(--font-sans);
+    color: #1a73e8; cursor: pointer; transition: all 0.15s; font-weight: 500;
   }
-
-  .g-chip:hover {
-    background: #e8f0fe;
-    border-color: #aecbfa;
-  }
+  .g-chip:hover { background: #e8f0fe; border-color: #aecbfa; }
 
   /* --- Streaming cursor --- */
   .g-cursor {
-    display: inline-block;
-    width: 2px;
-    height: 1em;
-    background: #1a73e8;
-    margin-left: 2px;
-    vertical-align: text-bottom;
+    display: inline-block; width: 2px; height: 1em; background: #1a73e8;
+    margin-left: 2px; vertical-align: text-bottom;
     animation: gBlink 0.8s step-end infinite;
   }
+  @keyframes gBlink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
-  @keyframes gBlink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0; }
-  }
-
-  /* --- Typing shimmer --- */
-  .g-shimmer {
-    display: flex;
-    gap: 5px;
-    padding: 0.2rem 0;
-  }
-
-  .g-shimmer span {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    animation: gPulse 1.4s infinite;
-  }
-
-  .g-shimmer span:nth-child(1) { background: #4285f4; animation-delay: 0s; }
+  /* --- Shimmer --- */
+  .g-shimmer { display: flex; gap: 5px; padding: 0.2rem 0; }
+  .g-shimmer span { width: 7px; height: 7px; border-radius: 50%; animation: gPulse 1.4s infinite; }
+  .g-shimmer span:nth-child(1) { background: #4285f4; }
   .g-shimmer span:nth-child(2) { background: #ea4335; animation-delay: 0.2s; }
   .g-shimmer span:nth-child(3) { background: #fbbc05; animation-delay: 0.4s; }
-
   @keyframes gPulse {
     0%, 80%, 100% { transform: scale(0.8); opacity: 0.4; }
     40% { transform: scale(1.1); opacity: 1; }
   }
 
-  /* --- Input area with glass fade --- */
+  /* --- Input --- */
   .gemini-input-fade {
     padding: 0.75rem 1.25rem 0.75rem;
     background: linear-gradient(to top, white 70%, rgba(255,255,255,0.8) 90%, transparent);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
   }
-
   .gemini-input-bar {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    background: #f1f3f4;
-    border: 1.5px solid transparent;
-    border-radius: 100px;
-    padding: 0.5rem 0.6rem 0.5rem 1.2rem;
-    transition: all 0.2s;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    display: flex; align-items: center; gap: 0.5rem;
+    background: #f1f3f4; border: 1.5px solid transparent;
+    border-radius: 100px; padding: 0.5rem 0.6rem 0.5rem 1.2rem;
+    transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.04);
   }
-
   .gemini-input-bar:focus-within {
-    background: #fff;
-    border-color: #1a73e8;
+    background: #fff; border-color: #1a73e8;
     box-shadow: 0 1px 6px rgba(26,115,232,0.15);
   }
-
   #chat-input {
-    flex: 1;
-    border: none;
-    background: none;
-    font-size: 0.88rem;
-    font-family: var(--font-sans);
-    color: #202124;
-    outline: none;
+    flex: 1; border: none; background: none; font-size: 0.88rem;
+    font-family: var(--font-sans); color: #202124; outline: none;
   }
-
   #chat-input::placeholder { color: #80868b; }
-
   #chat-send {
-    background: #1a73e8;
-    border: none;
-    border-radius: 50%;
-    width: 34px;
-    height: 34px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    cursor: pointer;
-    transition: background 0.15s, transform 0.15s;
-    flex-shrink: 0;
+    background: #1a73e8; border: none; border-radius: 50%;
+    width: 34px; height: 34px; display: flex; align-items: center;
+    justify-content: center; color: white; cursor: pointer;
+    transition: background 0.15s, transform 0.15s; flex-shrink: 0;
   }
-
-  #chat-send:hover {
-    background: #1557b0;
-    transform: scale(1.05);
-  }
-
+  #chat-send:hover { background: #1557b0; transform: scale(1.05); }
   .gemini-disclaimer {
-    font-size: 0.68rem;
-    color: #80868b;
-    text-align: center;
-    margin: 0.4rem 0 0;
+    font-size: 0.68rem; color: #80868b; text-align: center; margin: 0.4rem 0 0;
   }
-
   .gemini-disclaimer a { color: #1a73e8; text-decoration: none; }
   .gemini-disclaimer a:hover { text-decoration: underline; }
+
+  /* --- Mobile: hide sidebar --- */
+  @media (max-width: 640px) {
+    .g-sidebar { display: none; }
+    .gemini-wrap { height: 500px; }
+  }
 </style>
 
 <script>
   import { ChatEngine } from '../scripts/chat-engine.js';
 
-  const SESSION_KEY = 'gads-chat-v2';
+  const STORE_KEY = 'gads-threads';
+  const MAX_THREADS = 5;
   const SESSION_TTL = 10 * 60 * 1000;
 
   let engine = null;
-  let chatHistory = [];
+  let threads = [];       // { id, title, messages[], ts }
+  let activeId = null;
 
-  function saveSession() {
-    try { localStorage.setItem(SESSION_KEY, JSON.stringify({ ts: Date.now(), messages: chatHistory })); } catch {}
-  }
-
-  function loadSession() {
+  // --- Storage ---
+  function loadStore() {
     try {
-      const raw = localStorage.getItem(SESSION_KEY);
-      if (!raw) return null;
-      const d = JSON.parse(raw);
-      if (Date.now() - d.ts > SESSION_TTL) { localStorage.removeItem(SESSION_KEY); return null; }
-      return d.messages;
-    } catch { return null; }
+      const raw = localStorage.getItem(STORE_KEY);
+      if (!raw) return [];
+      const data = JSON.parse(raw);
+      // Purge expired threads
+      const now = Date.now();
+      return data.filter(t => now - t.ts < SESSION_TTL);
+    } catch { return []; }
   }
 
+  function saveStore() {
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(threads)); } catch {}
+  }
+
+  function genId() { return 'th_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
+
+  // --- Engine ---
   async function initEngine() {
     try {
       const resp = await fetch(import.meta.env.BASE_URL + 'data/knowledge-base.json');
@@ -364,6 +382,7 @@ const base = import.meta.env.BASE_URL;
     } catch (e) { console.warn('KB load failed:', e); }
   }
 
+  // --- Helpers ---
   function esc(t) { const d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
 
   function md(text) {
@@ -390,26 +409,18 @@ const base = import.meta.env.BASE_URL;
     return t.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/\*(.+?)\*/g, '<em>$1</em>').replace(/`(.+?)`/g, '<code>$1</code>');
   }
 
-  // --- Gemini-style sparkle icon ---
   const sparkle = `<svg viewBox="0 0 24 24" fill="white" width="16" height="16"><path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z"/></svg>`;
-
   const botAva = `<div class="g-ava bot">${sparkle}</div>`;
   const userAva = `<div class="g-ava user">Y</div>`;
-  const el = () => document.getElementById('chat-messages');
+  const msgEl = () => document.getElementById('chat-messages');
 
-  // --- Render bot message (instant for restore, or streaming) ---
+  // --- Render messages ---
   function addBotInstant(html, opts = {}) {
     const row = document.createElement('div');
     row.className = 'g-msg bot';
-
     let extra = '';
-    if (opts.links?.length) {
-      extra += '<div class="g-links">' + opts.links.map(l => `<a href="${l.url}" class="g-link">${esc(l.text)}</a>`).join('') + '</div>';
-    }
-    if (opts.related?.length) {
-      extra += '<div class="g-related"><p class="g-related-label">Related</p>' +
-        opts.related.map(r => `<button class="g-related-btn" data-query="${esc(r.question)}">${esc(r.question)}</button>`).join('') + '</div>';
-    }
+    if (opts.links?.length) extra += '<div class="g-links">' + opts.links.map(l => `<a href="${l.url}" class="g-link">${esc(l.text)}</a>`).join('') + '</div>';
+    if (opts.related?.length) extra += '<div class="g-related"><p class="g-related-label">Related</p>' + opts.related.map(r => `<button class="g-related-btn" data-query="${esc(r.question)}">${esc(r.question)}</button>`).join('') + '</div>';
     let chips = '';
     if (opts.chips) {
       chips = `<div class="g-chips" id="suggestion-chips">
@@ -420,99 +431,147 @@ const base = import.meta.env.BASE_URL;
         <button class="g-chip" data-query="How do I improve Quality Score?">Quality Score</button>
       </div>`;
     }
-
     row.innerHTML = `${botAva}<div class="g-text">${html}${extra}${chips}</div>`;
-    el().appendChild(row);
-    el().scrollTop = el().scrollHeight;
-
+    msgEl().appendChild(row);
+    msgEl().scrollTop = msgEl().scrollHeight;
     row.querySelectorAll('.g-chip').forEach(c => c.addEventListener('click', () => handleQuery(c.dataset.query)));
     row.querySelectorAll('.g-related-btn').forEach(b => b.addEventListener('click', () => handleQuery(b.dataset.query)));
-    return row;
   }
 
-  // --- Stream bot message word-by-word ---
   async function addBotStream(rawAnswer, opts = {}) {
     const row = document.createElement('div');
     row.className = 'g-msg bot';
     row.innerHTML = `${botAva}<div class="g-text"><span class="g-stream-target"></span><span class="g-cursor"></span></div>`;
-    el().appendChild(row);
-
+    msgEl().appendChild(row);
     const target = row.querySelector('.g-stream-target');
     const cursor = row.querySelector('.g-cursor');
-
-    // Stream the markdown word by word
     const words = rawAnswer.split(/(\s+)/);
-    let accumulated = '';
-
+    let acc = '';
     for (let i = 0; i < words.length; i++) {
-      accumulated += words[i];
-      target.innerHTML = md(accumulated);
-      el().scrollTop = el().scrollHeight;
-      // Faster for whitespace, slight pause for words
-      if (words[i].trim()) {
-        await new Promise(r => setTimeout(r, 18 + Math.random() * 12));
-      }
+      acc += words[i];
+      target.innerHTML = md(acc);
+      msgEl().scrollTop = msgEl().scrollHeight;
+      if (words[i].trim()) await new Promise(r => setTimeout(r, 18 + Math.random() * 12));
     }
-
-    // Remove cursor, add extras
     cursor.remove();
-
     let extra = '';
-    if (opts.links?.length) {
-      extra += '<div class="g-links">' + opts.links.map(l => `<a href="${l.url}" class="g-link">${esc(l.text)}</a>`).join('') + '</div>';
-    }
-    if (opts.related?.length) {
-      extra += '<div class="g-related"><p class="g-related-label">Related</p>' +
-        opts.related.map(r => `<button class="g-related-btn" data-query="${esc(r.question)}">${esc(r.question)}</button>`).join('') + '</div>';
-    }
-
-    const textEl = row.querySelector('.g-text');
-    textEl.innerHTML = md(rawAnswer) + extra;
-    el().scrollTop = el().scrollHeight;
-
+    if (opts.links?.length) extra += '<div class="g-links">' + opts.links.map(l => `<a href="${l.url}" class="g-link">${esc(l.text)}</a>`).join('') + '</div>';
+    if (opts.related?.length) extra += '<div class="g-related"><p class="g-related-label">Related</p>' + opts.related.map(r => `<button class="g-related-btn" data-query="${esc(r.question)}">${esc(r.question)}</button>`).join('') + '</div>';
+    row.querySelector('.g-text').innerHTML = md(rawAnswer) + extra;
+    msgEl().scrollTop = msgEl().scrollHeight;
     row.querySelectorAll('.g-related-btn').forEach(b => b.addEventListener('click', () => handleQuery(b.dataset.query)));
-    return row;
   }
 
   function addUser(text) {
     const row = document.createElement('div');
     row.className = 'g-msg user';
     row.innerHTML = `${userAva}<div class="g-text"><p>${esc(text)}</p></div>`;
-    el().appendChild(row);
-    el().scrollTop = el().scrollHeight;
+    msgEl().appendChild(row);
+    msgEl().scrollTop = msgEl().scrollHeight;
   }
 
   function showThinking() {
     const row = document.createElement('div');
-    row.className = 'g-msg bot';
-    row.id = 'thinking-row';
+    row.className = 'g-msg bot'; row.id = 'thinking-row';
     row.innerHTML = `${botAva}<div class="g-text"><div class="g-shimmer"><span></span><span></span><span></span></div></div>`;
-    el().appendChild(row);
-    el().scrollTop = el().scrollHeight;
+    msgEl().appendChild(row); msgEl().scrollTop = msgEl().scrollHeight;
   }
 
   function hideThinking() { document.getElementById('thinking-row')?.remove(); }
 
-  // --- Init UI ---
-  function initUI() {
-    const saved = loadSession();
-    if (saved?.length) {
-      chatHistory = saved;
-      for (const m of saved) {
-        if (m.role === 'user') addUser(m.text);
-        else addBotInstant(m.html);
+  // --- Thread sidebar ---
+  function renderSidebar() {
+    const list = document.getElementById('g-thread-list');
+    const count = document.getElementById('g-thread-count');
+    list.innerHTML = '';
+    count.textContent = `${threads.length} / ${MAX_THREADS} threads`;
+
+    for (const t of threads) {
+      const item = document.createElement('div');
+      item.className = 'g-thread-item' + (t.id === activeId ? ' active' : '');
+      item.innerHTML = `
+        <span class="g-thread-title">${esc(t.title || 'New chat')}</span>
+        <button class="g-thread-del" title="Delete thread">&times;</button>
+      `;
+      item.querySelector('.g-thread-title').addEventListener('click', () => switchThread(t.id));
+      item.querySelector('.g-thread-del').addEventListener('click', (e) => {
+        e.stopPropagation();
+        deleteThread(t.id);
+      });
+      list.appendChild(item);
+    }
+  }
+
+  // --- Thread management ---
+  function getThread(id) { return threads.find(t => t.id === id); }
+
+  function createThread() {
+    if (threads.length >= MAX_THREADS) {
+      alert(`Maximum ${MAX_THREADS} threads. Delete one to create a new chat.`);
+      return;
+    }
+    const t = { id: genId(), title: '', messages: [], ts: Date.now() };
+    threads.unshift(t);
+    activeId = t.id;
+    saveStore();
+    renderChat();
+    renderSidebar();
+    document.getElementById('chat-input').focus();
+  }
+
+  function deleteThread(id) {
+    threads = threads.filter(t => t.id !== id);
+    if (activeId === id) {
+      if (threads.length > 0) {
+        activeId = threads[0].id;
+      } else {
+        // Create a fresh thread
+        const t = { id: genId(), title: '', messages: [], ts: Date.now() };
+        threads.push(t);
+        activeId = t.id;
       }
-    } else {
+    }
+    saveStore();
+    renderChat();
+    renderSidebar();
+  }
+
+  function switchThread(id) {
+    if (id === activeId) return;
+    activeId = id;
+    renderChat();
+    renderSidebar();
+  }
+
+  function renderChat() {
+    msgEl().innerHTML = '';
+    const t = getThread(activeId);
+    if (!t || t.messages.length === 0) {
       addBotInstant(
         '<p>Hi, I\'m your <strong>Google Ads Solutions Architect</strong>. Ask me anything about campaigns, bidding, tracking, or optimization.</p>',
         { chips: true }
       );
+    } else {
+      for (const m of t.messages) {
+        if (m.role === 'user') addUser(m.text);
+        else addBotInstant(m.html);
+      }
     }
   }
 
+  // --- Handle query ---
   async function handleQuery(query) {
+    const t = getThread(activeId);
+    if (!t) return;
+
     addUser(query);
-    chatHistory.push({ role: 'user', text: query });
+    t.messages.push({ role: 'user', text: query });
+
+    // Set thread title from first user message
+    if (!t.title) {
+      t.title = query.length > 35 ? query.slice(0, 35) + '...' : query;
+      renderSidebar();
+    }
 
     const chips = document.getElementById('suggestion-chips');
     if (chips) chips.style.display = 'none';
@@ -522,35 +581,47 @@ const base = import.meta.env.BASE_URL;
     hideThinking();
 
     if (!engine) {
-      const h = '<p>Still loading. Please try again in a moment.</p>';
+      const h = '<p>Still loading. Try again in a moment.</p>';
       addBotInstant(h);
-      chatHistory.push({ role: 'bot', html: h });
-      saveSession();
+      t.messages.push({ role: 'bot', html: h });
+      t.ts = Date.now();
+      saveStore();
       return;
     }
 
     const result = engine.getResponse(query);
-
-    // Stream the response
     await addBotStream(result.answer, { links: result.links, related: result.related });
 
-    chatHistory.push({ role: 'bot', html: md(result.answer) });
-    saveSession();
+    t.messages.push({ role: 'bot', html: md(result.answer) });
+    t.ts = Date.now();
+    saveStore();
   }
 
+  // --- Init ---
   initEngine();
-  initUI();
 
+  threads = loadStore();
+  if (threads.length === 0) {
+    const t = { id: genId(), title: '', messages: [], ts: Date.now() };
+    threads.push(t);
+  }
+  activeId = threads[0].id;
+  saveStore();
+  renderChat();
+  renderSidebar();
+
+  // New chat button
+  document.getElementById('g-new-chat').addEventListener('click', createThread);
+
+  // Input
   const input = document.getElementById('chat-input');
   const send = document.getElementById('chat-send');
-
   function submit() {
     const q = input.value.trim();
     if (!q) return;
     input.value = '';
     handleQuery(q);
   }
-
   send.addEventListener('click', submit);
   input.addEventListener('keydown', e => { if (e.key === 'Enter') submit(); });
 </script>
