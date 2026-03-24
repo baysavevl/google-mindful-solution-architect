@@ -5050,5 +5050,709 @@
         "url": "/google-mindful-solution-architect/projects/google-ads/"
       }
     ]
+  },
+  {
+    "id": "sg-beginner-checklist",
+    "keywords": ["beginner checklist", "first account", "getting started checklist", "new advertiser", "google ads checklist"],
+    "category": "setup-guide",
+    "question": "What's the complete beginner's checklist for a first Google Ads account?",
+    "answer": "Start with these essentials: create your account in **Expert Mode**, set billing/currency/timezone, link GA4, install conversion tracking, build your first campaign with 3-5 ad groups, and set a conservative daily budget. Don't launch until tracking is verified with the **Tag Assistant**.",
+    "links": [{"text": "Setup Guide", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "sg-setup-from-scratch",
+    "keywords": ["setup from scratch", "create google ads account", "start google ads", "new google ads", "step by step setup"],
+    "category": "setup-guide",
+    "question": "How do I set up Google Ads from scratch, step by step?",
+    "answer": "Go to ads.google.com, create an account, and immediately switch to **Expert Mode**. Set your time zone and currency (can't change later), add billing, then link Google Analytics 4. Before creating any campaign, install the Google tag on your site and set up at least one conversion action.",
+    "links": [{"text": "Account Setup", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "sg-first-search-campaign",
+    "keywords": ["first search campaign", "search campaign setup", "create search campaign", "search ads walkthrough"],
+    "category": "setup-guide",
+    "question": "How do I set up my first Search campaign?",
+    "answer": "Create a Search campaign, pick your goal (sales or leads), and choose **Manual CPC** or **Maximize Conversions** bidding. Build 3-5 tightly themed ad groups with 10-20 keywords each. Write 3+ responsive search ads per group with unique headlines. Start with **phrase match** and add negatives as you learn what triggers your ads.",
+    "links": [{"text": "Search Campaign Guide", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "sg-first-shopping-campaign",
+    "keywords": ["first shopping campaign", "shopping campaign setup", "google shopping setup", "merchant center setup"],
+    "category": "setup-guide",
+    "question": "How do I set up my first Shopping campaign?",
+    "answer": "First, create a **Google Merchant Center** account and upload your product feed (title, price, image, GTIN, availability). Link Merchant Center to Google Ads, then create a Shopping campaign. Start with a Standard Shopping campaign before trying Performance Max so you can learn which products perform. Set bids conservatively and segment by product type.",
+    "links": [{"text": "Shopping Setup Guide", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "sg-first-youtube-campaign",
+    "keywords": ["first youtube campaign", "youtube ads setup", "video campaign setup", "youtube advertising start"],
+    "category": "setup-guide",
+    "question": "How do I set up my first YouTube campaign?",
+    "answer": "Upload your video to YouTube, then create a **Video campaign** in Google Ads. Choose skippable in-stream ads to start — you only pay when someone watches 30 seconds. Target by audience interests or custom segments rather than broad demographics. Keep your hook in the first 5 seconds and include a clear CTA.",
+    "links": [{"text": "YouTube Ads Guide", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "sg-first-pmax-campaign",
+    "keywords": ["first performance max", "pmax setup", "performance max walkthrough", "setup pmax", "create pmax"],
+    "category": "setup-guide",
+    "question": "How do I set up my first Performance Max campaign?",
+    "answer": "Create a Performance Max campaign, set your conversion goal and budget, then build **asset groups** with text headlines, descriptions, images, and videos. Add audience signals (your customer lists, website visitors, custom segments) to guide the algorithm. Give it at least 2-4 weeks of learning time before making changes, and ensure you have 30+ conversions per month for best results.",
+    "links": [{"text": "Performance Max Guide", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "sg-gtm-setup",
+    "keywords": ["google tag manager", "GTM setup", "tag manager from scratch", "install GTM", "GTM beginner"],
+    "category": "setup-guide",
+    "question": "How do I set up Google Tag Manager from zero?",
+    "answer": "Create a GTM account at tagmanager.google.com, then install the container snippet in your site's head and body. Add your **Google Ads conversion tag** and **GA4 configuration tag** as your first two tags. Use the built-in **Preview mode** to test everything fires correctly before publishing. GTM lets you manage all tracking without touching site code again.",
+    "links": [{"text": "GTM Setup Guide", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "sg-ga4-link",
+    "keywords": ["GA4 setup", "link GA4 google ads", "google analytics 4 setup", "GA4 linking", "analytics setup"],
+    "category": "setup-guide",
+    "question": "How do I set up GA4 and link it to Google Ads?",
+    "answer": "Create a GA4 property at analytics.google.com, install the measurement tag (or use GTM), then go to Admin > Google Ads Links in GA4 and link your account. This enables you to import GA4 audiences and conversions into Google Ads. Also enable **auto-tagging** in Google Ads settings so clicks are tracked properly.",
+    "links": [{"text": "GA4 Integration Guide", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "sg-ecommerce-conversion-tracking",
+    "keywords": ["ecommerce tracking", "purchase tracking", "conversion tracking ecommerce", "transaction tracking", "revenue tracking"],
+    "category": "setup-guide",
+    "question": "How do I set up conversion tracking for e-commerce?",
+    "answer": "Create a **Purchase** conversion action in Google Ads with dynamic values, then implement the conversion tag on your order confirmation page using GTM. Pass the transaction value, currency, and order ID via the data layer. Always verify with **Tag Assistant** and check that revenue matches your actual sales within a reasonable margin.",
+    "links": [{"text": "E-commerce Tracking", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "sg-leadgen-conversion-tracking",
+    "keywords": ["lead gen tracking", "form submission tracking", "lead conversion tracking", "lead generation tracking"],
+    "category": "setup-guide",
+    "question": "How do I set up conversion tracking for lead generation?",
+    "answer": "Create a **Submit Lead Form** conversion action in Google Ads, then fire the tag when a user reaches your thank-you page or submits a form. Use GTM's form submission trigger or a custom event. For better optimization, import **offline conversions** from your CRM so Google Ads knows which leads actually became customers.",
+    "links": [{"text": "Lead Gen Tracking", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "sg-remarketing-pixel",
+    "keywords": ["remarketing pixel", "remarketing tag", "retargeting setup", "remarketing setup", "audience pixel"],
+    "category": "setup-guide",
+    "question": "How do I set up the remarketing pixel?",
+    "answer": "Add the **Google Ads remarketing tag** site-wide using GTM — create a tag with your conversion ID and it fires on all pages. Then build remarketing lists in Google Ads under Audience Manager (e.g., all visitors, cart abandoners, converters). Lists need at least 1,000 users for Search and 100 for Display before they can be targeted.",
+    "links": [{"text": "Remarketing Setup", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "sg-account-structure",
+    "keywords": ["account structure first", "campaign structure beginner", "organize account", "ad group structure", "first account structure"],
+    "category": "setup-guide",
+    "question": "How should I structure my first Google Ads account?",
+    "answer": "Organize by **business goal** at the campaign level (brand vs. non-brand, product categories) and by theme at the ad group level. Start with 2-4 campaigns max — don't over-segment with a small budget. Each ad group should have tightly related keywords (10-20) and 3+ responsive search ads tailored to those keywords.",
+    "links": [{"text": "Account Structure Guide", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "sg-naming-conventions",
+    "keywords": ["naming conventions", "campaign naming", "ad group naming", "naming best practices", "organize campaigns"],
+    "category": "setup-guide",
+    "question": "What naming conventions should I use for campaigns and ad groups?",
+    "answer": "Use a consistent format like **[Network] | [Goal] | [Target] | [Match Type]** — for example, \"Search | Brand | US | Exact\" or \"PMax | Sales | All Products\". Good naming makes filtering and reporting much easier. Avoid vague names like \"Campaign 1\" and include enough detail that anyone on your team can understand the purpose at a glance.",
+    "links": [{"text": "Organization Tips", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "sg-first-budget",
+    "keywords": ["first budget", "starting budget", "how much to spend", "budget setting beginner", "initial budget"],
+    "category": "setup-guide",
+    "question": "How do I set my first Google Ads budget?",
+    "answer": "Start with a budget you're comfortable losing while learning — **$10-30/day** is a good starting point for most small businesses. Use Google's Keyword Planner to estimate CPCs in your industry, then ensure your daily budget can buy at least 10-15 clicks. You need enough data (aim for 30+ conversions/month) for Smart Bidding to optimize effectively.",
+    "links": [{"text": "Budget Planning", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "sg-daily-checklist",
+    "keywords": ["daily checklist", "daily tasks", "daily routine", "day to day management", "daily monitoring"],
+    "category": "setup-guide",
+    "question": "What's the daily checklist for new Google Ads managers?",
+    "answer": "Check these daily: **spend vs. budget** (any overspend?), conversion count and CPA, any disapproved ads or policy issues, and search terms report for irrelevant queries to add as negatives. It takes just 10-15 minutes. Don't make big changes daily though — let data accumulate for at least a few days before optimizing.",
+    "links": [{"text": "Management Checklist", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "sg-weekly-optimization",
+    "keywords": ["weekly optimization", "weekly routine", "weekly checklist", "optimization schedule", "weekly review"],
+    "category": "setup-guide",
+    "question": "What's the weekly optimization routine for beginners?",
+    "answer": "Every week: review **search terms** and add negatives, check Quality Scores and improve low-scoring keywords, pause underperformers (high spend, no conversions after 2-3x target CPA), test new ad copy variations, and review device/location/schedule performance. Document what you changed so you can learn what works over time.",
+    "links": [{"text": "Optimization Routine", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "sg-conversion-actions-setup",
+    "keywords": ["conversion actions", "create conversion", "conversion setup types", "conversion types", "conversion goals"],
+    "category": "setup-guide",
+    "question": "What conversion actions should I set up first?",
+    "answer": "Start with your **primary business action** — purchases for e-commerce, form submissions for lead gen. Then add secondary conversions like add-to-cart, phone calls, and page engagement as observation-only. Mark only your primary action as a \"primary\" conversion for bidding. Having too many primary conversions confuses Smart Bidding.",
+    "links": [{"text": "Conversion Setup", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "sg-enhanced-conversions",
+    "keywords": ["enhanced conversions", "enhanced conversions setup", "first party data tracking", "conversion accuracy"],
+    "category": "setup-guide",
+    "question": "How do I set up enhanced conversions?",
+    "answer": "Enhanced conversions improve tracking accuracy by sending **hashed first-party data** (email, phone, address) to Google when a conversion happens. Set it up in GTM by mapping your conversion tag to customer data fields on your thank-you page. This recovers conversions lost to cookie restrictions and typically improves reported conversions by 5-15%.",
+    "links": [{"text": "Enhanced Conversions Guide", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "sg-billing-payment",
+    "keywords": ["billing setup beginner", "payment method setup", "google ads billing setup", "credit card setup", "invoice billing"],
+    "category": "setup-guide",
+    "question": "How do I set up billing and payments in Google Ads?",
+    "answer": "Go to Billing > Settings and add a credit card, debit card, or bank account. Most accounts use **automatic payments** where you're charged after costs accumulate. Choose your currency carefully — it can't be changed later. For larger accounts, you can apply for monthly invoicing (typically requires $5K+/month spend history). Set up budget alerts to avoid surprises.",
+    "links": [{"text": "Billing Guide", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "sg-audience-setup",
+    "keywords": ["audience setup beginner", "create audiences", "audience manager setup", "first audiences", "audience configuration"],
+    "category": "setup-guide",
+    "question": "How do I set up audiences for my first campaigns?",
+    "answer": "Go to **Audience Manager** in Google Ads and create these starter audiences: all website visitors (30/90/180 days), converters, and cart abandoners (for e-commerce). Upload your customer email list for Customer Match. Add these as **observation audiences** to your Search campaigns first — you'll see performance data without restricting targeting, then make targeting decisions with real data.",
+    "links": [{"text": "Audience Setup Guide", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "sg-keyword-research-first",
+    "keywords": ["first keyword research", "keyword research beginner", "find keywords", "starter keywords", "keyword planning beginner"],
+    "category": "setup-guide",
+    "question": "How do I do keyword research for my first campaign?",
+    "answer": "Start with Google's **Keyword Planner** — enter your website URL and it suggests relevant keywords with search volume and estimated CPCs. Group related keywords by theme (these become your ad groups). Focus on **commercial intent** terms (\"buy\", \"hire\", \"near me\") over informational ones. Start with 50-100 keywords across 3-5 ad groups and expand based on what converts.",
+    "links": [{"text": "Keyword Research Guide", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "sg-ad-copy-first",
+    "keywords": ["first ad copy", "write google ads", "ad copy beginner", "responsive search ads writing", "RSA setup"],
+    "category": "setup-guide",
+    "question": "How do I write my first Google Ads ad copy?",
+    "answer": "For each ad group, create at least 3 **responsive search ads** with 15 unique headlines and 4 descriptions. Include your main keyword in at least 3 headlines, add a clear CTA (\"Get a Free Quote\", \"Shop Now\"), mention what makes you unique (price, speed, guarantee), and pin your most important headline to position 1. Let Google test combinations — check asset performance after 2 weeks.",
+    "links": [{"text": "Ad Copy Guide", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "sg-extensions-setup",
+    "keywords": ["ad extensions setup", "assets setup", "sitelinks setup", "callouts setup", "extensions first time"],
+    "category": "setup-guide",
+    "question": "Which ad extensions should I set up first?",
+    "answer": "At minimum, add **sitelink extensions** (4+ links to key pages), **callout extensions** (\"Free Shipping\", \"24/7 Support\"), **structured snippets** (product categories or services), and **call extensions** with your phone number. Extensions increase your ad's size and CTR by 10-15% on average. They're free to add — you only pay if someone clicks them.",
+    "links": [{"text": "Extensions Guide", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "cs-airbnb-global",
+    "keywords": ["airbnb google ads", "airbnb advertising", "airbnb growth", "travel platform ads"],
+    "category": "case-study",
+    "question": "How does Airbnb use Google Ads for global growth?",
+    "answer": "Airbnb runs massive **Search campaigns** in 190+ countries, bidding on destination-specific terms like \"apartments in Paris\" alongside brand defense. They heavily use **dynamic search ads** to automatically cover long-tail destination queries. Their strategy combines Search for high-intent bookings with YouTube for brand awareness in new markets.",
+    "links": [{"text": "Google Ads Case Studies", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "cs-shopify-shopping",
+    "keywords": ["shopify google ads", "shopify shopping", "shopify merchants", "shopify scaling"],
+    "category": "case-study",
+    "question": "How do Shopify merchants scale with Google Shopping?",
+    "answer": "Shopify's built-in Google channel makes it easy to sync product feeds to Merchant Center. Successful Shopify merchants typically start with **Standard Shopping** to learn which products convert, then graduate to Performance Max. The key is optimizing your product titles and images in your feed — that's what drives Shopping ad performance more than bids.",
+    "links": [{"text": "Shopping Ads Guide", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "cs-hubspot-b2b",
+    "keywords": ["hubspot google ads", "hubspot b2b", "hubspot lead generation", "b2b lead gen example"],
+    "category": "case-study",
+    "question": "How does HubSpot use Google Ads for B2B lead generation?",
+    "answer": "HubSpot bids aggressively on **high-intent keywords** like \"CRM software\" and \"marketing automation tool\" while also targeting competitor names. They drive traffic to free tool pages and content offers rather than direct sales pages, capturing leads at lower CPAs. Their funnel tracks from click to MQL to SQL using offline conversion imports.",
+    "links": [{"text": "B2B Lead Gen Strategies", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "cs-booking-search",
+    "keywords": ["booking.com google ads", "booking.com search", "booking advertising", "OTA google ads"],
+    "category": "case-study",
+    "question": "How does Booking.com dominate Search Ads?",
+    "answer": "Booking.com is one of the world's largest Google Ads spenders, bidding on millions of **hotel and destination keywords** across every country. They use dynamic keyword insertion, location-specific ad copy, and massive remarketing lists. Their secret is relentless A/B testing — they reportedly run thousands of ad experiments simultaneously to squeeze out incremental gains.",
+    "links": [{"text": "Search Ads Strategy", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "cs-dollar-shave-youtube",
+    "keywords": ["dollar shave club", "youtube ads viral", "video ads success", "DTC youtube"],
+    "category": "case-study",
+    "question": "How did Dollar Shave Club use YouTube Ads to go viral?",
+    "answer": "Dollar Shave Club's famous launch video cost just $4,500 to produce but generated 12,000 orders in 48 hours. They used **YouTube in-stream ads** targeting men interested in grooming, with a hook in the first 5 seconds. The lesson: a strong creative with a clear value proposition matters more than big budgets on YouTube.",
+    "links": [{"text": "YouTube Ads Strategy", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "cs-grammarly-scale",
+    "keywords": ["grammarly google ads", "grammarly advertising", "grammarly growth", "SaaS ads example"],
+    "category": "case-study",
+    "question": "How does Grammarly scale with Search and Display?",
+    "answer": "Grammarly dominates Search for writing-related keywords while running massive **Display and YouTube remarketing** campaigns. They target high-intent terms like \"grammar checker\" and \"writing assistant\" and use their freemium model to acquire users cheaply, then upsell to premium. Their Display ads focus on use-case-specific messaging (emails, essays, social posts).",
+    "links": [{"text": "SaaS Ads Strategy", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "cs-canva-acquisition",
+    "keywords": ["canva google ads", "canva growth", "canva user acquisition", "design tool ads"],
+    "category": "case-study",
+    "question": "How did Canva acquire millions of users with Google Ads?",
+    "answer": "Canva targets thousands of **template-specific keywords** like \"resume template\" and \"Instagram post maker\" that capture users at the moment of need. They drive traffic to free template pages that convert to signups. This content-led acquisition strategy means they're acquiring users who immediately see Canva's value, leading to strong retention and eventual upgrades.",
+    "links": [{"text": "User Acquisition Strategy", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "cs-local-restaurants",
+    "keywords": ["restaurant google ads", "local restaurant ads", "restaurant advertising", "food business ads"],
+    "category": "case-study",
+    "question": "How do local restaurants use Google Ads effectively?",
+    "answer": "Successful restaurants focus on **local Search campaigns** targeting \"near me\" and neighborhood-specific terms. They use **location extensions** and **call extensions** to drive phone orders and walk-ins. Budget as little as $10-15/day targeting a tight radius. Pair with a well-optimized Google Business Profile for maximum local visibility.",
+    "links": [{"text": "Local Ads Guide", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "cs-law-firms",
+    "keywords": ["law firm google ads", "legal advertising", "lawyer google ads", "attorney ads"],
+    "category": "case-study",
+    "question": "How do law firms win high-value leads with Search?",
+    "answer": "Law firms face CPCs of $50-200+ but each case can be worth thousands. Top firms use **exact match** on high-intent terms like \"personal injury lawyer near me\" and run call-only campaigns during business hours. They track calls through to signed cases using offline conversion imports, letting Smart Bidding optimize for actual case value, not just leads.",
+    "links": [{"text": "Legal Ads Strategy", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "cs-real-estate-local",
+    "keywords": ["real estate google ads", "realtor ads", "property ads", "real estate search ads"],
+    "category": "case-study",
+    "question": "How do real estate agents use local search ads?",
+    "answer": "Real estate agents target **hyper-local keywords** like \"homes for sale in [neighborhood]\" with small geo-targeted campaigns. They use lead form extensions and landing pages with IDX property listings. Smart agents track from lead to closed deal using CRM integration, which typically shows Google Ads delivering $10-30 cost per lead that converts to $3,000+ commissions.",
+    "links": [{"text": "Real Estate Ads Guide", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "cs-dtc-pmax",
+    "keywords": ["DTC performance max", "direct to consumer ads", "DTC brand scaling", "ecommerce pmax"],
+    "category": "case-study",
+    "question": "How do DTC brands use Performance Max?",
+    "answer": "DTC brands feed Performance Max their product catalog, customer lists, and creative assets, then let the algorithm find buyers across Search, Shopping, YouTube, Display, and Gmail. Top performers provide **strong audience signals** (first-party data, high-value customer lists) and refresh creative assets monthly. Most see 20-40% of revenue come from PMax alongside dedicated Search and Shopping campaigns.",
+    "links": [{"text": "Performance Max Strategy", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "cs-saas-cac",
+    "keywords": ["SaaS google ads", "reduce CAC", "SaaS customer acquisition", "SaaS advertising"],
+    "category": "case-study",
+    "question": "How do SaaS companies reduce CAC with Google Ads?",
+    "answer": "Smart SaaS companies lower CAC by bidding on **high-intent feature keywords** rather than broad category terms, using free trials or freemium to lower the conversion barrier, and importing downstream events (trial-to-paid) as conversions. They also build remarketing funnels with content (webinars, guides) to nurture prospects who didn't convert immediately.",
+    "links": [{"text": "SaaS Ads Guide", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "cs-agency-management",
+    "keywords": ["agency google ads", "manage multiple accounts", "MCC management", "agency scaling", "100 clients"],
+    "category": "case-study",
+    "question": "How do agencies manage 100+ client accounts?",
+    "answer": "Agencies use **Google Ads MCC (Manager accounts)** to access all clients from one dashboard. They standardize naming conventions, build templated campaign structures, and use Google Ads scripts for automated reporting and alerts. Top agencies use cross-account bid strategies and shared negative keyword lists to save time across similar client verticals.",
+    "links": [{"text": "Agency Management Guide", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "cs-ecommerce-zero-to-million",
+    "keywords": ["ecommerce scaling", "scale ad spend", "million dollar ads", "ecommerce growth", "scaling google ads"],
+    "category": "case-study",
+    "question": "How does an e-commerce brand scale from $0 to $1M/month in ad spend?",
+    "answer": "It happens in phases: start with **branded Search** and **Shopping** to capture existing demand ($0-5K/month), expand to non-brand Search and PMax ($5K-50K), then layer in YouTube and Display for demand generation ($50K+). Each phase requires better tracking, creative refresh, and margin analysis. Brands that scale successfully import profit data, not just revenue, into their bidding strategy.",
+    "links": [{"text": "Scaling Strategy", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "cs-small-business-500",
+    "keywords": ["small business google ads", "low budget ads", "$500 budget", "small budget success", "limited budget"],
+    "category": "case-study",
+    "question": "Can a small business succeed with Google Ads on $500/month?",
+    "answer": "Absolutely. With $500/month, focus on **exact match keywords** for your highest-intent terms in a single Search campaign. Target a tight geographic area, use ad scheduling for business hours only, and bid on specific services rather than broad terms. Many local businesses (plumbers, dentists, cleaners) generate 10-20 leads/month from $500 in ad spend.",
+    "links": [{"text": "Small Business Guide", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "cs-mobile-game-apps",
+    "keywords": ["mobile game ads", "app campaign", "game advertising", "app install ads", "mobile game UA"],
+    "category": "case-study",
+    "question": "How do mobile game companies use App campaigns?",
+    "answer": "Mobile game companies use Google **App campaigns** which automatically run across Search, Play Store, YouTube, and Display. They optimize for in-app events (level completion, purchases) rather than just installs to attract higher-value players. Creative is everything — top performers test 20+ video and image variations simultaneously and refresh every 2-3 weeks to combat creative fatigue.",
+    "links": [{"text": "App Campaigns Guide", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "cs-nike-brand-defense",
+    "keywords": ["nike google ads", "brand defense", "brand protection ads", "brand campaigns example"],
+    "category": "case-study",
+    "question": "Why do big brands like Nike still run branded Search ads?",
+    "answer": "Even with strong organic rankings, brands run branded ads because competitors bid on their name, and paid ads push organic results further down. Nike controls the narrative with branded ads — featuring current promotions, new releases, and specific product lines. Studies show that pausing branded ads can lose 20-40% of total traffic because competitors fill the gap.",
+    "links": [{"text": "Brand Strategy", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "cs-warby-parker-omnichannel",
+    "keywords": ["warby parker ads", "omnichannel advertising", "online to offline ads", "store visit ads"],
+    "category": "case-study",
+    "question": "How do DTC brands like Warby Parker use omnichannel Google Ads?",
+    "answer": "Warby Parker tracks the full journey from online ad click to in-store visit using **store visit conversions**. They run local inventory ads showing nearby store availability and use Performance Max with store visit goals. Their ads dynamically adjust messaging based on whether a user is near a physical store or in a delivery-only market.",
+    "links": [{"text": "Omnichannel Ads Guide", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "cs-peloton-youtube",
+    "keywords": ["peloton ads", "fitness brand ads", "subscription service ads", "peloton youtube"],
+    "category": "case-study",
+    "question": "How do subscription brands like Peloton use YouTube Ads?",
+    "answer": "Peloton uses **YouTube in-stream and bumper ads** showcasing real member stories and workout previews. They target fitness enthusiast audiences, competitor brand searchers, and custom intent audiences. Their approach layers video views into remarketing lists, then retargets engaged viewers with Search and Display ads for the conversion push. Video builds the emotional connection, Search captures the intent.",
+    "links": [{"text": "YouTube Strategy", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "cs-amazon-seller-ads",
+    "keywords": ["amazon seller google ads", "marketplace seller ads", "amazon alternative advertising", "drive traffic to amazon"],
+    "category": "case-study",
+    "question": "How do Amazon sellers use Google Ads to drive external traffic?",
+    "answer": "Some Amazon sellers run Google Ads to their Amazon listings (using attribution links) or their own DTC site. Driving external traffic to Amazon can boost organic ranking through increased sales velocity. Smart sellers split-test: Google Ads to Amazon for ranking boosts vs. Google Ads to their own store for higher margins and customer data ownership.",
+    "links": [{"text": "E-commerce Strategy", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "cs-zapier-integration-keywords",
+    "keywords": ["zapier google ads", "integration tool ads", "SaaS integration marketing", "zapier growth"],
+    "category": "case-study",
+    "question": "How does Zapier use Google Ads for massive scale?",
+    "answer": "Zapier targets millions of **long-tail integration keywords** like \"connect Slack to Google Sheets\" and \"Salesforce to Mailchimp integration.\" Each integration page serves as a landing page for specific keyword groups. This strategy captures users at the exact moment of need with perfect relevance. It's a textbook example of programmatic SEO meets paid search at scale.",
+    "links": [{"text": "SaaS Growth Strategy", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "cs-glossier-dtc",
+    "keywords": ["glossier ads", "beauty brand ads", "DTC beauty marketing", "cosmetics google ads"],
+    "category": "case-study",
+    "question": "How do DTC beauty brands like Glossier use Google Ads?",
+    "answer": "DTC beauty brands combine **Shopping ads** with strong product imagery, branded Search for defense against competitors, and YouTube for product demos and tutorials. Glossier leverages their community with Customer Match audiences to find lookalikes. They focus heavily on mobile since beauty purchases skew mobile, and use dynamic remarketing to show exact products viewed.",
+    "links": [{"text": "DTC Beauty Strategy", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "ip-ecom-branded-cpc",
+    "keywords": ["branded terms CPC", "brand bidding cost", "high CPC brand", "competitor brand bidding", "branded keywords expensive"],
+    "category": "industry-problems",
+    "question": "E-commerce: My branded term CPCs are high. What should I do?",
+    "answer": "High branded CPCs usually mean competitors are bidding on your brand name. Fight back: ensure your **Quality Score is 10** on brand terms (should be easy since you're most relevant), use brand-specific sitelinks and extensions to dominate the SERP, and consider filing a Google trademark complaint if competitors use your name in ad copy. Brand CPCs should be under $0.50 in most cases.",
+    "links": [{"text": "Brand Bidding Strategy", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "ip-ecom-feed-disapprovals",
+    "keywords": ["shopping feed disapproval", "merchant center disapproval", "product disapproved", "feed errors", "shopping feed fix"],
+    "category": "industry-problems",
+    "question": "E-commerce: How do I fix Shopping feed disapprovals?",
+    "answer": "Check Merchant Center's **Diagnostics tab** for specific errors. Common fixes: ensure prices match your landing page exactly, include GTINs for known brands, fix image quality (no watermarks/promotional text), and make shipping/tax info accurate. Use supplemental feeds to quickly fix issues without changing your primary feed. Recurring disapprovals usually mean a data mismatch between feed and site.",
+    "links": [{"text": "Shopping Feed Troubleshooting", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "ip-ecom-low-roas-new",
+    "keywords": ["low ROAS new products", "new product ads", "poor ROAS", "new product launch ads"],
+    "category": "industry-problems",
+    "question": "E-commerce: Why is ROAS low on new products and how do I fix it?",
+    "answer": "New products lack conversion history, so Smart Bidding can't optimize well. Start with **Manual CPC** or Maximize Clicks to gather data, then switch to Target ROAS after 30+ conversions. Boost new product visibility by featuring them in dedicated asset groups in PMax with strong audience signals. Also ensure your product titles and images are fully optimized in the feed.",
+    "links": [{"text": "ROAS Optimization", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "ip-saas-long-sales-cycle",
+    "keywords": ["long sales cycle", "SaaS attribution", "multi-touch attribution", "long conversion window", "B2B sales cycle"],
+    "category": "industry-problems",
+    "question": "SaaS: How do I track and attribute conversions with long sales cycles?",
+    "answer": "Extend your **conversion window** to 90 days in Google Ads settings. Track micro-conversions (free trial, demo request, pricing page view) alongside final sales. Import offline conversions from your CRM when deals close, even weeks later. Use **data-driven attribution** to credit the full journey, not just last-click, so top-of-funnel campaigns get proper credit.",
+    "links": [{"text": "Attribution Guide", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "ip-saas-high-cpa-trial",
+    "keywords": ["high CPA free trial", "SaaS CPA", "reduce trial CPA", "free trial cost", "signup CPA"],
+    "category": "industry-problems",
+    "question": "SaaS: How do I lower high CPA on free trial signups?",
+    "answer": "First, optimize your landing page — simplify the signup form and add social proof. Shift budget to **high-intent keywords** (\"[competitor] alternative\", \"best [tool] for [use case]\") and away from broad informational terms. Use remarketing to recapture visitors who didn't sign up. Most importantly, track trial-to-paid conversion and optimize for that, not just trial signups.",
+    "links": [{"text": "SaaS CPA Optimization", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "ip-saas-competitor-bidding",
+    "keywords": ["competitor keyword bidding", "bid on competitor names", "competitor targeting", "conquest campaigns"],
+    "category": "industry-problems",
+    "question": "SaaS: What's the best strategy for competitor keyword bidding?",
+    "answer": "Bidding on competitor names is legal but expensive (low Quality Scores = high CPCs). Create a **separate campaign** for competitor terms with its own budget cap. Write ad copy focused on your differentiators without mentioning the competitor's trademarked name. Expected CTRs are lower (2-4%) but conversion rates can be strong since these users are actively evaluating options.",
+    "links": [{"text": "Competitor Strategy", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "ip-leadgen-poor-quality",
+    "keywords": ["poor lead quality", "bad leads", "junk leads", "unqualified leads", "lead quality google ads"],
+    "category": "industry-problems",
+    "question": "Lead gen: How do I fix poor lead quality from Google Ads?",
+    "answer": "Import your CRM data as **offline conversions** so Google Ads knows which leads became customers. Add qualifying questions to your forms, use negative keywords aggressively to filter low-intent traffic, and exclude audiences that historically produce bad leads. Switch your bidding to optimize for qualified leads (SQLs) instead of raw form submissions.",
+    "links": [{"text": "Lead Quality Guide", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "ip-leadgen-crm-integration",
+    "keywords": ["CRM integration", "offline conversion tracking", "salesforce google ads", "hubspot google ads integration", "CRM tracking"],
+    "category": "industry-problems",
+    "question": "Lead gen: How do I integrate my CRM for offline conversion tracking?",
+    "answer": "Capture the **GCLID** (Google Click ID) on form submissions and store it in your CRM. When a lead converts to a customer, upload the GCLID and conversion value back to Google Ads via API, manual upload, or tools like Zapier. This tells Smart Bidding which clicks actually generate revenue, dramatically improving lead quality over time.",
+    "links": [{"text": "Offline Conversions Guide", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "ip-leadgen-lead-forms",
+    "keywords": ["lead form extensions", "lead form ads", "google ads lead forms", "lead gen extensions"],
+    "category": "industry-problems",
+    "question": "Lead gen: How do I use lead form extensions effectively?",
+    "answer": "Add **lead form extensions** to your Search and YouTube campaigns for users who prefer not to visit a website. Include qualifying questions to filter out low-quality leads. Connect them to your CRM via webhook or Zapier for instant follow-up. They work best on mobile where form-filling friction is highest. Monitor quality closely — lead form leads can sometimes be lower quality than landing page leads.",
+    "links": [{"text": "Lead Form Extensions", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "ip-realestate-seasonal",
+    "keywords": ["real estate seasonal", "seasonal demand realty", "real estate budget pacing", "seasonal fluctuations property"],
+    "category": "industry-problems",
+    "question": "Real estate: How do I handle seasonal demand fluctuations?",
+    "answer": "Real estate peaks in **spring/summer** and dips in winter. Increase budgets 30-50% during peak season (March-August) and reduce during slow months. Use ad scheduling to focus on evenings and weekends when buyers browse. During slow seasons, shift budget to remarketing to nurture prospects from the busy season who haven't converted yet.",
+    "links": [{"text": "Seasonal Strategy", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "ip-healthcare-policy",
+    "keywords": ["healthcare ad policy", "medical advertising restrictions", "health ads policy", "pharma ad restrictions"],
+    "category": "industry-problems",
+    "question": "Healthcare: How do I navigate Google Ads policy restrictions?",
+    "answer": "Healthcare ads face strict policies — you can't target users by health condition, and many treatments require **Google certification** (e.g., addiction services, pharmaceuticals). Avoid claims about cures or guaranteed outcomes. Focus ad copy on your practice's credentials and services. Apply for healthcare advertiser certification through Google's application process before running restricted content.",
+    "links": [{"text": "Healthcare Ads Compliance", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "ip-healthcare-hipaa",
+    "keywords": ["HIPAA tracking", "HIPAA compliance ads", "healthcare tracking privacy", "patient data privacy", "HIPAA google ads"],
+    "category": "industry-problems",
+    "question": "Healthcare: How do I maintain HIPAA compliance in tracking?",
+    "answer": "Never pass **Protected Health Information** (PHI) to Google — that means no patient names, conditions, or appointment details in URLs, conversion tags, or remarketing lists. Use **server-side tagging** through GTM to filter data before it reaches Google. Consider Google's Consent Mode and enhanced conversions with hashed data. Many healthcare advertisers track only generic form submissions, not specific treatment inquiries.",
+    "links": [{"text": "HIPAA Compliance Guide", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "ip-legal-high-cpc",
+    "keywords": ["legal high CPC", "expensive legal keywords", "lawyer CPC", "$50 keywords", "reduce legal CPC"],
+    "category": "industry-problems",
+    "question": "Legal: Keywords cost $50+. How do I compete?",
+    "answer": "Legal CPCs are among the highest ($50-300 for personal injury, DUI, etc.). Focus on **exact match** only, run ads only during intake hours, target a tight geo radius, and use call-only campaigns to skip the landing page. Track calls to signed cases and calculate your actual cost-per-case — even at $200/click, a $50K case makes the math work. Quality Score optimization here saves real money.",
+    "links": [{"text": "Legal Ads Strategy", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "ip-legal-call-tracking",
+    "keywords": ["call tracking legal", "lawyer call tracking", "phone tracking legal", "call attribution", "intake tracking"],
+    "category": "industry-problems",
+    "question": "Legal: How do I set up call tracking for intake?",
+    "answer": "Use Google Ads **call extensions** and **call-only ads** with Google forwarding numbers for basic tracking. For deeper insight, use tools like CallRail or CallTrackingMetrics that record calls, score lead quality, and push conversion data back to Google Ads. Track the full funnel: call > consultation > signed case. This data lets Smart Bidding optimize for actual case value.",
+    "links": [{"text": "Call Tracking Guide", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "ip-finance-restrictions",
+    "keywords": ["finance ad restrictions", "financial advertising compliance", "banking ads policy", "financial services ads"],
+    "category": "industry-problems",
+    "question": "Finance: What are the advertising restrictions and compliance rules?",
+    "answer": "Financial services face heavy regulation in Google Ads. **Loan and credit** ads require certification and must display APR/terms. Crypto ads need Google certification. You can't make misleading claims about returns or guarantees. Always include required disclaimers and comply with local regulations (FINRA, SEC, etc.). Apply for financial services certification in Google Ads settings before launching.",
+    "links": [{"text": "Financial Ads Compliance", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "ip-finance-loans-insurance",
+    "keywords": ["loan advertising", "insurance ads", "advertise loans", "mortgage ads", "insurance google ads"],
+    "category": "industry-problems",
+    "question": "Finance: How do I advertise loans and insurance on Google?",
+    "answer": "Get **Google financial services certification** first — without it, your ads will be disapproved. For loans, display APR and repayment terms clearly on your landing page. For insurance, target specific product queries (\"car insurance quote\") rather than broad terms. Use lead form extensions with qualifying questions. CPCs are high ($10-60) so track through to policy issuance for true ROI.",
+    "links": [{"text": "Finance Ads Guide", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "ip-travel-seasonality",
+    "keywords": ["travel seasonality", "travel budget pacing", "seasonal travel ads", "travel peak season"],
+    "category": "industry-problems",
+    "question": "Travel: How do I manage seasonality and budget pacing?",
+    "answer": "Use **historical data** (Google Trends + your own analytics) to map demand curves for each destination. Build campaigns 6-8 weeks before peak season to train bidding algorithms. Create ad copy specific to each season (\"summer deals\", \"holiday getaways\"). Use shared budgets carefully and set up automated rules to increase spend when conversion rates spike during peak booking periods.",
+    "links": [{"text": "Travel Ads Strategy", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "ip-travel-remarketing",
+    "keywords": ["travel remarketing", "dynamic remarketing travel", "destination remarketing", "travel retargeting"],
+    "category": "industry-problems",
+    "question": "Travel: How do I use dynamic remarketing for destinations?",
+    "answer": "Set up a **travel-specific feed** in Google Ads with destination IDs, prices, images, and dates. Dynamic remarketing then automatically shows users the exact destinations or hotels they viewed. These ads typically see 2-3x higher conversion rates than static remarketing. Segment your lists by intent level — cart abandoners vs. browsers — and bid accordingly.",
+    "links": [{"text": "Dynamic Remarketing Guide", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "ip-local-low-volume",
+    "keywords": ["low search volume local", "small market ads", "limited search volume", "local low traffic", "grow local ads"],
+    "category": "industry-problems",
+    "question": "Local business: Search volume is low. How do I grow?",
+    "answer": "When search volume is limited, broaden strategically: expand to **phrase and broad match** with strong negative keywords, add nearby zip codes or cities to your targeting, and test Display and YouTube campaigns for local awareness. Also optimize your **Google Business Profile** — it's free visibility. Consider combining Google Ads with local service ads (LSAs) if available in your category.",
+    "links": [{"text": "Local Growth Strategy", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "ip-local-gbp",
+    "keywords": ["Google Business Profile optimization", "GMB optimization", "google my business ads", "local profile ads", "GBP optimization"],
+    "category": "industry-problems",
+    "question": "Local business: How do I optimize Google Business Profile for ads?",
+    "answer": "Complete every field in your **Google Business Profile** — hours, services, photos, Q&A, and regular posts. Link it to Google Ads to enable location extensions and local campaigns. Respond to all reviews (it impacts ad visibility). A well-optimized GBP plus Google Ads gives you double visibility — organic local pack AND paid ads on the same search results page.",
+    "links": [{"text": "Local Business Guide", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "ip-restaurant-delivery",
+    "keywords": ["restaurant delivery ads", "restaurant reservations ads", "promote delivery", "restaurant online orders"],
+    "category": "industry-problems",
+    "question": "Restaurant: How do I promote delivery and reservations?",
+    "answer": "Run **local Search campaigns** targeting \"[cuisine] delivery near me\" and \"[cuisine] restaurant [area]\" with call and location extensions. Use ad scheduling to only show delivery ads during delivery hours. Add sitelinks for your menu, online ordering page, and reservation system. Consider Local campaigns that show your restaurant across Maps, Search, and YouTube in your delivery radius.",
+    "links": [{"text": "Restaurant Ads Guide", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "ip-education-lead-gen",
+    "keywords": ["education lead gen", "online course ads", "education advertising", "course enrollment ads", "edtech ads"],
+    "category": "industry-problems",
+    "question": "Education: How do I generate leads for online courses?",
+    "answer": "Target **high-intent keywords** like \"[topic] course online\" and \"learn [skill] certification\". Offer free resources (webinars, mini-courses) as lead magnets instead of pushing direct enrollment. Use **YouTube ads** to showcase instructor credibility and course previews. Track from lead to enrollment and import that data back — many leads take weeks to convert in education.",
+    "links": [{"text": "Education Ads Guide", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "ip-automotive-vla",
+    "keywords": ["vehicle listing ads", "automotive ads", "car dealer ads", "VLA setup", "auto inventory ads"],
+    "category": "industry-problems",
+    "question": "Automotive: How do I set up vehicle listing ads?",
+    "answer": "Upload your vehicle inventory feed to **Google Merchant Center** with required attributes (VIN, make, model, year, price, image, condition). Create a vehicle listing ads campaign in Google Ads — these show your actual inventory with photos and prices in Search results. Keep your feed updated daily since inventory changes frequently. VLAs typically outperform text ads for dealers by 2-3x in CTR.",
+    "links": [{"text": "Vehicle Listing Ads Guide", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "ip-app-inapp-events",
+    "keywords": ["in-app events", "app event tracking", "app analytics", "mobile app conversions", "app measurement"],
+    "category": "industry-problems",
+    "question": "App developers: How do I measure in-app events?",
+    "answer": "Integrate **Firebase SDK** into your app and define key events (registration, purchase, level_complete, subscription). Link Firebase to Google Ads to use these events as conversion actions. For App campaigns, optimize for deeper events (purchase) rather than installs to attract higher-quality users. Use **Firebase DebugView** to verify events fire correctly before launching campaigns.",
+    "links": [{"text": "App Event Tracking", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "ip-b2b-linkedin-vs-google",
+    "keywords": ["LinkedIn vs Google Ads", "B2B platform choice", "LinkedIn advertising comparison", "B2B channel selection"],
+    "category": "industry-problems",
+    "question": "B2B: When should I use LinkedIn vs Google Ads?",
+    "answer": "Use **Google Ads** when people are actively searching for your solution (high intent, lower CPC). Use **LinkedIn** for targeting specific job titles, companies, or industries when there's no search demand yet (awareness, ABM). Many B2B companies run both: Google Ads captures existing demand, LinkedIn creates new demand. Google is typically cheaper per lead, but LinkedIn offers unmatched professional targeting.",
+    "links": [{"text": "B2B Strategy Guide", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "ip-b2b-targeting-decision-makers",
+    "keywords": ["target decision makers", "B2B targeting google", "reach executives", "B2B audience targeting", "enterprise targeting"],
+    "category": "industry-problems",
+    "question": "B2B: How do I target decision makers with Google Ads?",
+    "answer": "Use **custom segments** based on search terms decision-makers use and websites they visit (industry publications, competitor sites). Layer on Google's **detailed demographics** for company size and industry. Upload your CRM customer list to create similar audiences. For enterprise targeting, use remarketing on visitors to your case studies and pricing pages — those are your highest-intent decision-makers.",
+    "links": [{"text": "B2B Targeting Guide", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "ip-ecom-cart-abandonment",
+    "keywords": ["cart abandonment", "abandoned cart remarketing", "cart recovery ads", "shopping cart remarketing"],
+    "category": "industry-problems",
+    "question": "E-commerce: How do I recover abandoned carts with Google Ads?",
+    "answer": "Create a remarketing list of users who added to cart but didn't purchase (via GTM events). Run **dynamic remarketing Display ads** showing the exact products they left behind. Keep the remarketing window short (7-14 days) for urgency. These campaigns typically see 3-5x higher conversion rates than prospecting campaigns. Pair with a sequential message — first remind, then offer an incentive.",
+    "links": [{"text": "Cart Recovery Strategy", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "ip-ecom-margin-bidding",
+    "keywords": ["profit bidding", "margin based bidding", "profit optimization", "ROAS vs profit", "product margins ads"],
+    "category": "industry-problems",
+    "question": "E-commerce: How do I optimize for profit instead of just ROAS?",
+    "answer": "Set different **Target ROAS** values per product group based on margins — high-margin products can afford a lower ROAS target. Use conversion value rules to adjust values by product category. The advanced approach is feeding actual profit data (not revenue) as your conversion value through a server-side setup. A product with 60% margins at 300% ROAS is far more profitable than 20% margins at 500% ROAS.",
+    "links": [{"text": "Profit Optimization", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "ip-saas-demo-optimization",
+    "keywords": ["demo requests ads", "SaaS demo ads", "book a demo", "demo conversion optimization"],
+    "category": "industry-problems",
+    "question": "SaaS: How do I optimize Google Ads for demo requests?",
+    "answer": "Target **high-intent keywords** like \"[category] software demo\" and \"[competitor] alternative.\" Create dedicated demo landing pages with social proof, a clear value prop, and a short form (name, email, company size). Track demo-to-opportunity rate and import as offline conversions. Most SaaS companies see demo CPAs of $50-200 from Google Ads depending on the market.",
+    "links": [{"text": "SaaS Demo Strategy", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "ip-leadgen-spam-leads",
+    "keywords": ["spam leads", "bot leads", "fake leads", "lead spam prevention", "invalid leads"],
+    "category": "industry-problems",
+    "question": "Lead gen: How do I prevent spam and bot leads from Google Ads?",
+    "answer": "Add **reCAPTCHA** to your forms, use honeypot fields, and require phone number verification. In Google Ads, exclude known bot-heavy placements (check your placement report), add suspicious IP addresses to your exclusion list, and avoid broad match keywords that attract irrelevant traffic. Monitor your invalid click rate in the account — Google refunds obvious invalid clicks automatically.",
+    "links": [{"text": "Lead Quality Protection", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "ip-healthcare-patient-acquisition",
+    "keywords": ["patient acquisition", "healthcare marketing ads", "medical practice ads", "doctor advertising", "clinic google ads"],
+    "category": "industry-problems",
+    "question": "Healthcare: How do I acquire patients cost-effectively?",
+    "answer": "Target **specific service keywords** (\"knee replacement surgeon [city]\") rather than broad medical terms. Use call extensions with tracking numbers and enable **call reporting** to measure phone leads. Run ads only during office hours when staff can answer. Most medical practices see $30-80 cost per new patient inquiry from Search, which pays off quickly given patient lifetime value.",
+    "links": [{"text": "Healthcare Ads Guide", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "ip-legal-practice-area-campaigns",
+    "keywords": ["legal practice areas", "lawyer campaign structure", "legal campaign organization", "law firm campaign setup"],
+    "category": "industry-problems",
+    "question": "Legal: How should I structure campaigns by practice area?",
+    "answer": "Create **separate campaigns** per practice area (personal injury, family law, criminal defense) because CPCs, conversion rates, and case values vary dramatically. This lets you set unique budgets and ROAS targets per area. Within each campaign, build ad groups around specific service keywords. A personal injury case worth $100K can justify a much higher CPA than a simple will preparation.",
+    "links": [{"text": "Legal Campaign Structure", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "ip-finance-credit-card-ads",
+    "keywords": ["credit card advertising", "financial product ads", "banking product ads", "credit card google ads"],
+    "category": "industry-problems",
+    "question": "Finance: How do I advertise credit cards and financial products?",
+    "answer": "Get **Google financial services certification** first. Include required disclosures (APR, fees, terms) on your landing page. Target comparison keywords (\"best credit cards 2026\") and benefit-specific terms (\"cash back credit card\"). Use ad customizers to dynamically insert current rates. CPCs are $5-30+ but lifetime customer value in financial services makes it worthwhile.",
+    "links": [{"text": "Financial Products Ads", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "ip-travel-hotel-ads",
+    "keywords": ["hotel ads google", "google hotel ads", "hotel advertising", "hotel campaigns", "hospitality ads"],
+    "category": "industry-problems",
+    "question": "Travel: How do hotels advertise effectively on Google?",
+    "answer": "Hotels should use **Google Hotel Ads** (separate from regular Search) which show rates, availability, and booking links directly in search results. Connect your property management system via a connectivity partner or Hotel Center. Also run Search campaigns for \"hotels in [destination]\" terms. Dynamic remarketing showing the exact rooms viewed drives strong return visitor conversion rates.",
+    "links": [{"text": "Hotel Ads Guide", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "ip-local-service-area",
+    "keywords": ["service area business ads", "service radius ads", "local service ads LSA", "home services ads"],
+    "category": "industry-problems",
+    "question": "Local business: How do service-area businesses advertise on Google?",
+    "answer": "Use **Local Services Ads** (LSAs) if available in your category — you only pay per qualified lead, not per click. For regular Google Ads, target a specific service radius (e.g., 15 miles) and bid on \"[service] near me\" and \"[service] [city]\" keywords. Include call extensions and set up call tracking. Most home service businesses see $15-50 cost per lead from Google Ads.",
+    "links": [{"text": "Local Service Ads Guide", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "ip-education-enrollment-funnel",
+    "keywords": ["enrollment funnel ads", "student enrollment ads", "education funnel", "course enrollment optimization"],
+    "category": "industry-problems",
+    "question": "Education: How do I build an enrollment funnel with Google Ads?",
+    "answer": "Build a three-stage funnel: **YouTube/Display** ads for awareness (program highlights), **Search ads** for consideration (targeting \"[program] online degree\"), and **remarketing** for conversion (application deadlines, testimonials). Track micro-conversions at each stage — info request, application start, application complete, enrollment. Import final enrollment data as offline conversions for bidding optimization.",
+    "links": [{"text": "Education Funnel Guide", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "ip-b2b-account-based-marketing",
+    "keywords": ["ABM google ads", "account based marketing ads", "target specific companies", "enterprise targeting ads"],
+    "category": "industry-problems",
+    "question": "B2B: How do I do account-based marketing with Google Ads?",
+    "answer": "Upload your target account list as a **Customer Match** audience using company email domains. Create custom segments based on websites your target accounts visit (competitor sites, industry publications). Use remarketing to stay visible to visitors from target companies. Combine Google Ads with LinkedIn for true ABM — use Google for search intent capture and LinkedIn for account-level targeting.",
+    "links": [{"text": "ABM with Google Ads", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "ip-ecom-product-title-optimization",
+    "keywords": ["product title optimization", "shopping feed titles", "product feed optimization", "shopping ad titles"],
+    "category": "industry-problems",
+    "question": "E-commerce: How do I optimize product titles for Shopping ads?",
+    "answer": "Product titles are the #1 lever for Shopping ad performance. Use the format: **Brand + Product Type + Key Attributes** (e.g., \"Nike Air Max 90 Men's Running Shoe Black Size 10\"). Front-load the most important terms since titles get truncated. Include color, size, material, and model number. A/B test titles using supplemental feeds — well-optimized titles can improve CTR by 20-40%.",
+    "links": [{"text": "Feed Optimization Guide", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "ip-b2b-long-form-content",
+    "keywords": ["B2B content ads", "whitepaper ads", "B2B content marketing ads", "gated content ads"],
+    "category": "industry-problems",
+    "question": "B2B: How do I promote gated content and whitepapers with Google Ads?",
+    "answer": "Target **research-stage keywords** like \"[topic] guide\", \"[topic] best practices\", and \"[topic] benchmark report\". Drive to dedicated landing pages with a clear value preview and short form. Track content downloads as secondary conversions and build remarketing lists of downloaders for follow-up campaigns promoting demos or trials. Content-led campaigns typically see 50-70% lower CPAs than direct demo campaigns.",
+    "links": [{"text": "B2B Content Strategy", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "ip-automotive-dealership-local",
+    "keywords": ["car dealership ads local", "local dealership marketing", "auto dealer local ads", "dealership google ads"],
+    "category": "industry-problems",
+    "question": "Automotive: How should car dealerships run local Google Ads?",
+    "answer": "Run **Search campaigns** for high-intent terms (\"[brand] dealer near me\", \"buy [model] [city]\") and **Vehicle Listing Ads** for inventory visibility. Target a 30-50 mile radius around your dealership. Use call tracking and store visit conversions to measure true ROI. Many dealerships also run YouTube ads showcasing new arrivals and special financing offers to build local awareness.",
+    "links": [{"text": "Automotive Ads Guide", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "ip-app-user-retention",
+    "keywords": ["app re-engagement", "app user retention ads", "app remarketing", "re-engage app users", "dormant users"],
+    "category": "industry-problems",
+    "question": "App developers: How do I re-engage dormant users?",
+    "answer": "Use **App campaigns for engagement** targeting users who installed but haven't opened your app recently. Deep link ads directly to relevant in-app content. Segment users by last-active date and tailor messaging — recently lapsed users get gentle reminders, while long-dormant users might need a special offer. Re-engagement campaigns typically cost 60-80% less than acquiring new users.",
+    "links": [{"text": "App Engagement Guide", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "ip-restaurant-local-campaigns",
+    "keywords": ["restaurant local campaigns", "restaurant google maps ads", "restaurant nearby ads", "food service local ads"],
+    "category": "industry-problems",
+    "question": "Restaurant: How do I show up on Google Maps with ads?",
+    "answer": "Link your **Google Business Profile** to Google Ads and enable location extensions. Run local campaigns or Performance Max with store visit goals — these automatically show your restaurant in Maps, Search, YouTube, and Display. Include your menu, photos, and current promotions in your Business Profile. Target a tight radius (3-5 miles) during meal times for maximum efficiency.",
+    "links": [{"text": "Restaurant Maps Ads", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
+  },
+  {
+    "id": "ip-education-competitor-targeting",
+    "keywords": ["education competitor ads", "university competitor bidding", "school marketing competition", "education competition"],
+    "category": "industry-problems",
+    "question": "Education: How do I compete with bigger institutions in Google Ads?",
+    "answer": "Focus on **niche program keywords** where large universities don't dominate (e.g., \"online data analytics certificate\" vs. \"MBA program\"). Highlight your unique advantages — flexible schedules, lower cost, career outcomes, smaller class sizes. Use remarketing heavily since education decisions take weeks. Bid on competitor names with comparison-style ad copy emphasizing your differentiators.",
+    "links": [{"text": "Education Competition Strategy", "url": "/google-mindful-solution-architect/projects/google-ads/"}]
   }
 ]
