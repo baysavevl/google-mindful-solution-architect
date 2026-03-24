@@ -101,14 +101,16 @@ const base = import.meta.env.BASE_URL;
     align-self: flex-end;
     background: #1D4ED8;
     color: #fff;
+    border: 2px solid #1E40AF;
     border-radius: 18px 18px 4px 18px;
-    padding: 0.6rem 0.9rem;
+    padding: 0.6rem 1rem;
     max-width: 72%;
     font-size: 0.87rem;
     line-height: 1.55;
     margin-bottom: 3px;
     animation: bubIn 0.2s ease;
     word-wrap: break-word;
+    box-shadow: 0 1px 4px rgba(29,78,216,0.2);
   }
 
   /* Bot: left, light grey, all rounded except bottom-left */
@@ -148,42 +150,47 @@ const base = import.meta.env.BASE_URL;
   .bub-bot li { margin-bottom: 0.2rem; line-height: 1.55; }
   .bub-bot li:last-child { margin-bottom: 0; }
 
-  /* ═══ All interactive items: bordered boxes ═══ */
-  .bub-links { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.55rem; }
+  /* ═══ Resource links: green tinted bordered boxes with spacing ═══ */
+  .bub-links {
+    display: flex; flex-wrap: wrap; gap: 0.45rem; margin-top: 0.65rem;
+  }
   .bub-link {
     display: inline-block;
-    font-size: 0.75rem; color: #1D4ED8; text-decoration: none;
-    font-weight: 500; padding: 0.25rem 0.55rem;
-    border: 1px solid #D1D5DB; border-radius: 8px;
-    background: #fff; transition: all 0.1s;
+    font-size: 0.76rem; color: #166534; text-decoration: none;
+    font-weight: 500; padding: 0.3rem 0.7rem;
+    border: 1.5px solid #86EFAC; border-radius: 10px;
+    background: #F0FDF4; transition: all 0.12s;
   }
-  .bub-link:hover { background: #EFF6FF; border-color: #93C5FD; }
+  .bub-link:hover { background: #DCFCE7; border-color: #4ADE80; }
 
-  .bub-related { margin-top: 0.5rem; display: flex; flex-wrap: wrap; gap: 0.3rem; }
+  /* ═══ Related questions: purple tinted bordered boxes ═══ */
+  .bub-related {
+    margin-top: 0.6rem; display: flex; flex-wrap: wrap; gap: 0.4rem;
+  }
   .bub-rel-btn {
-    display: inline-block; font-size: 0.75rem; color: #1D4ED8;
+    display: inline-block; font-size: 0.76rem; color: #6D28D9;
     font-family: var(--font-sans); font-weight: 500;
-    padding: 0.25rem 0.55rem; border: 1px solid #D1D5DB;
-    border-radius: 8px; background: #fff; cursor: pointer;
-    transition: all 0.1s;
+    padding: 0.3rem 0.7rem; border: 1.5px solid #C4B5FD;
+    border-radius: 10px; background: #F5F3FF; cursor: pointer;
+    transition: all 0.12s;
   }
-  .bub-rel-btn:hover { background: #EFF6FF; border-color: #93C5FD; }
+  .bub-rel-btn:hover { background: #EDE9FE; border-color: #A78BFA; }
 
-  /* Chips (suggestions) — same bordered box style */
+  /* ═══ Initial suggestion chips: blue tinted bordered boxes ═══ */
   .bub-chips {
     align-self: flex-start;
-    display: flex; flex-wrap: wrap; gap: 0.35rem;
-    margin-bottom: 3px; margin-top: 6px;
-    max-width: 78%;
+    display: flex; flex-wrap: wrap; gap: 0.4rem;
+    margin-bottom: 3px; margin-top: 8px;
+    max-width: 82%;
   }
   .bub-chip {
-    display: inline-block; font-size: 0.75rem; color: #1D4ED8;
+    display: inline-block; font-size: 0.76rem; color: #1D4ED8;
     font-family: var(--font-sans); font-weight: 500;
-    padding: 0.3rem 0.65rem; border: 1px solid #D1D5DB;
-    border-radius: 8px; background: #fff; cursor: pointer;
-    transition: all 0.1s;
+    padding: 0.3rem 0.7rem; border: 1.5px solid #93C5FD;
+    border-radius: 10px; background: #EFF6FF; cursor: pointer;
+    transition: all 0.12s;
   }
-  .bub-chip:hover { background: #EFF6FF; border-color: #93C5FD; }
+  .bub-chip:hover { background: #DBEAFE; border-color: #60A5FA; }
 
   /* ═══ Typing dots ═══ */
   .bub-typing {
