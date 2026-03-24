@@ -1,25 +1,132 @@
 ---
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import PostCard from "../../components/PostCard.astro";
+import SeaMap from "../../components/SeaMap.astro";
+import CaseStudyCard from "../../components/CaseStudyCard.astro";
+
+const base = import.meta.env.BASE_URL;
 
 const posts = (await getCollection("blog")).sort(
-  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
 );
+
+// Count posts per country
+const countryCounts: Record<string, number> = {};
+for (const post of posts) {
+  const country = post.data.country || 'Other';
+  countryCounts[country] = (countryCounts[country] || 0) + 1;
+}
 ---
 
-<BaseLayout title="Blog">
-  <h1 class="text-3xl font-bold text-gray-900">Blog</h1>
-  <div class="mt-8">
-    {
-      posts.map((post) => (
-        <PostCard
-          title={post.data.title}
-          description={post.data.description}
-          pubDate={post.data.pubDate}
-          url={`${import.meta.env.BASE_URL}blog/${post.id}`}
-        />
-      ))
-    }
+<BaseLayout title="Success Stories" wide={true} description="Real Google Ads success stories from businesses across Southeast Asia.">
+  <!-- Hero -->
+  <section class="blog-hero">
+    <div class="google-bar"><span></span><span></span><span></span><span></span></div>
+    <h1>Success Stories from Southeast Asia</h1>
+    <p>Real case studies of businesses achieving growth with Google Ads across the region.</p>
+  </section>
+
+  <!-- Map -->
+  <SeaMap countryCounts={countryCounts} />
+
+  <!-- Case Study Grid -->
+  <section class="case-studies-grid" id="case-studies-grid">
+    {posts.map((post) => (
+      <CaseStudyCard
+        title={post.data.title}
+        description={post.data.description}
+        url={`${base}blog/${post.id}`}
+        country={post.data.country || 'Other'}
+        industry={post.data.industry || ''}
+        metric={post.data.metric || ''}
+        googleProduct={post.data.googleProduct || ''}
+      />
+    ))}
+  </section>
+
+  <div class="no-results" id="no-results" style="display:none;">
+    <p>No stories found for this country yet.</p>
   </div>
 </BaseLayout>
+
+<style>
+  .blog-hero {
+    text-align: center;
+    padding: 2rem 0 1rem;
+  }
+
+  .google-bar {
+    display: flex;
+    height: 4px;
+    border-radius: 2px;
+    overflow: hidden;
+    max-width: 80px;
+    margin: 0 auto 1.5rem;
+  }
+
+  .google-bar span { flex: 1; }
+  .google-bar span:nth-child(1) { background: var(--color-google-blue); }
+  .google-bar span:nth-child(2) { background: var(--color-google-red); }
+  .google-bar span:nth-child(3) { background: var(--color-google-yellow); }
+  .google-bar span:nth-child(4) { background: var(--color-google-green); }
+
+  .blog-hero h1 {
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: var(--color-text);
+    margin: 0 0 0.75rem;
+    letter-spacing: -0.02em;
+  }
+
+  .blog-hero p {
+    font-size: 1.05rem;
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  .case-studies-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.25rem;
+    margin-top: 2rem;
+  }
+
+  .no-results {
+    text-align: center;
+    padding: 3rem;
+    color: var(--color-text-muted);
+  }
+
+  @media (max-width: 640px) {
+    .case-studies-grid {
+      grid-template-columns: 1fr;
+    }
+    .blog-hero h1 {
+      font-size: 1.75rem;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('country-filter', ((e: CustomEvent) => {
+    const country = e.detail.country;
+    const grid = document.getElementById('case-studies-grid');
+    const noResults = document.getElementById('no-results');
+    const cards = grid?.querySelectorAll('.case-study-card');
+    let visible = 0;
+
+    cards?.forEach(card => {
+      const el = card as HTMLElement;
+      if (country === 'All' || el.dataset.country === country) {
+        el.style.display = '';
+        visible++;
+      } else {
+        el.style.display = 'none';
+      }
+    });
+
+    if (noResults) {
+      noResults.style.display = visible === 0 ? '' : 'none';
+    }
+  }) as EventListener);
+</script>

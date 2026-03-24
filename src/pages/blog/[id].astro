@@ -2,6 +2,8 @@
 import { getCollection, render } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 
+const base = import.meta.env.BASE_URL;
+
 export async function getStaticPaths() {
   const posts = await getCollection("blog");
   return posts.map((post) => ({
@@ -18,18 +20,161 @@ const formattedDate = post.data.pubDate.toLocaleDateString("en-US", {
   month: "long",
   day: "numeric",
 });
+
+const countryFlags: Record<string, string> = {
+  'Vietnam': '🇻🇳',
+  'Thailand': '🇹🇭',
+  'Indonesia': '🇮🇩',
+  'Malaysia': '🇲🇾',
+  'Philippines': '🇵🇭',
+  'Singapore': '🇸🇬',
+  'APAC': '🌏',
+};
+
+const flag = countryFlags[post.data.country || ''] || '';
+const isCaseStudy = !!post.data.country;
 ---
 
 <BaseLayout title={post.data.title} description={post.data.description}>
-  <article>
-    <header class="mb-8">
-      <time class="text-sm text-gray-500" datetime={post.data.pubDate.toISOString()}>
-        {formattedDate}
-      </time>
-      <h1 class="mt-2 text-3xl font-bold text-gray-900">{post.data.title}</h1>
-    </header>
+  <nav class="breadcrumb">
+    <a href={`${base}blog`}>Success Stories</a>
+    <span class="sep">/</span>
+    <span>{post.data.title}</span>
+  </nav>
+
+  <article class="case-study-article">
+    {isCaseStudy ? (
+      <header class="cs-header">
+        <div class="cs-meta">
+          {post.data.country && (
+            <span class="cs-badge cs-country">{flag} {post.data.country}</span>
+          )}
+          {post.data.industry && (
+            <span class="cs-badge cs-industry">{post.data.industry}</span>
+          )}
+          {post.data.googleProduct && (
+            <span class="cs-badge cs-product">{post.data.googleProduct}</span>
+          )}
+        </div>
+        {post.data.metric && (
+          <div class="cs-metric-banner">
+            <span class="cs-metric-value">{post.data.metric}</span>
+          </div>
+        )}
+        <time class="cs-date" datetime={post.data.pubDate.toISOString()}>
+          {formattedDate}
+        </time>
+      </header>
+    ) : (
+      <header class="mb-8">
+        <time class="text-sm text-[var(--color-text-muted)]" datetime={post.data.pubDate.toISOString()}>
+          {formattedDate}
+        </time>
+        <h1 class="mt-2 text-3xl font-bold text-[var(--color-text)]">{post.data.title}</h1>
+      </header>
+    )}
+
     <div class="prose prose-gray max-w-none">
       <Content />
     </div>
+
+    {post.data.source && (
+      <footer class="cs-source">
+        <p>
+          <strong>Source:</strong> <a href={post.data.source} target="_blank" rel="noopener noreferrer">Original case study</a>
+          — based on publicly available information from Google.
+        </p>
+      </footer>
+    )}
   </article>
 </BaseLayout>
+
+<style>
+  .breadcrumb {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    margin-bottom: 1.5rem;
+  }
+
+  .breadcrumb a {
+    color: var(--color-google-blue);
+    text-decoration: none;
+  }
+
+  .breadcrumb a:hover {
+    text-decoration: underline;
+  }
+
+  .breadcrumb .sep {
+    margin: 0 0.4rem;
+    color: var(--color-border);
+  }
+
+  .cs-header {
+    margin-bottom: 2rem;
+  }
+
+  .cs-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .cs-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.3rem 0.75rem;
+    border-radius: 100px;
+    font-size: 0.8rem;
+    font-weight: 500;
+  }
+
+  .cs-country {
+    background: #e8f0fe;
+    color: #174ea6;
+  }
+
+  .cs-industry {
+    background: var(--color-bg-subtle);
+    color: var(--color-text-muted);
+    border: 1px solid var(--color-border);
+  }
+
+  .cs-product {
+    background: #e6f4ea;
+    color: #137333;
+  }
+
+  .cs-metric-banner {
+    margin-bottom: 0.75rem;
+  }
+
+  .cs-metric-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #137333;
+  }
+
+  .cs-date {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+  }
+
+  .cs-source {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--color-border);
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+  }
+
+  .cs-source p {
+    margin: 0;
+  }
+
+  .cs-source a {
+    color: var(--color-google-blue);
+  }
+</style>

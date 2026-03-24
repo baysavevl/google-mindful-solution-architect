@@ -1,0 +1,503 @@
+---
+const base = import.meta.env.BASE_URL;
+---
+
+<div class="chatbot" id="chatbot">
+  <div class="chat-messages" id="chat-messages">
+    <div class="chat-message bot-message">
+      <div class="message-avatar">
+        <div class="avatar-dots">
+          <span style="background: var(--color-google-blue)"></span>
+          <span style="background: var(--color-google-red)"></span>
+          <span style="background: var(--color-google-yellow)"></span>
+          <span style="background: var(--color-google-green)"></span>
+        </div>
+      </div>
+      <div class="message-content">
+        <p class="message-text">
+          Hi! I'm your <strong>Google Ads Solutions Architect</strong>. I can help you plan, build, and optimize your Google Ads campaigns. What would you like to know?
+        </p>
+        <div class="suggestion-chips" id="suggestion-chips">
+          <button class="chip" data-query="How do I set up my first Google Ads campaign?">Set up my first campaign</button>
+          <button class="chip" data-query="Which campaign type should I choose for my business?">Choose a campaign type</button>
+          <button class="chip" data-query="What bidding strategy should I use?">Pick a bidding strategy</button>
+          <button class="chip" data-query="How do I improve my Quality Score?">Improve Quality Score</button>
+          <button class="chip" data-query="My ads have low CTR, how do I fix this?">Fix low CTR</button>
+          <button class="chip" data-query="How do I set up conversion tracking?">Set up tracking</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chat-input-area">
+    <div class="chat-input-wrapper">
+      <input
+        type="text"
+        id="chat-input"
+        placeholder="Ask me anything about Google Ads..."
+        autocomplete="off"
+      />
+      <button id="chat-send" aria-label="Send message">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="22" y1="2" x2="11" y2="13"></line>
+          <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+        </svg>
+      </button>
+    </div>
+    <p class="chat-disclaimer">
+      Powered by a curated knowledge base. For complex queries, refer to the <a href={`${base}projects/google-ads/`}>complete guide</a>.
+    </p>
+  </div>
+</div>
+
+<style>
+  .chatbot {
+    background: white;
+    border: 1px solid var(--color-border);
+    border-radius: 16px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 520px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+  }
+
+  .chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    scroll-behavior: smooth;
+  }
+
+  .chat-message {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+    max-width: 90%;
+    animation: fadeInUp 0.3s ease;
+  }
+
+  .bot-message {
+    align-self: flex-start;
+  }
+
+  .user-message {
+    align-self: flex-end;
+    flex-direction: row-reverse;
+  }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .message-avatar {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-bg-subtle);
+    border: 1px solid var(--color-border);
+  }
+
+  .avatar-dots {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+  }
+
+  .avatar-dots span {
+    display: block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
+
+  .user-message .message-avatar {
+    background: var(--color-google-blue);
+    border-color: var(--color-google-blue);
+  }
+
+  .user-message .message-avatar::after {
+    content: "U";
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+
+  .user-message .avatar-dots {
+    display: none;
+  }
+
+  .message-content {
+    background: var(--color-bg-subtle);
+    padding: 0.875rem 1.125rem;
+    border-radius: 12px;
+    border: 1px solid var(--color-border);
+  }
+
+  .user-message .message-content {
+    background: var(--color-google-blue);
+    border-color: var(--color-google-blue);
+    color: white;
+  }
+
+  .message-text {
+    font-size: 0.9rem;
+    line-height: 1.65;
+    margin: 0;
+    color: var(--color-text);
+  }
+
+  .message-text :global(strong) {
+    font-weight: 600;
+  }
+
+  .message-text :global(code) {
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    background: rgba(0,0,0,0.06);
+    padding: 0.1em 0.35em;
+    border-radius: 3px;
+  }
+
+  .user-message .message-text {
+    color: white;
+  }
+
+  .suggestion-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.875rem;
+  }
+
+  .chip {
+    background: white;
+    border: 1px solid var(--color-border);
+    border-radius: 100px;
+    padding: 0.4rem 0.85rem;
+    font-size: 0.8rem;
+    font-family: var(--font-sans);
+    color: var(--color-google-blue);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    font-weight: 500;
+  }
+
+  .chip:hover {
+    background: #e8f0fe;
+    border-color: #aecbfa;
+  }
+
+  .message-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.75rem;
+  }
+
+  .message-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.8rem;
+    color: var(--color-google-blue);
+    text-decoration: none;
+    font-weight: 500;
+    padding: 0.25rem 0.6rem;
+    border-radius: 6px;
+    background: #e8f0fe;
+    transition: background 0.15s;
+  }
+
+  .message-link:hover {
+    background: #d2e3fc;
+  }
+
+  .related-questions {
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .related-questions p {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    margin: 0 0 0.35rem;
+    font-weight: 500;
+  }
+
+  .related-btn {
+    display: block;
+    background: none;
+    border: none;
+    color: var(--color-google-blue);
+    font-size: 0.8rem;
+    font-family: var(--font-sans);
+    cursor: pointer;
+    padding: 0.2rem 0;
+    text-align: left;
+    transition: opacity 0.15s;
+  }
+
+  .related-btn:hover {
+    opacity: 0.7;
+  }
+
+  .typing-indicator {
+    display: flex;
+    gap: 4px;
+    padding: 0.5rem 0;
+  }
+
+  .typing-indicator span {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--color-text-muted);
+    animation: typing 1.2s infinite;
+  }
+
+  .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+  .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes typing {
+    0%, 60%, 100% { opacity: 0.3; transform: scale(0.8); }
+    30% { opacity: 1; transform: scale(1); }
+  }
+
+  .chat-input-area {
+    padding: 1rem 1.5rem 1rem;
+    border-top: 1px solid var(--color-border);
+    background: white;
+  }
+
+  .chat-input-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--color-bg-subtle);
+    border: 1px solid var(--color-border);
+    border-radius: 100px;
+    padding: 0.5rem 0.5rem 0.5rem 1.25rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .chat-input-wrapper:focus-within {
+    border-color: var(--color-google-blue);
+    box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.15);
+  }
+
+  #chat-input {
+    flex: 1;
+    border: none;
+    background: none;
+    font-size: 0.9rem;
+    font-family: var(--font-sans);
+    color: var(--color-text);
+    outline: none;
+  }
+
+  #chat-input::placeholder {
+    color: var(--color-text-muted);
+  }
+
+  #chat-send {
+    background: var(--color-google-blue);
+    border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.15s;
+    flex-shrink: 0;
+  }
+
+  #chat-send:hover {
+    background: var(--color-accent-hover);
+    transform: scale(1.05);
+  }
+
+  .chat-disclaimer {
+    font-size: 0.7rem;
+    color: var(--color-text-muted);
+    text-align: center;
+    margin: 0.5rem 0 0;
+  }
+
+  .chat-disclaimer a {
+    color: var(--color-google-blue);
+  }
+</style>
+
+<script>
+  import { ChatEngine } from '../scripts/chat-engine.js';
+
+  let engine = null;
+
+  async function initChat() {
+    try {
+      const resp = await fetch(import.meta.env.BASE_URL + 'data/knowledge-base.json');
+      const kb = await resp.json();
+      engine = new ChatEngine(kb);
+    } catch (e) {
+      console.warn('Failed to load knowledge base:', e);
+    }
+  }
+
+  function escapeHtml(text) {
+    const d = document.createElement('div');
+    d.textContent = text;
+    return d.innerHTML;
+  }
+
+  function markdownToHtml(text) {
+    return text
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.+?)\*/g, '<em>$1</em>')
+      .replace(/`(.+?)`/g, '<code>$1</code>')
+      .replace(/\n/g, '<br>');
+  }
+
+  function addMessage(content, isUser = false) {
+    const messages = document.getElementById('chat-messages');
+    const msg = document.createElement('div');
+    msg.className = `chat-message ${isUser ? 'user-message' : 'bot-message'}`;
+
+    if (isUser) {
+      msg.innerHTML = `
+        <div class="message-avatar"></div>
+        <div class="message-content">
+          <p class="message-text">${escapeHtml(content)}</p>
+        </div>`;
+    } else {
+      msg.innerHTML = `
+        <div class="message-avatar">
+          <div class="avatar-dots">
+            <span style="background: var(--color-google-blue)"></span>
+            <span style="background: var(--color-google-red)"></span>
+            <span style="background: var(--color-google-yellow)"></span>
+            <span style="background: var(--color-google-green)"></span>
+          </div>
+        </div>
+        <div class="message-content">
+          <p class="message-text">${content}</p>
+        </div>`;
+    }
+
+    messages.appendChild(msg);
+    messages.scrollTop = messages.scrollHeight;
+    return msg;
+  }
+
+  function addTypingIndicator() {
+    const messages = document.getElementById('chat-messages');
+    const msg = document.createElement('div');
+    msg.className = 'chat-message bot-message';
+    msg.id = 'typing';
+    msg.innerHTML = `
+      <div class="message-avatar">
+        <div class="avatar-dots">
+          <span style="background: var(--color-google-blue)"></span>
+          <span style="background: var(--color-google-red)"></span>
+          <span style="background: var(--color-google-yellow)"></span>
+          <span style="background: var(--color-google-green)"></span>
+        </div>
+      </div>
+      <div class="message-content">
+        <div class="typing-indicator"><span></span><span></span><span></span></div>
+      </div>`;
+    messages.appendChild(msg);
+    messages.scrollTop = messages.scrollHeight;
+  }
+
+  function removeTypingIndicator() {
+    document.getElementById('typing')?.remove();
+  }
+
+  async function handleQuery(query) {
+    addMessage(query, true);
+
+    // Hide suggestion chips after first interaction
+    const chips = document.getElementById('suggestion-chips');
+    if (chips) chips.style.display = 'none';
+
+    addTypingIndicator();
+
+    // Simulate thinking delay
+    await new Promise(r => setTimeout(r, 400 + Math.random() * 600));
+
+    removeTypingIndicator();
+
+    if (!engine) {
+      addMessage("I'm still loading my knowledge base. Please try again in a moment.");
+      return;
+    }
+
+    const result = engine.getResponse(query);
+    let html = markdownToHtml(result.answer);
+
+    // Add links
+    if (result.links && result.links.length > 0) {
+      html += '<div class="message-links">';
+      for (const link of result.links) {
+        html += `<a href="${link.url}" class="message-link">📖 ${escapeHtml(link.text)}</a>`;
+      }
+      html += '</div>';
+    }
+
+    // Add related questions
+    if (result.related && result.related.length > 0) {
+      html += '<div class="related-questions"><p>Related questions:</p>';
+      for (const r of result.related) {
+        html += `<button class="related-btn" data-query="${escapeHtml(r.question)}">${escapeHtml(r.question)}</button>`;
+      }
+      html += '</div>';
+    }
+
+    const msg = addMessage(html);
+
+    // Bind related question buttons
+    msg.querySelectorAll('.related-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        handleQuery(btn.dataset.query);
+      });
+    });
+  }
+
+  // Initialize
+  initChat();
+
+  const input = document.getElementById('chat-input');
+  const send = document.getElementById('chat-send');
+
+  function submitQuery() {
+    const q = input.value.trim();
+    if (!q) return;
+    input.value = '';
+    handleQuery(q);
+  }
+
+  send.addEventListener('click', submitQuery);
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') submitQuery();
+  });
+
+  // Suggestion chips
+  document.querySelectorAll('.chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      handleQuery(chip.dataset.query);
+    });
+  });
+</script>

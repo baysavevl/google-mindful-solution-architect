@@ -2,6 +2,26 @@
 const year = new Date().getFullYear();
 ---
 
-<footer class="mt-20 border-t border-[var(--color-border)] py-8 text-center text-sm text-[var(--color-text-muted)]">
-  <p class="mb-0">&copy; {year} Hubs. All rights reserved.</p>
+<footer class="mt-20 border-t border-[var(--color-border)] bg-[var(--color-bg-subtle)]">
+  <div class="mx-auto max-w-6xl px-6 py-10">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <div>
+        <div class="flex items-center gap-2 mb-1">
+          <div class="flex gap-[3px]">
+            <span class="block w-2 h-2 rounded-full bg-[var(--color-google-blue)]"></span>
+            <span class="block w-2 h-2 rounded-full bg-[var(--color-google-red)]"></span>
+            <span class="block w-2 h-2 rounded-full bg-[var(--color-google-yellow)]"></span>
+            <span class="block w-2 h-2 rounded-full bg-[var(--color-google-green)]"></span>
+          </div>
+          <span class="text-sm font-semibold text-[var(--color-text)]">Google Ads Solutions Architect</span>
+        </div>
+        <p class="text-xs text-[var(--color-text-muted)] mb-0">
+          Helping businesses across Southeast Asia succeed with Google Ads.
+        </p>
+      </div>
+      <p class="text-xs text-[var(--color-text-muted)] mb-0">
+        &copy; {year} Mindful Google Ads Solutions Architect. All rights reserved.
+      </p>
+    </div>
+  </div>
 </footer>

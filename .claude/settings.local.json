@@ -15,7 +15,18 @@
       "Bash(node -e \"console.log\\(require\\('./node_modules/astro/package.json'\\).version\\)\")",
       "Bash(node -e \"const pkg = require\\('./node_modules/astro/package.json'\\); console.log\\(pkg.version\\)\")",
       "Bash(git -C /Users/lap14894/Documents/VinhL/Code/Personal/hubs log --oneline)",
-      "Bash(git -C /Users/lap14894/Documents/VinhL/Code/Personal/hubs remote -v)"
+      "Bash(git -C /Users/lap14894/Documents/VinhL/Code/Personal/hubs remote -v)",
+      "Bash(git push:*)",
+      "Bash(node -e \"\nconst base = '/hubs';\nconsole.log\\('base:', JSON.stringify\\(base\\)\\);\nconsole.log\\('base + blog:', JSON.stringify\\(base + 'blog'\\)\\);\nconsole.log\\('base + /blog:', JSON.stringify\\(base + '/blog'\\)\\);\n\")",
+      "WebFetch(domain:publicpolicy.google)",
+      "WebFetch(domain:business.google.com)",
+      "WebFetch(domain:ads.google.com)",
+      "WebFetch(domain:blog.google)",
+      "WebFetch(domain:www.thinkwithgoogle.com)",
+      "WebFetch(domain:services.google.com)",
+      "WebSearch",
+      "WebFetch(domain:megadigital.ai)",
+      "WebFetch(domain:www.productsup.com)"
     ]
   }
 }

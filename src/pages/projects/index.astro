@@ -1,28 +1,179 @@
 ---
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import ProjectCard from "../../components/ProjectCard.astro";
+
+const base = import.meta.env.BASE_URL;
 
 const projects = (await getCollection("projects")).sort((a, b) => {
-  // Featured first, then by pubDate descending
   if (a.data.featured && !b.data.featured) return -1;
   if (!a.data.featured && b.data.featured) return 1;
   return b.data.pubDate.valueOf() - a.data.pubDate.valueOf();
 });
+
+const categoryIcons: Record<string, string> = {
+  'comprehensive': '📖',
+  'getting-started': '🚀',
+  'campaign-management': '📋',
+  'optimization': '⚡',
+  'technical': '🔧',
+};
 ---
 
-<BaseLayout title="Projects">
-  <h1 class="text-3xl font-bold text-gray-900">Projects</h1>
-  <div class="mt-8 grid gap-4">
-    {
-      projects.map((project) => (
-        <ProjectCard
-          title={project.data.title}
-          description={project.data.description}
-          url={`${import.meta.env.BASE_URL}projects/${project.id}`}
-          featured={project.data.featured}
-        />
-      ))
-    }
-  </div>
+<BaseLayout title="Knowledge Library" wide={true} description="Comprehensive Google Ads guides and resources.">
+  <section class="library-hero">
+    <div class="google-bar"><span></span><span></span><span></span><span></span></div>
+    <h1>Google Ads Knowledge Library</h1>
+    <p>Comprehensive guides, tutorials, and resources to master Google Ads.</p>
+  </section>
+
+  <section class="library-grid">
+    {projects.map((project) => {
+      const icon = categoryIcons[project.data.category || 'comprehensive'] || '📖';
+      return (
+        <a href={`${base}projects/${project.id}`} class:list={["library-card", { featured: project.data.featured }]}>
+          <div class="library-card-inner">
+            <span class="library-icon">{icon}</span>
+            <div>
+              <div class="library-card-header">
+                <h3>{project.data.title}</h3>
+                {project.data.featured && (
+                  <span class="featured-badge">Featured</span>
+                )}
+              </div>
+              <p>{project.data.description}</p>
+              {project.data.category && (
+                <span class="library-category">{project.data.category}</span>
+              )}
+            </div>
+          </div>
+          <span class="library-arrow">&rarr;</span>
+        </a>
+      );
+    })}
+  </section>
 </BaseLayout>
+
+<style>
+  .library-hero {
+    text-align: center;
+    padding: 2rem 0 2.5rem;
+  }
+
+  .google-bar {
+    display: flex;
+    height: 4px;
+    border-radius: 2px;
+    overflow: hidden;
+    max-width: 80px;
+    margin: 0 auto 1.5rem;
+  }
+
+  .google-bar span { flex: 1; }
+  .google-bar span:nth-child(1) { background: var(--color-google-blue); }
+  .google-bar span:nth-child(2) { background: var(--color-google-red); }
+  .google-bar span:nth-child(3) { background: var(--color-google-yellow); }
+  .google-bar span:nth-child(4) { background: var(--color-google-green); }
+
+  .library-hero h1 {
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: var(--color-text);
+    margin: 0 0 0.75rem;
+    letter-spacing: -0.02em;
+  }
+
+  .library-hero p {
+    font-size: 1.05rem;
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  .library-grid {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .library-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: white;
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-decoration: none;
+    transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
+  }
+
+  .library-card:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transform: translateY(-1px);
+  }
+
+  .library-card.featured {
+    border-color: var(--color-google-blue);
+    border-width: 2px;
+    background: linear-gradient(135deg, rgba(66, 133, 244, 0.03), rgba(52, 168, 83, 0.03));
+  }
+
+  .library-card-inner {
+    display: flex;
+    gap: 1.25rem;
+    align-items: flex-start;
+  }
+
+  .library-icon {
+    font-size: 2rem;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+  }
+
+  .library-card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.35rem;
+  }
+
+  .library-card h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--color-text);
+    margin: 0;
+  }
+
+  .featured-badge {
+    background: #e8f0fe;
+    color: var(--color-google-blue);
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 0.15rem 0.5rem;
+    border-radius: 100px;
+  }
+
+  .library-card p {
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+    margin: 0 0 0.5rem;
+    line-height: 1.6;
+  }
+
+  .library-category {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    text-transform: capitalize;
+    font-weight: 500;
+  }
+
+  .library-arrow {
+    font-size: 1.25rem;
+    color: var(--color-text-muted);
+    flex-shrink: 0;
+    transition: transform 0.15s;
+  }
+
+  .library-card:hover .library-arrow {
+    transform: translateX(3px);
+    color: var(--color-google-blue);
+  }
+</style>

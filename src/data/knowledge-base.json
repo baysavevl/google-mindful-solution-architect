@@ -1,0 +1,978 @@
+[
+  {
+    "id": "gs-what-is-google-ads",
+    "keywords": ["what is google ads", "google ads overview", "google adwords", "paid search"],
+    "category": "getting-started",
+    "question": "What is Google Ads and how does it work?",
+    "answer": "Google Ads is Google's online advertising platform where businesses bid to display ads across Google Search, YouTube, Display Network, and partner sites. It operates on a pay-per-click (PPC) model, meaning you only pay when someone clicks your ad. Advertisers compete in a real-time auction for each search query, and Google uses a combination of your bid amount and ad quality to determine which ads appear and in what order.",
+    "links": [{"text": "Google Ads Guide", "url": "/hubs/projects/google-ads/"}]
+  },
+  {
+    "id": "gs-auction-system",
+    "keywords": ["auction", "ad rank", "how ads are ranked", "bidding auction"],
+    "category": "getting-started",
+    "question": "How does the Google Ads auction system work?",
+    "answer": "Every time a user searches, Google runs an instant auction among all eligible ads. Your Ad Rank is calculated as your Max Bid multiplied by your Quality Score, plus the expected impact of ad extensions and formats. This means you can outrank a competitor with a higher bid if your Quality Score is significantly better. The actual CPC you pay is typically lower than your max bid -- just enough to beat the Ad Rank of the advertiser below you.",
+    "links": [{"text": "Understanding the Auction", "url": "/hubs/projects/google-ads/#auction-system"}]
+  },
+  {
+    "id": "gs-quality-score",
+    "keywords": ["quality score", "ad quality", "qs", "quality score factors"],
+    "category": "getting-started",
+    "question": "What is Quality Score and why does it matter?",
+    "answer": "Quality Score is a 1-10 rating Google assigns to each keyword based on three factors: expected click-through rate (CTR), ad relevance, and landing page experience. A higher Quality Score lowers your cost-per-click and improves your ad position -- a keyword with QS 10 can pay up to 50% less per click than one with QS 5. Focus on tightly themed ad groups, relevant ad copy, and fast-loading, relevant landing pages to improve it.",
+    "links": [{"text": "Improving Quality Score", "url": "/hubs/projects/google-ads/#quality-score"}]
+  },
+  {
+    "id": "gs-account-setup",
+    "keywords": ["create account", "setup", "new account", "sign up", "get started"],
+    "category": "getting-started",
+    "question": "How do I set up a Google Ads account?",
+    "answer": "Go to ads.google.com and sign in with your Google account. Immediately switch to Expert Mode (skip the guided setup) to get full control over your campaigns. Set your billing information, time zone, and currency -- these cannot be changed later, so choose carefully. Then link your Google Analytics 4 property and set up conversion tracking before launching any campaigns.",
+    "links": [{"text": "Account Setup Guide", "url": "/hubs/projects/google-ads/#account-setup"}]
+  },
+  {
+    "id": "gs-expert-mode",
+    "keywords": ["expert mode", "smart mode", "default mode", "guided setup"],
+    "category": "getting-started",
+    "question": "Should I use Expert Mode or the default Smart Mode in Google Ads?",
+    "answer": "Always switch to Expert Mode immediately. Smart Mode (the default) severely limits your control -- you cannot set match types, create proper ad groups, or access many bidding strategies. Expert Mode gives you full access to all campaign types, detailed reporting, audience targeting, and optimization levers. You can switch from Smart to Expert Mode at any time, but you cannot switch back.",
+    "links": [{"text": "Expert Mode Setup", "url": "/hubs/projects/google-ads/#expert-mode"}]
+  },
+  {
+    "id": "gs-account-hierarchy",
+    "keywords": ["MCC", "manager account", "account hierarchy", "multiple accounts"],
+    "category": "getting-started",
+    "question": "What is the Google Ads account hierarchy (MCC)?",
+    "answer": "A Manager Account (MCC - My Client Center) sits at the top and lets you manage multiple Google Ads accounts from one dashboard. The hierarchy is: MCC > Individual Accounts > Campaigns > Ad Groups > Ads/Keywords. If you manage ads for multiple businesses or brands, create an MCC first, then create individual accounts underneath it. This gives you consolidated billing, cross-account reporting, and easier user access management.",
+    "links": [{"text": "Account Structure", "url": "/hubs/projects/google-ads/#account-hierarchy"}]
+  },
+  {
+    "id": "gs-billing",
+    "keywords": ["billing", "payment", "credit card", "invoicing", "payment methods"],
+    "category": "getting-started",
+    "question": "How does billing work in Google Ads?",
+    "answer": "Google Ads uses automatic payments by default -- you are charged after your ads run, either when you hit your payment threshold or every 30 days, whichever comes first. You can pay by credit/debit card, bank account, or in some countries, bank transfer. Your payment threshold starts low (around $50) and increases as you build payment history. Remember that your currency and billing country cannot be changed after account creation.",
+    "links": [{"text": "Billing Setup", "url": "/hubs/projects/google-ads/#billing"}]
+  },
+  {
+    "id": "gs-link-analytics",
+    "keywords": ["link analytics", "GA4", "google analytics linking", "connect analytics"],
+    "category": "getting-started",
+    "question": "How do I link Google Analytics to Google Ads?",
+    "answer": "In Google Ads, go to Tools & Settings > Linked Accounts > Google Analytics (GA4) and select the properties you want to link. You need admin access on both platforms. Once linked, you can import GA4 conversion events into Google Ads, see Google Ads data in your Analytics reports, and build remarketing audiences based on site behavior. This is one of the most important setup steps -- do it before launching any campaigns.",
+    "links": [{"text": "Analytics Linking", "url": "/hubs/projects/google-ads/#analytics-linking"}]
+  },
+  {
+    "id": "gs-first-campaign",
+    "keywords": ["first campaign", "launch campaign", "create campaign", "new campaign"],
+    "category": "getting-started",
+    "question": "How should I set up my first Google Ads campaign?",
+    "answer": "Start with a single Search campaign targeting your highest-intent, brand-related keywords. Create 3-5 tightly themed ad groups with 10-15 keywords each, using a mix of exact and phrase match. Write 2-3 responsive search ads per ad group with unique headlines and descriptions. Set a daily budget you are comfortable testing with for at least 2-4 weeks, and use Maximize Clicks bidding initially to gather data before switching to a conversion-based strategy.",
+    "links": [{"text": "First Campaign Guide", "url": "/hubs/projects/google-ads/#first-campaign"}]
+  },
+  {
+    "id": "gs-budget-recommendations",
+    "keywords": ["budget", "how much to spend", "daily budget", "starting budget", "minimum budget"],
+    "category": "getting-started",
+    "question": "How much budget should I start with in Google Ads?",
+    "answer": "A good starting point is $20-50/day for most small businesses, which gives you enough data to learn from within 2-4 weeks. Calculate your ideal budget by working backwards: if your target CPA is $50 and you want 2 conversions/day, budget at least $100/day. Google can spend up to 2x your daily budget on high-traffic days, but will not exceed your monthly cap (daily budget x 30.4). Start conservatively and scale up once you find profitable keywords and audiences.",
+    "links": [{"text": "Budget Planning", "url": "/hubs/projects/google-ads/#budget"}]
+  },
+  {
+    "id": "gs-campaign-structure",
+    "keywords": ["campaign structure", "ad group structure", "organize campaigns", "SKAG", "account structure"],
+    "category": "getting-started",
+    "question": "What is the best way to structure my Google Ads account?",
+    "answer": "Organize campaigns by product/service line or business goal, and ad groups by tightly related keyword themes. A solid structure looks like: Campaign (Product A) > Ad Group (Feature 1 keywords) > Relevant Ads. Aim for 10-20 keywords per ad group maximum, all sharing the same intent. Avoid the old SKAG (Single Keyword Ad Group) approach -- with modern RSAs and smart bidding, themed ad groups with 5-15 closely related keywords perform better.",
+    "links": [{"text": "Account Structure", "url": "/hubs/projects/google-ads/#account-structure"}]
+  },
+  {
+    "id": "gs-conversion-setup",
+    "keywords": ["conversion setup", "track conversions", "conversion actions", "goals"],
+    "category": "getting-started",
+    "question": "How do I set up conversion tracking in Google Ads?",
+    "answer": "Go to Tools & Settings > Conversions > New Conversion Action and choose your conversion source (website, app, phone calls, or import). For website conversions, install the Google tag on your site and configure the event snippet on your thank-you or confirmation page. Alternatively, import conversion events from GA4 for a more unified setup. Always set up conversion tracking before launching campaigns -- without it, you are flying blind and smart bidding strategies will not work.",
+    "links": [{"text": "Conversion Tracking", "url": "/hubs/projects/google-ads/#conversion-tracking"}]
+  },
+  {
+    "id": "gs-auto-tagging",
+    "keywords": ["auto tagging", "GCLID", "UTM parameters", "tracking parameters"],
+    "category": "getting-started",
+    "question": "What is auto-tagging and should I enable it?",
+    "answer": "Auto-tagging automatically appends a GCLID (Google Click ID) parameter to your ad URLs, which is how Google Ads and Google Analytics share data. Always keep auto-tagging enabled -- it is on by default and is required for accurate GA4 linking and conversion import. You can use UTM parameters alongside auto-tagging for additional tracking in third-party tools, but GCLID is more reliable for the Google ecosystem.",
+    "links": [{"text": "Auto-tagging Setup", "url": "/hubs/projects/google-ads/#auto-tagging"}]
+  },
+  {
+    "id": "gs-ad-preview",
+    "keywords": ["ad preview", "test ads", "see my ads", "ad preview tool"],
+    "category": "getting-started",
+    "question": "How can I preview my Google Ads without affecting metrics?",
+    "answer": "Use the Ad Preview and Diagnosis tool (Tools & Settings > Planning > Ad Preview and Diagnosis) to see how your ads appear in search results without generating impressions or clicks. Never search for your own ads on Google directly -- this inflates your impressions, lowers your CTR, and teaches Google you never click, which can reduce your ad delivery. The preview tool also tells you why your ad might not be showing for specific queries.",
+    "links": [{"text": "Ad Preview Tool", "url": "/hubs/projects/google-ads/#ad-preview"}]
+  },
+  {
+    "id": "gs-google-ads-editor",
+    "keywords": ["google ads editor", "bulk changes", "offline editor", "desktop app"],
+    "category": "getting-started",
+    "question": "What is Google Ads Editor and when should I use it?",
+    "answer": "Google Ads Editor is a free desktop application for making bulk changes to your Google Ads account offline. It is essential for large accounts -- you can copy/paste campaigns, find-and-replace across ads, make bulk bid adjustments, and review changes before posting them live. Download it from ads.google.com/intl/en/home/tools/ads-editor/. Use it whenever you need to make more than a handful of changes at once.",
+    "links": [{"text": "Google Ads Editor", "url": "/hubs/projects/google-ads/#ads-editor"}]
+  },
+  {
+    "id": "ct-search-campaigns",
+    "keywords": ["search campaigns", "search ads", "text ads", "search network"],
+    "category": "campaign-types",
+    "question": "When should I use Search campaigns?",
+    "answer": "Search campaigns are your go-to for capturing high-intent users who are actively searching for your product or service. They deliver the best conversion rates of any campaign type because you are meeting users at the moment of intent. Use them for lead generation, direct sales, and branded searches. Start here if you are new to Google Ads -- they are the most straightforward to manage and the easiest to measure ROI on.",
+    "links": [{"text": "Search Campaigns", "url": "/hubs/projects/google-ads/#search-campaigns"}]
+  },
+  {
+    "id": "ct-display-campaigns",
+    "keywords": ["display campaigns", "display network", "banner ads", "GDN", "display ads"],
+    "category": "campaign-types",
+    "question": "When should I use Display campaigns?",
+    "answer": "Display campaigns place visual banner and responsive ads across 3+ million websites and apps in the Google Display Network. They are best for brand awareness, remarketing to past visitors, and reaching users earlier in the buying journey at a lower CPC (typically $0.50-$2.00 vs $1-5+ for Search). The trade-off is lower conversion rates since users are not actively searching. Pair them with remarketing audiences for the best results.",
+    "links": [{"text": "Display Campaigns", "url": "/hubs/projects/google-ads/#display-campaigns"}]
+  },
+  {
+    "id": "ct-video-campaigns",
+    "keywords": ["video campaigns", "youtube ads", "video ads", "youtube advertising"],
+    "category": "campaign-types",
+    "question": "When should I use Video campaigns on YouTube?",
+    "answer": "Video campaigns are ideal for brand awareness, product demonstrations, and storytelling -- YouTube is the world's second-largest search engine. Use skippable in-stream ads for awareness (you only pay if someone watches 30 seconds or interacts), and non-skippable for short, impactful messages. Video campaigns typically have lower CPCs ($0.01-$0.30 per view) but require video creative. They are particularly effective when paired with remarketing to re-engage viewers on Search or Display.",
+    "links": [{"text": "Video Campaigns", "url": "/hubs/projects/google-ads/#video-campaigns"}]
+  },
+  {
+    "id": "ct-shopping-campaigns",
+    "keywords": ["shopping campaigns", "product ads", "google shopping", "merchant center", "ecommerce ads"],
+    "category": "campaign-types",
+    "question": "When should I use Shopping campaigns?",
+    "answer": "Shopping campaigns are essential for e-commerce businesses -- they show product images, prices, and store names directly in search results and the Shopping tab. They typically deliver 25-30% higher conversion rates than text ads for product searches because users see the price and image before clicking. You need a Google Merchant Center account with an up-to-date product feed. Use Standard Shopping for granular control or Performance Max for broader automation.",
+    "links": [{"text": "Shopping Campaigns", "url": "/hubs/projects/google-ads/#shopping-campaigns"}]
+  },
+  {
+    "id": "ct-pmax",
+    "keywords": ["performance max", "pmax", "PMax campaign", "automated campaigns"],
+    "category": "campaign-types",
+    "question": "What is Performance Max and when should I use it?",
+    "answer": "Performance Max (PMax) is Google's AI-driven campaign type that runs ads across all Google channels -- Search, Display, YouTube, Gmail, Discover, and Maps -- from a single campaign. It is best when you have strong conversion data (50+ conversions/month) and want to scale. Provide high-quality creative assets (text, images, video) and let Google's algorithms find the best placements. The downside is limited visibility into which channels drive results, so always run it alongside dedicated Search campaigns for your top keywords.",
+    "links": [{"text": "Performance Max Guide", "url": "/hubs/projects/google-ads/#performance-max"}]
+  },
+  {
+    "id": "ct-app-campaigns",
+    "keywords": ["app campaigns", "app install ads", "app promotion", "UAC", "universal app campaigns"],
+    "category": "campaign-types",
+    "question": "When should I use App campaigns?",
+    "answer": "App campaigns (formerly Universal App Campaigns) are designed specifically to drive app installs or in-app actions across Search, Play Store, YouTube, Display, and Discover. Provide text ideas, images, videos, and a budget, and Google's machine learning optimizes delivery automatically. You need to link your app from Google Play or Apple App Store and set up in-app conversion tracking via Firebase or a third-party SDK. Target a cost-per-install (CPI) of $1-5 for most categories.",
+    "links": [{"text": "App Campaigns", "url": "/hubs/projects/google-ads/#app-campaigns"}]
+  },
+  {
+    "id": "ct-demand-gen",
+    "keywords": ["demand gen", "discovery ads", "demand generation", "discover ads", "gmail ads"],
+    "category": "campaign-types",
+    "question": "What are Demand Gen campaigns?",
+    "answer": "Demand Gen campaigns (which replaced Discovery campaigns) run visually rich ads across YouTube, YouTube Shorts, Discover feed, and Gmail. They are designed for mid-funnel engagement -- reaching users who match your audience profiles but are not actively searching. They excel at driving consideration and remarketing with compelling visual creative. Expect CPCs between Display and Search levels, with strong performance for lookalike audiences built from your customer lists.",
+    "links": [{"text": "Demand Gen Campaigns", "url": "/hubs/projects/google-ads/#demand-gen"}]
+  },
+  {
+    "id": "ct-campaign-goals",
+    "keywords": ["campaign type for leads", "campaign type for sales", "which campaign type", "best campaign type"],
+    "category": "campaign-types",
+    "question": "Which campaign type should I use for lead generation?",
+    "answer": "For lead generation, start with Search campaigns targeting high-intent keywords like 'best [service] near me' or '[service] pricing.' Search captures users actively looking for solutions and typically delivers the lowest cost-per-lead. Once you have 30+ conversions per month, layer in Performance Max to expand reach. Use Display and Video primarily for remarketing to people who visited your site but did not convert. Demand Gen works well for B2B leads with longer consideration cycles.",
+    "links": [{"text": "Lead Generation Strategy", "url": "/hubs/projects/google-ads/#lead-generation"}]
+  },
+  {
+    "id": "ct-ecommerce-strategy",
+    "keywords": ["ecommerce strategy", "online store ads", "product sales", "campaign type for sales"],
+    "category": "campaign-types",
+    "question": "Which campaign type is best for e-commerce sales?",
+    "answer": "For e-commerce, run Shopping campaigns as your foundation -- they consistently deliver the highest ROAS for product-based businesses. Pair them with Search campaigns for non-product queries (e.g., 'best running shoes for flat feet') and branded terms. Performance Max can complement Shopping by expanding into YouTube, Display, and Discover. Use Dynamic Remarketing on Display to show users the exact products they viewed on your site.",
+    "links": [{"text": "E-commerce Strategy", "url": "/hubs/projects/google-ads/#ecommerce-strategy"}]
+  },
+  {
+    "id": "ct-brand-awareness",
+    "keywords": ["brand awareness", "awareness campaign", "top of funnel", "reach campaign"],
+    "category": "campaign-types",
+    "question": "Which campaign type is best for brand awareness?",
+    "answer": "For brand awareness, Video campaigns on YouTube give you the most reach at the lowest cost -- you can reach thousands of users for pennies per view. Display campaigns are also cost-effective for awareness with CPMs (cost per thousand impressions) as low as $2-5. Use Demand Gen for visually engaging placements on Discover and Gmail. Measure success with metrics like impressions, reach, view rate, and brand lift rather than direct conversions.",
+    "links": [{"text": "Brand Awareness", "url": "/hubs/projects/google-ads/#brand-awareness"}]
+  },
+  {
+    "id": "ct-local-campaigns",
+    "keywords": ["local campaigns", "local ads", "local business", "google maps ads", "local services"],
+    "category": "campaign-types",
+    "question": "How do I advertise a local business on Google Ads?",
+    "answer": "For local businesses, use Search campaigns with location targeting (radius around your business) and location-specific keywords like 'plumber in [city].' Enable Location Assets (extensions) to show your address and map pin. Link your Google Business Profile for store visit tracking. Performance Max with store visit goals works well for multi-location businesses. Also consider Local Services Ads (a separate product) if you are in an eligible service category -- they appear above regular search ads.",
+    "links": [{"text": "Local Advertising", "url": "/hubs/projects/google-ads/#local-campaigns"}]
+  },
+  {
+    "id": "ct-pmax-vs-shopping",
+    "keywords": ["pmax vs shopping", "performance max vs shopping", "standard shopping vs pmax"],
+    "category": "campaign-types",
+    "question": "Should I use Performance Max or Standard Shopping?",
+    "answer": "Use Standard Shopping when you want full control over product groups, bids, and search term visibility -- it is better for smaller catalogs and tighter budgets. Use Performance Max when you have strong conversion data, want to scale across multiple channels, and have diverse creative assets. Many advertisers run both: PMax for broad reach and Standard Shopping for their top-performing products. If PMax cannibalizes your Shopping traffic, use campaign priority settings and brand exclusions to maintain control.",
+    "links": [{"text": "PMax vs Shopping", "url": "/hubs/projects/google-ads/#pmax-vs-shopping"}]
+  },
+  {
+    "id": "ct-remarketing-campaigns",
+    "keywords": ["remarketing campaign", "retargeting ads", "remarketing type", "retargeting campaign type"],
+    "category": "campaign-types",
+    "question": "Which campaign type should I use for remarketing?",
+    "answer": "Display campaigns are the most common and cost-effective choice for remarketing, with CPCs often under $1.00. Use Dynamic Remarketing for e-commerce to show users the specific products they viewed. For higher-value remarketing, use Search RLSA (Remarketing Lists for Search Ads) to bid more aggressively when past visitors search again. Video remarketing on YouTube is excellent for re-engaging users with longer consideration cycles. Demand Gen campaigns also perform well for remarketing with visually rich creative.",
+    "links": [{"text": "Remarketing Campaigns", "url": "/hubs/projects/google-ads/#remarketing"}]
+  },
+  {
+    "id": "ct-responsive-search-ads",
+    "keywords": ["RSA", "responsive search ads", "ad format", "search ad format"],
+    "category": "campaign-types",
+    "question": "What are Responsive Search Ads (RSAs)?",
+    "answer": "RSAs are the only standard search ad format available -- Google retired expanded text ads in 2022. You provide up to 15 headlines and 4 descriptions, and Google's AI tests different combinations to find the best performers. Aim for at least 10 unique headlines and 3 descriptions per RSA. Use pin sparingly (only for legal or branding requirements) as it limits Google's testing ability. Check your ad strength indicator and aim for 'Good' or 'Excellent.'",
+    "links": [{"text": "Responsive Search Ads", "url": "/hubs/projects/google-ads/#responsive-search-ads"}]
+  },
+  {
+    "id": "kw-match-types",
+    "keywords": ["match types", "broad match", "phrase match", "exact match", "keyword matching"],
+    "category": "keywords",
+    "question": "What are the keyword match types in Google Ads?",
+    "answer": "There are three match types: Broad Match (keyword) triggers for related searches and synonyms -- widest reach but least control. Phrase Match (\"keyword\") triggers when the search includes the meaning of your keyword in the right order. Exact Match ([keyword]) triggers only for searches with the same meaning as your keyword. In 2024+, all match types use intent-matching, so even exact match can trigger for close variants. Start with phrase and exact match, then expand to broad match once you have smart bidding and sufficient conversion data.",
+    "links": [{"text": "Match Types Guide", "url": "/hubs/projects/google-ads/#match-types"}]
+  },
+  {
+    "id": "kw-broad-match",
+    "keywords": ["broad match", "broad match modifier", "broad keyword", "when to use broad match"],
+    "category": "keywords",
+    "question": "When should I use Broad Match keywords?",
+    "answer": "Use Broad Match when you have smart bidding enabled and at least 30+ conversions per month -- the AI needs conversion data to effectively filter relevant searches. Broad Match with smart bidding is Google's recommended approach as it captures long-tail queries you might never think to target. However, always monitor your search terms report closely and add negative keywords aggressively. Without smart bidding, broad match will likely waste budget on irrelevant searches.",
+    "links": [{"text": "Broad Match Strategy", "url": "/hubs/projects/google-ads/#broad-match"}]
+  },
+  {
+    "id": "kw-phrase-match",
+    "keywords": ["phrase match", "phrase match keyword", "when to use phrase match"],
+    "category": "keywords",
+    "question": "When should I use Phrase Match keywords?",
+    "answer": "Phrase Match is the best all-around match type for most advertisers -- it balances reach with control by matching searches that include the meaning of your keyword. For example, \"running shoes\" can match 'best running shoes for women' or 'buy running shoes online' but not 'shoes for running a business.' Use it as your default match type when starting out, and pair it with a robust negative keyword list. It works well with both manual and smart bidding strategies.",
+    "links": [{"text": "Phrase Match Guide", "url": "/hubs/projects/google-ads/#phrase-match"}]
+  },
+  {
+    "id": "kw-exact-match",
+    "keywords": ["exact match", "exact match keyword", "when to use exact match"],
+    "category": "keywords",
+    "question": "When should I use Exact Match keywords?",
+    "answer": "Use Exact Match for your most valuable, highest-converting keywords where you want maximum control over spend. It is ideal for branded terms, high-CPC competitive keywords, and terms with proven conversion history. Note that even exact match now includes close variants (plurals, misspellings, implied words), so it is not as strict as it used to be. Combine exact match with phrase match in the same ad group -- exact for your core terms with higher bids, phrase for discovery.",
+    "links": [{"text": "Exact Match Guide", "url": "/hubs/projects/google-ads/#exact-match"}]
+  },
+  {
+    "id": "kw-negative-keywords",
+    "keywords": ["negative keywords", "exclude keywords", "negative keyword list", "block keywords"],
+    "category": "keywords",
+    "question": "How do I use negative keywords effectively?",
+    "answer": "Negative keywords prevent your ads from showing for irrelevant searches, saving budget and improving CTR. Add them at the campaign or account level using negative keyword lists for efficiency. Review your Search Terms report weekly (especially in the first month) and add irrelevant terms as negatives. Common negatives include 'free,' 'jobs,' 'salary,' 'DIY,' and competitor names (unless you want to bid on them). Use exact match negatives for specific terms and phrase match negatives for broader exclusions.",
+    "links": [{"text": "Negative Keywords", "url": "/hubs/projects/google-ads/#negative-keywords"}]
+  },
+  {
+    "id": "kw-long-tail",
+    "keywords": ["long-tail keywords", "long tail vs short tail", "keyword length", "specific keywords"],
+    "category": "keywords",
+    "question": "What is the difference between long-tail and short-tail keywords?",
+    "answer": "Short-tail keywords (1-2 words like 'running shoes') have high search volume but are expensive, competitive, and often too broad to convert well. Long-tail keywords (3+ words like 'best running shoes for flat feet women') have lower volume but higher intent, lower CPCs, and better conversion rates -- often 2-5x higher. Build your campaigns around long-tail keywords first, especially with limited budgets. They typically make up 70% of all search traffic combined.",
+    "links": [{"text": "Long-tail Keywords", "url": "/hubs/projects/google-ads/#long-tail-keywords"}]
+  },
+  {
+    "id": "kw-research-tools",
+    "keywords": ["keyword research", "keyword planner", "keyword tools", "find keywords", "keyword ideas"],
+    "category": "keywords",
+    "question": "What tools should I use for keyword research?",
+    "answer": "Start with Google's free Keyword Planner (Tools & Settings > Planning) to get search volume estimates and keyword ideas. Supplement with Google Search Console data for queries already driving organic traffic. Third-party tools like SEMrush, Ahrefs, or Ubersuggest provide competitor keyword data and gap analysis. Also mine your Search Terms report for new keyword ideas once campaigns are running. Google Trends helps identify seasonal patterns and trending topics in your industry.",
+    "links": [{"text": "Keyword Research", "url": "/hubs/projects/google-ads/#keyword-research"}]
+  },
+  {
+    "id": "kw-search-intent",
+    "keywords": ["search intent", "user intent", "keyword intent", "informational vs transactional"],
+    "category": "keywords",
+    "question": "What are the different types of search intent?",
+    "answer": "There are four main types: Navigational (searching for a specific site, e.g., 'facebook login'), Informational (seeking knowledge, e.g., 'how to fix a leaky faucet'), Commercial (researching before buying, e.g., 'best CRM software 2024'), and Transactional (ready to buy, e.g., 'buy Nike Air Max size 10'). Focus your Google Ads budget on commercial and transactional intent keywords for the best conversion rates. Save informational keywords for content marketing and SEO.",
+    "links": [{"text": "Search Intent Guide", "url": "/hubs/projects/google-ads/#search-intent"}]
+  },
+  {
+    "id": "kw-search-terms-report",
+    "keywords": ["search terms report", "search queries", "what people searched", "matched search terms"],
+    "category": "keywords",
+    "question": "How do I use the Search Terms report?",
+    "answer": "The Search Terms report (Insights & Reports > Search Terms) shows the actual queries that triggered your ads. Review it at least weekly and take three actions: add high-performing new queries as keywords, add irrelevant queries as negative keywords, and identify match type issues. Note that Google only shows about 50-70% of search terms for privacy reasons. Sort by impressions or cost to find the biggest opportunities and budget wasters first.",
+    "links": [{"text": "Search Terms Report", "url": "/hubs/projects/google-ads/#search-terms-report"}]
+  },
+  {
+    "id": "kw-keyword-cannibalization",
+    "keywords": ["keyword cannibalization", "duplicate keywords", "overlapping keywords", "keyword conflict"],
+    "category": "keywords",
+    "question": "What is keyword cannibalization and how do I prevent it?",
+    "answer": "Keyword cannibalization occurs when multiple ad groups or campaigns compete against each other for the same search terms, driving up your costs. To prevent it, use a clear campaign structure where each keyword lives in only one ad group, and use negative keywords to direct traffic to the right ad group. If you run both Shopping and Search campaigns, use campaign priorities to control which takes precedence. Regularly check the Auction Insights report to ensure you are not bidding against yourself.",
+    "links": [{"text": "Keyword Organization", "url": "/hubs/projects/google-ads/#keyword-cannibalization"}]
+  },
+  {
+    "id": "kw-keyword-grouping",
+    "keywords": ["keyword grouping", "ad group keywords", "themed ad groups", "keyword organization"],
+    "category": "keywords",
+    "question": "How should I group keywords into ad groups?",
+    "answer": "Group keywords by shared intent and theme so you can write highly relevant ad copy for each group. For example, instead of one ad group for 'shoes,' create separate groups for 'running shoes,' 'dress shoes,' and 'hiking boots.' Each ad group should contain 5-15 closely related keywords. The ad copy and landing page should directly match the keyword theme. This improves Quality Score, CTR, and conversion rates. Use the 'would the same ad and landing page make sense for all these keywords?' test.",
+    "links": [{"text": "Keyword Grouping", "url": "/hubs/projects/google-ads/#keyword-grouping"}]
+  },
+  {
+    "id": "kw-competitor-keywords",
+    "keywords": ["competitor keywords", "competitor bidding", "brand bidding", "competitor names"],
+    "category": "keywords",
+    "question": "Should I bid on competitor brand names?",
+    "answer": "Bidding on competitor names is legal in most countries but comes with trade-offs. Pros: you reach high-intent users actively evaluating alternatives, and CPCs can be reasonable. Cons: low Quality Scores (2-4 typically), low CTRs (1-3%), and competitors may retaliate by bidding on your brand. Never use competitor trademarks in your ad copy -- that violates Google's policy. If you do bid on competitors, create a separate campaign with its own budget so it does not cannibalize your core campaigns.",
+    "links": [{"text": "Competitor Bidding", "url": "/hubs/projects/google-ads/#competitor-keywords"}]
+  },
+  {
+    "id": "kw-dynamic-search-ads",
+    "keywords": ["DSA", "dynamic search ads", "auto-generated ads", "dynamic keywords"],
+    "category": "keywords",
+    "question": "What are Dynamic Search Ads (DSAs)?",
+    "answer": "Dynamic Search Ads automatically generate headlines and landing pages based on your website content, filling in keyword gaps you might miss. They are great for large sites with many products or pages, or for discovering new keyword opportunities. Set them up as a separate ad group within your Search campaign, and aggressively exclude pages you do not want to advertise (like blog posts or job listings). Always run DSAs alongside regular keyword-targeted ad groups, not as a replacement.",
+    "links": [{"text": "Dynamic Search Ads", "url": "/hubs/projects/google-ads/#dynamic-search-ads"}]
+  },
+  {
+    "id": "bid-manual-cpc",
+    "keywords": ["manual CPC", "manual bidding", "cost per click bidding", "manual bid strategy"],
+    "category": "bidding",
+    "question": "When should I use Manual CPC bidding?",
+    "answer": "Manual CPC gives you full control over bids at the keyword level, which is useful when starting a new account with zero conversion data, or for very small budgets where each click matters. It is also helpful for learning how the auction works. However, for most advertisers, smart bidding outperforms manual CPC once you have 15-30 conversions per month. If you use Manual CPC, enable Enhanced CPC (ECPC) to let Google adjust bids slightly based on conversion likelihood.",
+    "links": [{"text": "Manual CPC", "url": "/hubs/projects/google-ads/#manual-cpc"}]
+  },
+  {
+    "id": "bid-smart-bidding",
+    "keywords": ["smart bidding", "automated bidding", "AI bidding", "machine learning bidding"],
+    "category": "bidding",
+    "question": "What is Smart Bidding and how does it work?",
+    "answer": "Smart Bidding is Google's suite of machine-learning bid strategies that automatically optimize for conversions or conversion value in real-time. It analyzes dozens of signals (device, location, time, audience, query, browser, etc.) at auction-time to set the optimal bid for each individual search. The main strategies are Target CPA, Target ROAS, Maximize Conversions, and Maximize Conversion Value. Smart Bidding needs sufficient conversion data to learn -- aim for at least 30 conversions in 30 days before switching from manual bidding.",
+    "links": [{"text": "Smart Bidding", "url": "/hubs/projects/google-ads/#smart-bidding"}]
+  },
+  {
+    "id": "bid-target-cpa",
+    "keywords": ["target CPA", "cost per acquisition", "tCPA", "target cost per action"],
+    "category": "bidding",
+    "question": "How does Target CPA bidding work?",
+    "answer": "Target CPA automatically sets bids to get as many conversions as possible at or below your target cost-per-acquisition. Set your target CPA based on your historical data -- start with your actual average CPA, then gradually lower it by 10-15% over time. Google will not hit your target exactly every day but should average around it over 1-2 weeks. If your target is too aggressive, Google will reduce traffic significantly. You need at least 30 conversions in the last 30 days for reliable performance.",
+    "links": [{"text": "Target CPA", "url": "/hubs/projects/google-ads/#target-cpa"}]
+  },
+  {
+    "id": "bid-target-roas",
+    "keywords": ["target ROAS", "return on ad spend", "tROAS", "revenue bidding"],
+    "category": "bidding",
+    "question": "How does Target ROAS bidding work?",
+    "answer": "Target ROAS sets bids to maximize conversion value while hitting your target return on ad spend. If you set a 400% ROAS target, Google aims to generate $4 in revenue for every $1 spent on ads. This strategy requires conversion value tracking (revenue data) and works best for e-commerce. You need at least 50 conversions with value data in 30 days for it to optimize well. Start with a target 10-20% below your current ROAS and tighten gradually.",
+    "links": [{"text": "Target ROAS", "url": "/hubs/projects/google-ads/#target-roas"}]
+  },
+  {
+    "id": "bid-maximize-conversions",
+    "keywords": ["maximize conversions", "max conversions", "conversion bidding"],
+    "category": "bidding",
+    "question": "When should I use Maximize Conversions bidding?",
+    "answer": "Maximize Conversions spends your entire daily budget to get the most conversions possible, with no CPA target. Use it when you want to gather conversion data quickly (e.g., a new campaign) or when you care more about volume than efficiency. Be cautious -- it will spend your full budget aggressively, and CPAs can be volatile. Once you have enough conversion data (30+ in 30 days) and know your target CPA, switch to Target CPA for more predictable costs.",
+    "links": [{"text": "Maximize Conversions", "url": "/hubs/projects/google-ads/#maximize-conversions"}]
+  },
+  {
+    "id": "bid-maximize-clicks",
+    "keywords": ["maximize clicks", "max clicks", "click bidding", "traffic bidding"],
+    "category": "bidding",
+    "question": "When should I use Maximize Clicks bidding?",
+    "answer": "Maximize Clicks gets you the most clicks within your budget, which is useful for brand new campaigns where you need traffic and data before optimizing for conversions. Set a max CPC bid limit to prevent overspending on individual clicks. This is a good starting strategy for the first 2-4 weeks of a new campaign, but switch to a conversion-based strategy as soon as you have 15-30 conversions. Do not use Maximize Clicks long-term -- it optimizes for clicks, not business results.",
+    "links": [{"text": "Maximize Clicks", "url": "/hubs/projects/google-ads/#maximize-clicks"}]
+  },
+  {
+    "id": "bid-switching-strategies",
+    "keywords": ["switch bidding", "change bid strategy", "when to switch", "bidding transition"],
+    "category": "bidding",
+    "question": "When should I switch from manual to smart bidding?",
+    "answer": "Switch to smart bidding once you have at least 15-30 conversions per month (30-50 is ideal) and your conversion tracking is accurate. The typical progression is: Maximize Clicks (data gathering) > Maximize Conversions (volume building) > Target CPA or Target ROAS (efficiency optimization). Allow 2-3 weeks of learning period after each switch -- performance may dip initially. Never switch strategies during your busiest sales period; make changes during stable traffic periods.",
+    "links": [{"text": "Bidding Strategy Transitions", "url": "/hubs/projects/google-ads/#bidding-transitions"}]
+  },
+  {
+    "id": "bid-learning-period",
+    "keywords": ["learning period", "bidding learning", "smart bidding learning", "optimization period"],
+    "category": "bidding",
+    "question": "What is the smart bidding learning period?",
+    "answer": "When you set or change a smart bidding strategy, Google enters a 'Learning' period (shown in the Status column) that typically lasts 7-14 days. During this time, performance may be volatile as the algorithm tests different bid levels. Avoid making major changes during this period -- do not adjust targets, budgets, or ad copy as each change restarts the learning. If you see 'Learning (limited),' it means there is not enough data; consider broadening targeting or increasing budget.",
+    "links": [{"text": "Learning Period", "url": "/hubs/projects/google-ads/#learning-period"}]
+  },
+  {
+    "id": "bid-data-requirements",
+    "keywords": ["bidding data", "how much data", "conversion data needed", "minimum conversions"],
+    "category": "bidding",
+    "question": "How much data does Smart Bidding need to work effectively?",
+    "answer": "Google officially recommends at least 30 conversions in the last 30 days for Target CPA and 50 for Target ROAS. In practice, more data means better performance -- campaigns with 50+ monthly conversions see significantly more stable results. If you do not have enough conversions, consider using micro-conversions (like form starts or add-to-cart) as intermediate conversion actions to feed the algorithm, then optimize toward macro-conversions as volume grows.",
+    "links": [{"text": "Smart Bidding Data", "url": "/hubs/projects/google-ads/#bidding-data"}]
+  },
+  {
+    "id": "bid-portfolio-strategies",
+    "keywords": ["portfolio bidding", "shared bidding", "portfolio strategy", "cross-campaign bidding"],
+    "category": "bidding",
+    "question": "What are portfolio bid strategies?",
+    "answer": "Portfolio bid strategies apply a single smart bidding strategy across multiple campaigns, allowing Google to optimize bids holistically and shift budget between campaigns to hit your overall target. They are useful when individual campaigns do not have enough conversion volume for smart bidding on their own. Create them in Tools & Settings > Shared Library > Bid Strategies. Use portfolios to combine related campaigns that share the same CPA or ROAS target for better algorithmic performance.",
+    "links": [{"text": "Portfolio Strategies", "url": "/hubs/projects/google-ads/#portfolio-bidding"}]
+  },
+  {
+    "id": "bid-bid-adjustments",
+    "keywords": ["bid adjustments", "device bidding", "location bid adjustment", "time bid adjustment"],
+    "category": "bidding",
+    "question": "How do bid adjustments work with smart bidding?",
+    "answer": "With manual CPC, you can set bid adjustments for devices (-100% to +900%), locations, ad schedules, audiences, and demographics. However, when using smart bidding (Target CPA, Target ROAS, etc.), most bid adjustments are ignored because the algorithm handles optimization automatically. The only exception is the -100% device bid adjustment to completely exclude a device. If you want to influence smart bidding by segment, break those segments into separate campaigns with different targets.",
+    "links": [{"text": "Bid Adjustments", "url": "/hubs/projects/google-ads/#bid-adjustments"}]
+  },
+  {
+    "id": "bid-ecpc",
+    "keywords": ["enhanced CPC", "ECPC", "enhanced cost per click"],
+    "category": "bidding",
+    "question": "What is Enhanced CPC (ECPC)?",
+    "answer": "Enhanced CPC is a semi-automated bid strategy that lets you set manual bids but allows Google to adjust them up or down based on conversion likelihood. It is a good middle ground between full manual and full automation. Google can increase your bid by any amount for likely converters and decrease it for unlikely ones. However, Google has been gradually reducing ECPC's capabilities -- for most advertisers, moving to fully automated smart bidding is now the better choice.",
+    "links": [{"text": "Enhanced CPC", "url": "/hubs/projects/google-ads/#ecpc"}]
+  },
+  {
+    "id": "tgt-demographics",
+    "keywords": ["demographics targeting", "age targeting", "gender targeting", "income targeting"],
+    "category": "targeting",
+    "question": "How do I use demographic targeting in Google Ads?",
+    "answer": "Google Ads lets you target or adjust bids by age, gender, parental status, and household income. Access these in your campaign's Audiences, Keywords, and Content > Demographics section. Rather than excluding demographics outright, start by using bid adjustments -- increase bids for high-performing segments and decrease for low performers. The 'Unknown' category often contains a large portion of traffic, so do not exclude it without testing. Household income targeting is available in select countries only.",
+    "links": [{"text": "Demographic Targeting", "url": "/hubs/projects/google-ads/#demographics"}]
+  },
+  {
+    "id": "tgt-affinity-audiences",
+    "keywords": ["affinity audiences", "interest targeting", "lifestyle targeting", "affinity segments"],
+    "category": "targeting",
+    "question": "What are Affinity audiences and when should I use them?",
+    "answer": "Affinity audiences reach people based on their long-term interests and habits -- like 'Outdoor Enthusiasts,' 'Foodies,' or 'Tech Savvy' users. They are best for brand awareness campaigns on Display and Video where you want broad reach among people with relevant lifestyles. For Search campaigns, use them as observation layers (not targeting) to see which affinity segments convert best, then apply bid adjustments. Custom Affinity audiences let you define interests using keywords and URLs for more precision.",
+    "links": [{"text": "Affinity Audiences", "url": "/hubs/projects/google-ads/#affinity-audiences"}]
+  },
+  {
+    "id": "tgt-in-market",
+    "keywords": ["in-market audiences", "purchase intent", "ready to buy", "in-market segments"],
+    "category": "targeting",
+    "question": "What are In-Market audiences?",
+    "answer": "In-Market audiences target people who are actively researching or comparing products/services in your category -- for example, 'In-Market for SUVs' or 'In-Market for Business Software.' These are among the most powerful audience types because they indicate recent purchase intent. Layer them on Search campaigns as observation first, then promote to targeting for Display. In-Market audiences typically deliver 10-30% higher conversion rates compared to general audiences. Combine them with your keywords for a powerful intent-plus-audience strategy.",
+    "links": [{"text": "In-Market Audiences", "url": "/hubs/projects/google-ads/#in-market-audiences"}]
+  },
+  {
+    "id": "tgt-custom-audiences",
+    "keywords": ["custom audiences", "custom segments", "custom intent", "custom affinity"],
+    "category": "targeting",
+    "question": "How do Custom Audiences work?",
+    "answer": "Custom Audiences (formerly Custom Intent and Custom Affinity) let you build audiences based on keywords people search, URLs they visit, or apps they use. For example, target people who have searched for competitor products or visited competitor websites. They are incredibly flexible and often outperform pre-built audiences. Create them in Tools & Settings > Shared Library > Audience Manager. Use search term-based custom audiences for Display and Video campaigns to bring search-level intent to those channels.",
+    "links": [{"text": "Custom Audiences", "url": "/hubs/projects/google-ads/#custom-audiences"}]
+  },
+  {
+    "id": "tgt-remarketing",
+    "keywords": ["remarketing", "retargeting", "remarketing setup", "retargeting audiences"],
+    "category": "targeting",
+    "question": "How do I set up remarketing in Google Ads?",
+    "answer": "First, ensure the Google tag is installed on all pages of your site. Then create remarketing lists in Tools & Settings > Shared Library > Audience Manager. Start with these segments: all visitors (30/60/90 days), specific page visitors (product pages, pricing page), cart abandoners, and past converters (to exclude or upsell). Lists need at least 100 users for Display and 1,000 for Search (RLSA). Set appropriate membership durations based on your sales cycle -- 30 days for impulse buys, 90-180 days for high-consideration purchases.",
+    "links": [{"text": "Remarketing Setup", "url": "/hubs/projects/google-ads/#remarketing-setup"}]
+  },
+  {
+    "id": "tgt-customer-match",
+    "keywords": ["customer match", "email targeting", "CRM targeting", "first-party data", "customer list"],
+    "category": "targeting",
+    "question": "What is Customer Match and how do I use it?",
+    "answer": "Customer Match lets you upload your customer email lists, phone numbers, or mailing addresses to target (or create similar audiences from) your existing customers. Upload your list in Audience Manager -- Google matches it against signed-in users (typical match rates are 30-60%). Use it to: upsell existing customers, exclude past purchasers from acquisition campaigns, or create 'Similar Audiences' to find new prospects. You need at least 1,000 matched customers, and your account must have a good compliance history.",
+    "links": [{"text": "Customer Match", "url": "/hubs/projects/google-ads/#customer-match"}]
+  },
+  {
+    "id": "tgt-observation-vs-targeting",
+    "keywords": ["observation vs targeting", "audience mode", "targeting mode", "observation mode"],
+    "category": "targeting",
+    "question": "What is the difference between Observation and Targeting mode for audiences?",
+    "answer": "Targeting mode restricts your ads to only show to people in that audience -- it narrows your reach. Observation mode shows your ads to everyone but lets you see performance data for the audience and set bid adjustments. Always start with Observation mode on Search campaigns to collect data without limiting reach. Use Targeting mode on Display and Video campaigns where you want to restrict delivery to specific audiences. You can switch from Observation to Targeting once you have enough data to confidently narrow your audience.",
+    "links": [{"text": "Audience Modes", "url": "/hubs/projects/google-ads/#audience-modes"}]
+  },
+  {
+    "id": "tgt-location-targeting",
+    "keywords": ["location targeting", "geo targeting", "radius targeting", "location options"],
+    "category": "targeting",
+    "question": "How should I set up location targeting?",
+    "answer": "Go to Campaign Settings > Locations and target by country, state/region, city, zip code, or a radius around an address. Critically, change the location options from the default 'Presence or interest' to 'Presence: People in or regularly in your targeted locations' -- the default setting shows your ads to people who merely searched about your location, which wastes budget on non-local users. Exclude locations where you do not serve customers. Review the geographic report regularly to find top and bottom performing areas for bid adjustments.",
+    "links": [{"text": "Location Targeting", "url": "/hubs/projects/google-ads/#location-targeting"}]
+  },
+  {
+    "id": "tgt-ad-schedule",
+    "keywords": ["ad schedule", "dayparting", "time targeting", "when to show ads"],
+    "category": "targeting",
+    "question": "How do I set up ad scheduling (dayparting)?",
+    "answer": "Ad scheduling lets you show ads only during specific days and hours, or adjust bids by time period. Set it in Campaign Settings > Ad Schedule. Run your campaigns for 2-4 weeks first to collect data, then analyze the 'Day and Hour' report to find peak and off-peak performance periods. Rather than turning ads off completely during slow hours, reduce bids by 25-50%. For B2B, weekday business hours typically outperform evenings and weekends. Note that ad schedules use the time zone set in your account.",
+    "links": [{"text": "Ad Scheduling", "url": "/hubs/projects/google-ads/#ad-schedule"}]
+  },
+  {
+    "id": "tgt-similar-audiences",
+    "keywords": ["similar audiences", "lookalike audiences", "audience expansion", "similar segments"],
+    "category": "targeting",
+    "question": "How do lookalike/similar audiences work in Google Ads?",
+    "answer": "Google's audience expansion features (available in PMax and Demand Gen) analyze your existing customer lists and remarketing audiences to find new users with similar characteristics and behaviors. In Performance Max, provide audience signals including your best customer lists, and Google will use them as starting points to expand reach. For Demand Gen, you can create lookalike segments based on your seed lists with narrow, balanced, or broad reach settings. The quality of your seed list directly impacts how well the expansion performs.",
+    "links": [{"text": "Audience Expansion", "url": "/hubs/projects/google-ads/#audience-expansion"}]
+  },
+  {
+    "id": "tech-google-tag",
+    "keywords": ["google tag", "gtag", "global site tag", "tracking code", "install tag"],
+    "category": "tracking",
+    "question": "How do I install the Google tag for conversion tracking?",
+    "answer": "The Google tag (gtag.js) is a snippet of JavaScript you add to every page of your site, either directly in the <head> section or via Google Tag Manager. In Google Ads, go to Tools & Settings > Conversions > New Conversion Action > Website to get your tag code. You need two parts: the global tag (all pages) and the event snippet (conversion pages only). For most modern sites, using Google Tag Manager is the easier and more maintainable approach. Verify installation using the Google Tag Assistant Chrome extension.",
+    "links": [{"text": "Google Tag Setup", "url": "/hubs/projects/google-ads/#google-tag"}]
+  },
+  {
+    "id": "tech-gtm-vs-direct",
+    "keywords": ["GTM", "google tag manager", "tag manager vs direct", "GTM setup"],
+    "category": "tracking",
+    "question": "Should I use Google Tag Manager or install tags directly?",
+    "answer": "Google Tag Manager (GTM) is almost always the better choice. It lets you manage all your tracking tags (Google Ads, Analytics, Meta, etc.) from one interface without editing website code. You install GTM once, then add and update tags through the GTM dashboard. This is safer (built-in version control and preview mode), faster (no developer needed for tag changes), and more flexible (custom triggers and variables). Direct implementation only makes sense for very simple sites with a single tag.",
+    "links": [{"text": "GTM Setup Guide", "url": "/hubs/projects/google-ads/#gtm-setup"}]
+  },
+  {
+    "id": "tech-enhanced-conversions",
+    "keywords": ["enhanced conversions", "first-party data", "conversion accuracy", "enhanced conversion tracking"],
+    "category": "tracking",
+    "question": "What are Enhanced Conversions and should I set them up?",
+    "answer": "Enhanced Conversions improve tracking accuracy by sending hashed first-party data (email, phone, name, address) from your conversion forms to Google, which matches it with signed-in users. This recovers conversions lost to cookie restrictions and cross-device journeys -- typically improving reported conversions by 5-15%. Yes, you should absolutely set it up. Configure it via GTM, the Google tag, or the Google Ads API. It is privacy-safe since data is hashed (SHA-256) before leaving the browser.",
+    "links": [{"text": "Enhanced Conversions", "url": "/hubs/projects/google-ads/#enhanced-conversions"}]
+  },
+  {
+    "id": "tech-ga4-linking",
+    "keywords": ["GA4 linking", "analytics linking", "google analytics 4", "import conversions from GA4"],
+    "category": "tracking",
+    "question": "How do I link GA4 to Google Ads and import conversions?",
+    "answer": "Link GA4 in Google Ads at Tools & Settings > Linked Accounts > Google Analytics (GA4). You need admin access on both. Once linked, go to Tools & Settings > Conversions > Import > Google Analytics 4 to import GA4 conversion events. GA4-imported conversions are useful because they can use more sophisticated event tracking and attribution. However, GA4 uses data-driven attribution and may report different numbers than Google Ads -- this is normal. Use Google Ads conversion tracking as your primary source for bid optimization.",
+    "links": [{"text": "GA4 Integration", "url": "/hubs/projects/google-ads/#ga4-linking"}]
+  },
+  {
+    "id": "tech-conversion-window",
+    "keywords": ["conversion window", "attribution window", "lookback window", "conversion timeframe"],
+    "category": "tracking",
+    "question": "What conversion window should I set?",
+    "answer": "The conversion window defines how long after a click (or view) a conversion can be attributed to your ad. The default is 30 days for click-through and 1 day for view-through. Set it based on your sales cycle: 7 days for impulse/low-cost purchases, 30 days for most B2B and considered purchases, 60-90 days for high-value or long-cycle products. Check your 'Days to Conversion' report in Google Ads to see how long your customers actually take. A window that is too short under-counts conversions and hurts smart bidding performance.",
+    "links": [{"text": "Conversion Windows", "url": "/hubs/projects/google-ads/#conversion-window"}]
+  },
+  {
+    "id": "tech-offline-conversions",
+    "keywords": ["offline conversions", "CRM import", "offline tracking", "import conversions"],
+    "category": "tracking",
+    "question": "How do I track offline conversions (phone calls, in-store, CRM)?",
+    "answer": "To track offline conversions, capture the GCLID (Google Click ID) when a user fills out a form, store it in your CRM alongside the lead record, then upload conversion data back to Google Ads when the lead converts offline. Do this via manual CSV upload, the Google Ads API, or integrations like Zapier/HubSpot. This is critical for businesses where the real conversion happens offline (B2B, automotive, real estate). It allows smart bidding to optimize for actual revenue, not just form fills.",
+    "links": [{"text": "Offline Conversions", "url": "/hubs/projects/google-ads/#offline-conversions"}]
+  },
+  {
+    "id": "tech-consent-mode",
+    "keywords": ["consent mode", "cookie consent", "GDPR tracking", "privacy compliance", "consent management"],
+    "category": "tracking",
+    "question": "What is Google Consent Mode and do I need it?",
+    "answer": "Consent Mode lets your Google tags dynamically adjust their behavior based on user cookie consent -- if a user declines cookies, tags send cookieless pings that Google uses for conversion modeling. You need it if you operate in the EU/EEA, UK, or any region with cookie consent requirements. Implement it with your Consent Management Platform (CMP) via GTM. Since March 2024, Consent Mode v2 is required for using remarketing and audience features in the EEA. Even outside the EU, it is good practice for future-proofing.",
+    "links": [{"text": "Consent Mode", "url": "/hubs/projects/google-ads/#consent-mode"}]
+  },
+  {
+    "id": "tech-conversion-value",
+    "keywords": ["conversion value", "revenue tracking", "value tracking", "dynamic values"],
+    "category": "tracking",
+    "question": "How do I set up conversion value tracking?",
+    "answer": "For e-commerce, pass the dynamic transaction value (order total) into the conversion tag using a data layer variable. For lead gen, assign static values based on lead quality -- for example, a form fill might be worth $50, a phone call $100, based on your close rates and average deal size. Setting accurate values enables Target ROAS bidding and helps you understand true ROI. In GTM, configure the conversion value parameter to pull from your data layer's purchase event. Review the 'Conversion Value' column in reports to validate accuracy.",
+    "links": [{"text": "Conversion Values", "url": "/hubs/projects/google-ads/#conversion-value"}]
+  },
+  {
+    "id": "tech-attribution-models",
+    "keywords": ["attribution model", "last click", "data-driven attribution", "attribution"],
+    "category": "tracking",
+    "question": "Which attribution model should I use?",
+    "answer": "Use Data-Driven Attribution (DDA), which is now Google's default and recommended model. DDA uses machine learning to assign credit to each touchpoint based on its actual impact on conversions, rather than arbitrary rules like last-click or first-click. It gives smart bidding more accurate data to optimize from. If DDA is not available (you need at least 300 conversions and 3,000 interactions in 30 days), use Time Decay as the next best option. Avoid Last Click -- it under-credits top-of-funnel campaigns.",
+    "links": [{"text": "Attribution Models", "url": "/hubs/projects/google-ads/#attribution"}]
+  },
+  {
+    "id": "tech-server-side-tracking",
+    "keywords": ["server-side tracking", "server-side GTM", "sGTM", "first-party tracking"],
+    "category": "tracking",
+    "question": "What is server-side tracking and when should I use it?",
+    "answer": "Server-side tracking (via server-side GTM) routes your tracking through your own server instead of the user's browser, improving data accuracy by 10-20% by bypassing ad blockers and cookie restrictions. It also improves page load speed since tags fire server-side. Set it up when you have significant traffic (50K+ visits/month) and the technical resources to manage a server container (typically via Google Cloud Run at $50-100/month). It is becoming increasingly important as browser privacy features tighten.",
+    "links": [{"text": "Server-Side Tracking", "url": "/hubs/projects/google-ads/#server-side-tracking"}]
+  },
+  {
+    "id": "opt-quality-score-improvement",
+    "keywords": ["improve quality score", "increase quality score", "fix quality score", "QS optimization"],
+    "category": "optimization",
+    "question": "How do I improve my Quality Score?",
+    "answer": "Focus on all three components: Expected CTR (write compelling ads with strong CTAs and include keywords in headlines), Ad Relevance (ensure keywords and ad copy are tightly themed within each ad group), and Landing Page Experience (fast load times under 3 seconds, mobile-friendly, relevant content matching the ad promise). The fastest win is usually restructuring large ad groups into smaller, more focused ones with tailored ad copy. Quality Score updates take a few days to weeks, so be patient after making changes.",
+    "links": [{"text": "Quality Score Optimization", "url": "/hubs/projects/google-ads/#quality-score-optimization"}]
+  },
+  {
+    "id": "opt-ad-copy",
+    "keywords": ["ad copy", "write ads", "ad copywriting", "headline tips", "ad writing"],
+    "category": "optimization",
+    "question": "What are the best practices for writing Google Ads copy?",
+    "answer": "Lead with benefits (not features), include numbers and specifics ('Save 30%' beats 'Save Money'), and always have a clear CTA ('Get a Free Quote,' 'Shop Now'). Include your target keyword in at least 2-3 headlines. Use all 15 headline slots and 4 description slots in RSAs with diverse messaging angles -- pricing, benefits, urgency, social proof, and unique selling points. Test emotional vs. rational appeals. Check your Ad Strength indicator and aim for 'Good' or 'Excellent,' but prioritize conversion data over Ad Strength score.",
+    "links": [{"text": "Ad Copy Best Practices", "url": "/hubs/projects/google-ads/#ad-copy"}]
+  },
+  {
+    "id": "opt-ad-extensions",
+    "keywords": ["ad extensions", "assets", "sitelinks", "callouts", "structured snippets"],
+    "category": "optimization",
+    "question": "What ad extensions (assets) should I add?",
+    "answer": "Add all relevant extensions -- they increase ad real estate and CTR by 10-15% at no additional cost. Must-haves: Sitelinks (4-6 linking to top pages), Callouts (unique selling points), Structured Snippets (product categories or service types), and Call extensions (if you accept phone calls). Also add: Image extensions, Price extensions (for products/services), Location extensions (for local businesses), and Lead Form extensions (for mobile lead capture). Google will automatically show the best-performing combination.",
+    "links": [{"text": "Ad Extensions Guide", "url": "/hubs/projects/google-ads/#ad-extensions"}]
+  },
+  {
+    "id": "opt-rsa-tips",
+    "keywords": ["RSA optimization", "responsive search ad tips", "headline optimization", "RSA best practices"],
+    "category": "optimization",
+    "question": "How do I optimize Responsive Search Ads?",
+    "answer": "Provide at least 10 unique headlines (max 15) and all 4 descriptions, each with a distinct message. Include keywords in 3-5 headlines, value propositions in 3-4, and CTAs in 2-3. Make sure headlines work well in any combination -- avoid headlines that are too similar or that would sound odd together. Use pin sparingly (only if legally required). Monitor the 'Combinations' report to see which headline/description pairings Google favors. Replace low-performing headlines every 4-6 weeks based on the asset performance labels (Best, Good, Low).",
+    "links": [{"text": "RSA Optimization", "url": "/hubs/projects/google-ads/#rsa-optimization"}]
+  },
+  {
+    "id": "opt-ab-testing",
+    "keywords": ["A/B testing", "ad testing", "experiment", "split test", "test ads"],
+    "category": "optimization",
+    "question": "How do I run A/B tests in Google Ads?",
+    "answer": "Use Google Ads Experiments (Campaigns > Experiments) to test changes like bidding strategies, landing pages, or ad copy with a controlled traffic split. Set a 50/50 split and run for at least 2-4 weeks or until you reach statistical significance. For ad copy testing with RSAs, create 2-3 ads per ad group with distinctly different messaging angles and let them run for 4-6 weeks before pausing losers. Test one variable at a time for clear results. Check the experiment scorecard for confidence levels before making decisions.",
+    "links": [{"text": "A/B Testing Guide", "url": "/hubs/projects/google-ads/#ab-testing"}]
+  },
+  {
+    "id": "opt-landing-pages",
+    "keywords": ["landing pages", "landing page optimization", "post-click experience", "conversion rate"],
+    "category": "optimization",
+    "question": "How do I optimize landing pages for Google Ads?",
+    "answer": "Your landing page should deliver exactly what the ad promised -- match the headline, offer, and CTA from your ad. Key elements: load time under 3 seconds (Google penalizes slow pages), mobile-responsive design, clear headline and value proposition above the fold, a single focused CTA, and trust signals (reviews, testimonials, badges). Create dedicated landing pages for your top ad groups rather than sending all traffic to your homepage. A/B test landing page elements using Google Optimize or a third-party tool to incrementally improve conversion rates.",
+    "links": [{"text": "Landing Page Optimization", "url": "/hubs/projects/google-ads/#landing-pages"}]
+  },
+  {
+    "id": "opt-search-terms-optimization",
+    "keywords": ["search terms optimization", "query sculpting", "search term mining", "optimize keywords"],
+    "category": "optimization",
+    "question": "How do I optimize based on search terms data?",
+    "answer": "Review the Search Terms report weekly and take action in three ways: promote high-converting search terms as new keywords (with appropriate match type), add irrelevant or low-performing terms as negative keywords, and identify new ad group themes from patterns you see. Sort by cost (to find budget wasters) and by conversions (to find winners). Also look for queries with high impressions but low CTR -- they may indicate poor ad relevance for that search, suggesting a new ad group is needed.",
+    "links": [{"text": "Search Terms Optimization", "url": "/hubs/projects/google-ads/#search-terms-optimization"}]
+  },
+  {
+    "id": "opt-ad-schedule-optimization",
+    "keywords": ["schedule optimization", "time optimization", "hour performance", "day performance"],
+    "category": "optimization",
+    "question": "How do I optimize my ad schedule for better performance?",
+    "answer": "After collecting 2-4 weeks of data, review performance by day and hour in Reports > Predefined > Time. Look for patterns in conversion rate and CPA across different time slots. Rather than eliminating low-performing hours entirely, use bid adjustments: increase bids 10-30% during peak hours and decrease 20-50% during off-peak. With smart bidding, the algorithm already handles much of this, but you can still use ad scheduling to completely pause ads during hours your business is unable to respond to leads.",
+    "links": [{"text": "Schedule Optimization", "url": "/hubs/projects/google-ads/#schedule-optimization"}]
+  },
+  {
+    "id": "opt-device-optimization",
+    "keywords": ["device optimization", "mobile optimization", "desktop vs mobile", "device performance"],
+    "category": "optimization",
+    "question": "How should I optimize for different devices?",
+    "answer": "Review device performance in Campaigns > Devices to see how mobile, desktop, and tablet compare for CTR, conversion rate, and CPA. Mobile often has higher CTR but lower conversion rates -- this may indicate a poor mobile landing page experience rather than low-quality mobile traffic. Before adjusting device bids, ensure your landing pages are truly mobile-optimized. With smart bidding, device optimization is handled automatically, but you can still create separate campaigns by device if the performance gap is dramatic (2x+ CPA difference).",
+    "links": [{"text": "Device Optimization", "url": "/hubs/projects/google-ads/#device-optimization"}]
+  },
+  {
+    "id": "opt-auction-insights",
+    "keywords": ["auction insights", "competitor analysis", "impression share", "competitor ads"],
+    "category": "optimization",
+    "question": "How do I use Auction Insights to analyze competitors?",
+    "answer": "Auction Insights (Campaigns/Ad Groups/Keywords > Auction Insights) shows you who you are competing against and how you compare on impression share, overlap rate, position above rate, and outranking share. Monitor it monthly to identify: new competitors entering the auction, competitors increasing aggression, and where you are losing share. If your impression share is dropping while competitors rise, consider increasing bids or improving Quality Score. Use this data to inform bidding strategy rather than chasing competitors directly.",
+    "links": [{"text": "Auction Insights", "url": "/hubs/projects/google-ads/#auction-insights"}]
+  },
+  {
+    "id": "opt-negative-keyword-optimization",
+    "keywords": ["optimize negatives", "refine negatives", "negative keyword audit", "wasted spend"],
+    "category": "optimization",
+    "question": "How often should I review and update negative keywords?",
+    "answer": "Review the Search Terms report and add negative keywords at least weekly during the first month, then bi-weekly or monthly once your campaigns mature. Create shared negative keyword lists for universal exclusions (competitors, irrelevant industries, free/job seekers) and apply them across all campaigns. Periodically audit your existing negatives to ensure they are not blocking relevant traffic -- an overly aggressive negative list can suppress good traffic. Use the 'Added/Excluded' column in the Search Terms report to track what you have already actioned.",
+    "links": [{"text": "Negative Keyword Optimization", "url": "/hubs/projects/google-ads/#negative-keyword-optimization"}]
+  },
+  {
+    "id": "opt-impression-share",
+    "keywords": ["impression share", "lost impression share", "IS", "search impression share"],
+    "category": "optimization",
+    "question": "What is Impression Share and how do I improve it?",
+    "answer": "Impression Share (IS) is the percentage of eligible impressions your ads actually received. 'Lost IS (Budget)' means your budget ran out before the day ended -- increase budget or narrow targeting. 'Lost IS (Rank)' means your Ad Rank was too low -- improve Quality Score or increase bids. For branded campaigns, aim for 90%+ IS. For non-branded, 50-70% is healthy for most budgets. Add IS columns to your campaign view by clicking Columns > Competitive Metrics. Prioritize fixing Lost IS (Rank) first, as it improves efficiency.",
+    "links": [{"text": "Impression Share Guide", "url": "/hubs/projects/google-ads/#impression-share"}]
+  },
+  {
+    "id": "opt-scripts-automation",
+    "keywords": ["scripts", "automation", "google ads scripts", "automated rules"],
+    "category": "optimization",
+    "question": "How can I automate Google Ads optimization?",
+    "answer": "Google Ads offers two main automation tools: Automated Rules (Tools & Settings > Bulk Actions > Rules) for simple tasks like pausing keywords below a threshold or increasing budgets on high-performing campaigns, and Google Ads Scripts for advanced JavaScript-based automation. Popular scripts include: anomaly detection (alerts for spend/CPC spikes), Quality Score tracking, broken URL detection, and automatic negative keyword addition. Start with automated rules, then explore scripts from sources like brainlabsdigital.com/google-ads-scripts-library for pre-built solutions.",
+    "links": [{"text": "Automation Tools", "url": "/hubs/projects/google-ads/#automation"}]
+  },
+  {
+    "id": "ts-low-impressions",
+    "keywords": ["low impressions", "no impressions", "ads not showing", "low visibility", "zero impressions"],
+    "category": "troubleshooting",
+    "question": "Why are my ads getting low or zero impressions?",
+    "answer": "Check these in order: Campaign status (paused/enabled?), budget (not exhausted?), bid (competitive enough?), keyword status (not 'below first page bid'?), and ad approval (not disapproved?). Low search volume keywords will not trigger ads often. Check impression share lost to budget and rank to identify the root cause. Also verify your targeting is not too narrow -- restrictive location, schedule, or audience settings can dramatically limit reach. Use the Ad Preview tool to test specific queries and see why your ad may not be showing.",
+    "links": [{"text": "Fixing Low Impressions", "url": "/hubs/projects/google-ads/#low-impressions"}]
+  },
+  {
+    "id": "ts-high-cpc",
+    "keywords": ["high CPC", "expensive clicks", "reduce CPC", "lower cost per click", "CPC too high"],
+    "category": "troubleshooting",
+    "question": "Why is my CPC so high and how do I lower it?",
+    "answer": "High CPCs usually stem from low Quality Score, competitive keywords, or overbidding. First, check Quality Score -- improving from 5 to 7 can reduce CPC by 28%. Second, focus on long-tail keywords with lower competition. Third, improve CTR through better ad copy (higher CTR signals improve Ad Rank, lowering CPC). Fourth, review your geographic and device performance -- some locations and devices have much higher CPCs. Finally, consider shifting budget to Display or YouTube for cheaper traffic on awareness goals. The average Search CPC across industries is $1-$5.",
+    "links": [{"text": "Reducing CPC", "url": "/hubs/projects/google-ads/#high-cpc"}]
+  },
+  {
+    "id": "ts-low-ctr",
+    "keywords": ["low CTR", "click-through rate", "improve CTR", "nobody clicking"],
+    "category": "troubleshooting",
+    "question": "Why is my click-through rate (CTR) low?",
+    "answer": "Average Search CTR is 3-5% across industries -- below 2% is a red flag. Common causes: ad copy is not compelling or relevant to the search query, you are missing ad extensions (they increase CTR 10-15%), your keywords are too broad (triggering for irrelevant searches), or your ad position is too low. Fix it by: writing headlines that include the keyword and a clear value proposition, adding all relevant extensions, tightening match types, and checking the Search Terms report for irrelevant queries lowering your CTR.",
+    "links": [{"text": "Improving CTR", "url": "/hubs/projects/google-ads/#low-ctr"}]
+  },
+  {
+    "id": "ts-disapproved-ads",
+    "keywords": ["disapproved ads", "ad rejected", "policy violation", "ad approval", "ad review"],
+    "category": "troubleshooting",
+    "question": "Why are my ads disapproved and how do I fix them?",
+    "answer": "Click on the disapproved ad to see the specific policy violation. Common reasons: misleading claims, unsupported superlatives ('best' or '#1' without third-party verification), restricted content (alcohol, healthcare, financial services need special approval), trademark issues, or landing page problems (malware, broken URL, or misleading content). Fix the violation and resubmit for review. If you believe the disapproval is an error, submit a policy appeal through the Ads interface. Most reviews complete within 1 business day.",
+    "links": [{"text": "Fixing Disapproved Ads", "url": "/hubs/projects/google-ads/#disapproved-ads"}]
+  },
+  {
+    "id": "ts-low-conversion-rate",
+    "keywords": ["low conversion rate", "no conversions", "poor conversion rate", "not converting"],
+    "category": "troubleshooting",
+    "question": "Why are my ads getting clicks but no conversions?",
+    "answer": "First, verify your conversion tracking is working correctly using Tag Assistant and checking real-time reports. If tracking is fine, the issue is usually one of: landing page mismatch (the page does not deliver what the ad promised), poor landing page UX (slow load, confusing layout, form too long), wrong audience (keywords are too broad or targeting informational intent), or unrealistic offer compared to competitors. Average conversion rates are 3-5% for Search -- check your industry benchmarks. Test a simplified landing page with a single clear CTA as a starting point.",
+    "links": [{"text": "Improving Conversions", "url": "/hubs/projects/google-ads/#low-conversions"}]
+  },
+  {
+    "id": "ts-budget-spent-too-fast",
+    "keywords": ["budget exhausted", "budget spent quickly", "early budget", "daily budget limit", "overspending"],
+    "category": "troubleshooting",
+    "question": "Why is my daily budget being spent too early in the day?",
+    "answer": "If your budget runs out by midday, your daily budget is too low relative to your keyword bids and search volume. Solutions: increase your daily budget, reduce keyword bids or switch to an automated bidding strategy that paces better, add negative keywords to eliminate wasteful clicks, narrow your targeting (location, schedule, device), or pause low-performing keywords. Also check 'Accelerated' delivery setting if available -- 'Standard' delivery spreads budget throughout the day. With smart bidding, Google typically paces budget more evenly than manual CPC.",
+    "links": [{"text": "Budget Pacing", "url": "/hubs/projects/google-ads/#budget-pacing"}]
+  },
+  {
+    "id": "ts-high-cost-per-conversion",
+    "keywords": ["high CPA", "expensive conversions", "cost per conversion", "reduce CPA"],
+    "category": "troubleshooting",
+    "question": "How do I reduce my cost per conversion?",
+    "answer": "Attack the problem from both sides: lower your CPC and increase your conversion rate. Lower CPC by improving Quality Score, using long-tail keywords, and pausing expensive underperformers. Increase conversion rate by optimizing landing pages, tightening keyword targeting to higher-intent terms, and using remarketing to re-engage warm audiences. Review the Search Terms report to eliminate queries that spend but do not convert. Also segment by device, location, and audience to find and cut or reduce spend on low-converting segments. Aim to reduce CPA by 10-20% incrementally, not all at once.",
+    "links": [{"text": "Reducing CPA", "url": "/hubs/projects/google-ads/#reduce-cpa"}]
+  },
+  {
+    "id": "ts-limited-by-budget",
+    "keywords": ["limited by budget", "budget constrained", "campaign limited", "budget status"],
+    "category": "troubleshooting",
+    "question": "What does 'Limited by Budget' mean and what should I do?",
+    "answer": "The 'Limited by Budget' status means your campaign could get more clicks and conversions if you increased the daily budget -- you are missing out on eligible impressions. Google shows you the recommended budget and estimated impact. Before increasing budget, first optimize: pause low-performing keywords, tighten targeting, and improve Quality Score to make existing budget go further. If the campaign is profitable, increasing budget is the fastest way to scale results. Prioritize budget increases for campaigns with the lowest CPA or highest ROAS.",
+    "links": [{"text": "Budget Constraints", "url": "/hubs/projects/google-ads/#limited-by-budget"}]
+  },
+  {
+    "id": "ts-conversion-tracking-issues",
+    "keywords": ["tracking not working", "conversions not recording", "tag issues", "tracking problems"],
+    "category": "troubleshooting",
+    "question": "My conversion tracking is not working. How do I debug it?",
+    "answer": "Use the Google Tag Assistant (Chrome extension or tagassistant.google.com) to verify your tags fire correctly on conversion pages. Check Tools & Settings > Conversions for the tracking status -- it should say 'Recording conversions.' Common issues: tag on the wrong page, missing global site tag, duplicate tags inflating numbers, or the conversion action set to 'Secondary' instead of 'Primary.' Test by completing a conversion yourself and checking if it appears in Google Ads within 24 hours. Also check your GA4 real-time report to verify the event fires.",
+    "links": [{"text": "Debugging Conversion Tracking", "url": "/hubs/projects/google-ads/#tracking-issues"}]
+  },
+  {
+    "id": "ts-account-suspended",
+    "keywords": ["account suspended", "account banned", "suspension", "circumvention", "policy violation"],
+    "category": "troubleshooting",
+    "question": "My Google Ads account was suspended. What do I do?",
+    "answer": "Check your email and the Google Ads interface for the specific suspension reason -- common causes are suspicious payment activity, circumventing policy, or repeated policy violations. For payment issues, verify your billing info and contact Google Ads support. For policy violations, fix all flagged ads and landing pages, then submit an appeal through the account. If it is a misunderstanding, write a detailed appeal explaining your business and the steps you have taken. Appeals typically take 5-7 business days. Do not create a new account to circumvent suspension -- that will result in a permanent ban.",
+    "links": [{"text": "Account Suspension", "url": "/hubs/projects/google-ads/#account-suspension"}]
+  },
+  {
+    "id": "ts-smart-bidding-poor-performance",
+    "keywords": ["smart bidding not working", "automated bidding bad", "target CPA not met", "smart bidding issues"],
+    "category": "troubleshooting",
+    "question": "My smart bidding strategy is not performing well. What should I check?",
+    "answer": "First, ensure you have waited past the 2-week learning period without making major changes. Then check: Do you have enough conversion volume (30+/month for tCPA, 50+ for tROAS)? Is your target realistic (start with your historical average, not a stretch goal)? Is your conversion tracking accurate (no duplicate or missing conversions)? Are your campaign settings too restrictive? If the strategy has been running 4+ weeks with poor results, try: loosening your target by 15-20%, expanding keyword targeting, or stepping back to Maximize Conversions without a target to rebuild the data foundation.",
+    "links": [{"text": "Smart Bidding Troubleshooting", "url": "/hubs/projects/google-ads/#smart-bidding-issues"}]
+  },
+  {
+    "id": "bp-budget-management",
+    "keywords": ["budget management", "allocate budget", "budget strategy", "spend management"],
+    "category": "best-practices",
+    "question": "What are best practices for budget management?",
+    "answer": "Allocate budget based on campaign performance, not equally across campaigns. Use the 70/20/10 rule: 70% to proven, profitable campaigns, 20% to promising campaigns being scaled, and 10% to testing new campaigns. Review budget allocation weekly and shift spend toward your best-performing campaigns. Use shared budgets for campaigns with similar goals to let Google auto-distribute. Monitor your actual spend vs. budget daily during the first week and after any major changes. Never set and forget -- even profitable campaigns need regular budget reviews.",
+    "links": [{"text": "Budget Management", "url": "/hubs/projects/google-ads/#budget-management"}]
+  },
+  {
+    "id": "bp-scaling-campaigns",
+    "keywords": ["scaling", "grow campaigns", "increase spend", "scale ads", "expand campaigns"],
+    "category": "best-practices",
+    "question": "How do I scale successful Google Ads campaigns?",
+    "answer": "Scale gradually -- increase budgets by no more than 15-20% at a time and wait 1-2 weeks between increases to maintain smart bidding stability. To scale beyond budget increases: expand to new keyword themes, add Broad Match with smart bidding, layer in new audience segments, launch campaigns in additional match types, and test new campaign types (Search > Shopping > PMax). Geographic expansion and new device targeting can also unlock additional volume. Monitor CPA/ROAS closely during scaling -- some efficiency loss is normal but should stabilize.",
+    "links": [{"text": "Scaling Campaigns", "url": "/hubs/projects/google-ads/#scaling"}]
+  },
+  {
+    "id": "bp-seasonal-adjustments",
+    "keywords": ["seasonal", "holiday ads", "seasonal adjustments", "seasonality", "black friday"],
+    "category": "best-practices",
+    "question": "How should I adjust campaigns for seasonal changes?",
+    "answer": "Use Google Ads' Seasonality Adjustments (Tools & Settings > Bid Strategies > Advanced Controls) to tell smart bidding about expected short-term conversion rate changes (like Black Friday sales). Increase budgets 2-4 weeks before peak season and schedule ad copy updates in advance. Create season-specific ad copy and landing pages for major events. Use Google Trends to identify when demand ramps up in your industry. After peak season, reduce budgets gradually rather than cutting abruptly to avoid disrupting smart bidding. Plan your seasonal calendar at least one quarter ahead.",
+    "links": [{"text": "Seasonal Strategy", "url": "/hubs/projects/google-ads/#seasonal-adjustments"}]
+  },
+  {
+    "id": "bp-compliance",
+    "keywords": ["compliance", "ad policies", "google ads policies", "prohibited content", "ad rules"],
+    "category": "best-practices",
+    "question": "What are the key Google Ads policies I need to know?",
+    "answer": "Key policies to understand: Prohibited content (counterfeit goods, dangerous products, enabling dishonest behavior), restricted content (alcohol, gambling, healthcare, financial services need special approval), editorial standards (no excessive capitalization, symbols, or misleading claims), and technical requirements (landing page must work, be relevant, and not have malware). Healthcare and financial advertisers need to apply for certification. Trademark policies allow bidding on trademarked terms but restrict using them in ad copy. Review the Google Ads Policy Center regularly as policies update frequently.",
+    "links": [{"text": "Google Ads Policies", "url": "/hubs/projects/google-ads/#policies"}]
+  },
+  {
+    "id": "bp-reporting",
+    "keywords": ["reporting", "reports", "dashboards", "performance reporting", "custom reports"],
+    "category": "best-practices",
+    "question": "How should I set up Google Ads reporting?",
+    "answer": "Create a custom dashboard using Google Ads' Reports editor (Reports > Custom > Table/Chart) with your key metrics: cost, conversions, CPA, ROAS, impression share, and Quality Score. Set up automated email reports weekly for stakeholders. For more advanced reporting, connect Google Ads to Looker Studio (free) for interactive dashboards combining Ads and Analytics data. Review performance at the campaign, ad group, keyword, search term, and audience levels weekly. Always compare periods (this week vs. last week, this month vs. last month) to spot trends.",
+    "links": [{"text": "Reporting Best Practices", "url": "/hubs/projects/google-ads/#reporting"}]
+  },
+  {
+    "id": "bp-account-audit",
+    "keywords": ["account audit", "ads audit", "review account", "health check", "audit checklist"],
+    "category": "best-practices",
+    "question": "How often should I audit my Google Ads account?",
+    "answer": "Do a comprehensive audit quarterly, with lighter weekly and monthly reviews. Your quarterly audit should check: conversion tracking accuracy, campaign structure, Quality Score trends, search term relevance, negative keyword lists, audience performance, bid strategy effectiveness, ad copy freshness, extension completeness, and landing page performance. Weekly, review search terms, budgets, and anomalies. Monthly, analyze audience and device segments, check competitor changes via Auction Insights, and refresh any underperforming ad copy. Document findings and track improvements over time.",
+    "links": [{"text": "Account Audit Guide", "url": "/hubs/projects/google-ads/#account-audit"}]
+  },
+  {
+    "id": "bp-brand-campaigns",
+    "keywords": ["brand campaigns", "branded keywords", "brand bidding", "own brand"],
+    "category": "best-practices",
+    "question": "Should I bid on my own brand name?",
+    "answer": "Yes, almost always. Brand campaigns deliver extremely high CTRs (30-60%), very low CPCs ($0.10-0.50), and near-100% conversion rates for branded searches. Even if you rank #1 organically, competitors may bid on your brand -- without brand ads, they can steal 10-15% of your brand traffic. Brand campaigns also let you control the messaging and direct users to specific landing pages. Run branded campaigns separately with their own budget so they do not inflate non-brand metrics. The ROI on brand campaigns is typically the highest in your account.",
+    "links": [{"text": "Brand Campaigns", "url": "/hubs/projects/google-ads/#brand-campaigns"}]
+  },
+  {
+    "id": "bp-testing-framework",
+    "keywords": ["testing framework", "testing strategy", "continuous testing", "optimization cycle"],
+    "category": "best-practices",
+    "question": "What should I be testing in my Google Ads account?",
+    "answer": "Maintain a continuous testing pipeline: always have at least one active experiment running. Priority order for testing: landing pages (biggest impact on conversion rate), bidding strategies (biggest impact on efficiency), ad copy and creative (impacts CTR and Quality Score), audiences (impacts targeting precision), and keyword expansion (impacts reach). Test one variable at a time, run for a minimum of 2 weeks or 100 conversions for statistical significance, and document every test with hypothesis, method, result, and action taken. Aim for 2-4 completed tests per month.",
+    "links": [{"text": "Testing Framework", "url": "/hubs/projects/google-ads/#testing-framework"}]
+  },
+  {
+    "id": "bp-multi-channel",
+    "keywords": ["multi-channel", "full funnel", "channel strategy", "campaign mix"],
+    "category": "best-practices",
+    "question": "How should I combine different campaign types for a full-funnel strategy?",
+    "answer": "Build a full-funnel approach: Top of funnel (awareness) with Video and Display campaigns targeting broad audiences and interests. Middle of funnel (consideration) with Demand Gen and Display remarketing to engage users who have seen your brand. Bottom of funnel (conversion) with Search and Shopping campaigns capturing high-intent users ready to buy. Use audience lists to connect the funnel -- remarket to video viewers on Display, and remarket to Display engagers on Search with RLSA. Allocate 60-70% of budget to bottom-funnel, 20-30% to mid-funnel, and 10% to top-funnel.",
+    "links": [{"text": "Full-Funnel Strategy", "url": "/hubs/projects/google-ads/#full-funnel"}]
+  },
+  {
+    "id": "ts-keyword-low-search-volume",
+    "keywords": ["low search volume", "keyword inactive", "not eligible", "low volume keyword"],
+    "category": "troubleshooting",
+    "question": "What does 'Low Search Volume' mean for a keyword?",
+    "answer": "The 'Low Search Volume' status means your keyword gets very little or no search traffic on Google, so ads will not show for it. Google re-evaluates these keywords periodically and will reactivate them if search volume increases. Solutions: try a broader match type, use a less specific keyword variant, check for typos, or combine the concept with a more general term. Do not waste time trying to force low-volume keywords -- instead, use broader keywords and let the Search Terms report reveal what people actually search for.",
+    "links": [{"text": "Low Search Volume Keywords", "url": "/hubs/projects/google-ads/#low-search-volume"}]
+  },
+  {
+    "id": "ts-ad-strength",
+    "keywords": ["ad strength", "poor ad strength", "average ad strength", "improve ad strength"],
+    "category": "troubleshooting",
+    "question": "My ad strength is 'Poor' or 'Average.' Should I worry?",
+    "answer": "Ad Strength is a directional guideline, not a direct performance metric. Focus on improving it to 'Good' by adding more unique headlines, including keywords, and diversifying your messaging angles. However, do not sacrifice proven high-performing ad copy just to please the Ad Strength indicator. A 'Poor' strength ad that converts well is better than an 'Excellent' strength ad that does not. Treat Ad Strength as a checklist reminder to provide enough variety for Google's RSA testing, but let actual conversion data drive your optimization decisions.",
+    "links": [{"text": "Ad Strength Guide", "url": "/hubs/projects/google-ads/#ad-strength"}]
+  },
+  {
+    "id": "opt-responsive-display-ads",
+    "keywords": ["responsive display ads", "display ad creative", "display ad format", "RDA"],
+    "category": "optimization",
+    "question": "How do I create effective Responsive Display Ads?",
+    "answer": "Provide at least 5 landscape images, 5 square images, and 2-3 logos in both landscape and square formats. Use high-quality images with minimal text overlay (Google prefers clean images). Write 5 short headlines (30 chars), 5 long headlines (90 chars), and 5 descriptions (90 chars). Include your logo and business name. Test with and without video assets -- adding even a simple video can improve performance significantly. Review the asset performance labels after 2 weeks and replace any 'Low' performing assets.",
+    "links": [{"text": "Display Ad Optimization", "url": "/hubs/projects/google-ads/#responsive-display-ads"}]
+  },
+  {
+    "id": "opt-pmax-asset-groups",
+    "keywords": ["PMax assets", "asset groups", "performance max creative", "PMax optimization"],
+    "category": "optimization",
+    "question": "How do I optimize Performance Max asset groups?",
+    "answer": "Create separate asset groups for each product or service theme, similar to how you would structure ad groups. Each asset group needs: 20 text assets (headlines + descriptions), 7+ images in various sizes, at least 1 video (or Google will auto-generate a low-quality one -- upload your own), your logo, and a targeted URL. Add audience signals to guide Google's targeting -- include your remarketing lists, customer lists, custom segments, and relevant in-market audiences. Review asset performance monthly and replace low-performing creative regularly.",
+    "links": [{"text": "PMax Asset Optimization", "url": "/hubs/projects/google-ads/#pmax-assets"}]
+  },
+  {
+    "id": "kw-branded-vs-non-branded",
+    "keywords": ["branded vs non-branded", "brand keywords", "generic keywords", "brand vs generic"],
+    "category": "keywords",
+    "question": "Should I separate branded and non-branded keywords?",
+    "answer": "Absolutely -- always separate branded and non-branded keywords into different campaigns. Branded terms (your company name, product names) have drastically different performance: much higher CTR (30-60% vs 3-5%), lower CPC, and higher conversion rates. Mixing them inflates your overall metrics and hides true non-brand performance. With separate campaigns, you can set different budgets, bidding strategies, and targets. Branded campaigns should have their own budget so they never compete with your growth-driving non-brand campaigns.",
+    "links": [{"text": "Brand vs Non-Brand", "url": "/hubs/projects/google-ads/#brand-vs-nonbrand"}]
+  },
+  {
+    "id": "ts-remarketing-list-too-small",
+    "keywords": ["remarketing list small", "audience too small", "not enough users", "minimum audience size"],
+    "category": "troubleshooting",
+    "question": "My remarketing audience is too small. How do I grow it?",
+    "answer": "Remarketing lists need at least 100 users for Display and 1,000 for Search (RLSA). To grow your lists faster: extend the membership duration (from 30 to 90 or 180 days), broaden your audience definition (all visitors instead of just product page visitors), drive more traffic with top-funnel campaigns (Display, Video), and ensure your Google tag is on every page of your site. Also check that your tag is firing correctly using Google Tag Assistant. Consider using GA4 audiences which can be more flexible and include cross-device users.",
+    "links": [{"text": "Growing Remarketing Lists", "url": "/hubs/projects/google-ads/#remarketing-list-size"}]
+  },
+  {
+    "id": "ts-quality-score-below-average",
+    "keywords": ["below average landing page", "below average CTR", "below average relevance", "QS components"],
+    "category": "troubleshooting",
+    "question": "How do I fix 'Below Average' Quality Score components?",
+    "answer": "For Below Average Expected CTR: write more compelling ads with stronger CTAs, include the keyword in headlines, and add extensions. For Below Average Ad Relevance: restructure your ad group to have tighter keyword themes and rewrite ads to match keyword intent closely. For Below Average Landing Page: improve page load speed (under 3 seconds), ensure content directly matches the ad and keyword, make it mobile-friendly, add trust signals, and include clear CTAs. Address Ad Relevance first -- it is the quickest to fix and impacts the other components.",
+    "links": [{"text": "Quality Score Components", "url": "/hubs/projects/google-ads/#qs-components"}]
+  },
+  {
+    "id": "bp-agency-vs-diy",
+    "keywords": ["agency", "manage yourself", "hire agency", "PPC agency", "freelancer"],
+    "category": "best-practices",
+    "question": "Should I manage Google Ads myself or hire an agency?",
+    "answer": "Manage it yourself if you are spending under $5K/month, have time to learn (5-10 hours/week initially), and enjoy data analysis. Hire an agency or freelancer when spending $5K+/month, lacking time for regular optimization, or operating in a complex industry needing specialized expertise. A good agency should save you more than their fee through better performance. When evaluating agencies, ask for case studies in your industry, understand their reporting cadence, ensure you own the account, and require transparency on all changes made.",
+    "links": [{"text": "Management Options", "url": "/hubs/projects/google-ads/#agency-vs-diy"}]
+  },
+  {
+    "id": "gs-google-ads-certifications",
+    "keywords": ["certification", "google ads certification", "skillshop", "learn google ads"],
+    "category": "getting-started",
+    "question": "How do I get Google Ads certified?",
+    "answer": "Google Ads certifications are free through Google Skillshop (skillshop.exceedlms.com). There are separate certifications for Search, Display, Video, Shopping, Apps, and Measurement. Each requires passing an exam (75% score, 75 minutes). The certifications are valid for one year and are a good way to learn the platform systematically. They are especially valuable if you are starting out or want to demonstrate competence to clients. However, real-world experience matters more than certifications for actual campaign performance.",
+    "links": [{"text": "Google Ads Certifications", "url": "/hubs/projects/google-ads/#certifications"}]
+  },
+  {
+    "id": "opt-ad-rotation",
+    "keywords": ["ad rotation", "ad serving", "optimize ads", "rotate ads evenly"],
+    "category": "optimization",
+    "question": "What ad rotation setting should I use?",
+    "answer": "Use the default 'Optimize: Prefer best performing ads' for most cases -- Google will automatically favor ads with higher expected conversion rates. Only use 'Do not optimize: Rotate ads indefinitely' when you are running a structured A/B test and need even distribution. With RSAs, rotation matters less since Google already tests headline/description combinations within each ad. The key is having 2-3 RSAs per ad group with distinctly different messaging themes, then letting Google's optimization determine the winner over 4-6 weeks.",
+    "links": [{"text": "Ad Rotation Settings", "url": "/hubs/projects/google-ads/#ad-rotation"}]
+  },
+  {
+    "id": "tgt-audience-signals-pmax",
+    "keywords": ["audience signals", "PMax audiences", "performance max targeting", "signal audiences"],
+    "category": "targeting",
+    "question": "What are audience signals in Performance Max?",
+    "answer": "Audience signals in PMax are hints you give Google's algorithm about who your ideal customers are -- they guide initial targeting but do not restrict it. Provide your best-performing remarketing lists, customer match lists, custom segments (based on search terms and competitor URLs), and relevant in-market/affinity audiences. The more quality signals you provide, the faster PMax learns who to target. Without signals, PMax starts with a very broad audience and takes longer to optimize. Think of signals as the algorithm's starting point, not a hard boundary.",
+    "links": [{"text": "PMax Audience Signals", "url": "/hubs/projects/google-ads/#audience-signals"}]
+  },
+  {
+    "id": "ct-search-vs-pmax",
+    "keywords": ["search vs pmax", "search vs performance max", "replace search with pmax"],
+    "category": "campaign-types",
+    "question": "Should I replace my Search campaigns with Performance Max?",
+    "answer": "No -- run them together. Search campaigns give you direct control over which queries trigger your ads, which is critical for your highest-value keywords. PMax is excellent for expanding reach across channels but offers limited search term visibility. The recommended approach is: keep dedicated Search campaigns for your core brand and top non-brand keywords, and use PMax to capture incremental traffic across Search, Shopping, Display, YouTube, and Discover. If PMax overlaps with Search for a query, Search takes priority for exact match keywords.",
+    "links": [{"text": "Search vs PMax", "url": "/hubs/projects/google-ads/#search-vs-pmax"}]
+  },
+  {
+    "id": "opt-wasted-spend",
+    "keywords": ["wasted spend", "reduce waste", "save money", "budget waste", "inefficient spend"],
+    "category": "optimization",
+    "question": "How do I identify and reduce wasted spend?",
+    "answer": "Check these areas weekly: Search Terms report (remove irrelevant queries as negatives), keyword performance (pause keywords with high spend and zero conversions after 2-3x your target CPA in spend), geographic performance (exclude or reduce bids in low-performing locations), device performance (adjust bids for underperforming devices), and audience performance (exclude low-value segments). Sort everything by cost descending to find the biggest budget drains first. Most accounts waste 20-30% of their budget on non-converting traffic when first audited.",
+    "links": [{"text": "Reducing Wasted Spend", "url": "/hubs/projects/google-ads/#wasted-spend"}]
+  },
+  {
+    "id": "ts-conversion-discrepancy",
+    "keywords": ["conversion mismatch", "different conversion numbers", "GA4 vs google ads", "discrepancy"],
+    "category": "troubleshooting",
+    "question": "Why do Google Ads and Google Analytics show different conversion numbers?",
+    "answer": "This is normal and expected. Key differences: Google Ads attributes conversions to the click date while GA4 uses the conversion date. Google Ads uses its own attribution model (often data-driven across Google Ads clicks) while GA4 uses cross-channel attribution. Google Ads counts conversions within its conversion window from the last ad click, while GA4 may attribute the same conversion to organic or another channel. Use Google Ads data for optimizing Google Ads campaigns, and GA4 for understanding the full cross-channel picture. Discrepancies of 10-20% are common.",
+    "links": [{"text": "Conversion Discrepancies", "url": "/hubs/projects/google-ads/#conversion-discrepancy"}]
+  },
+  {
+    "id": "bp-competitor-monitoring",
+    "keywords": ["competitor monitoring", "watch competitors", "competitive analysis", "competitor strategy"],
+    "category": "best-practices",
+    "question": "How should I monitor competitor activity in Google Ads?",
+    "answer": "Use Auction Insights monthly to track changes in competitor impression share and overlap rates. The Google Ads Transparency Center (adstransparency.google.com) lets you see any advertiser's active ads across Google. Third-party tools like SEMrush, SpyFu, and iSpionage show competitor keyword strategies and estimated spend. Set up Google Alerts for competitor brand names to catch new campaigns or offers. Do not obsess over competitors -- focus 80% of your effort on your own optimization and only monitor competitors for strategic intelligence and inspiration.",
+    "links": [{"text": "Competitor Monitoring", "url": "/hubs/projects/google-ads/#competitor-monitoring"}]
+  }
+]

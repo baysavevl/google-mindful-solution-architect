@@ -1,0 +1,152 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  url: string;
+  country: string;
+  industry: string;
+  metric: string;
+  googleProduct: string;
+}
+
+const { title, description, url, country, industry, metric, googleProduct } = Astro.props;
+
+const countryColors: Record<string, string> = {
+  'Vietnam': 'var(--color-google-blue)',
+  'Thailand': 'var(--color-google-red)',
+  'Indonesia': 'var(--color-google-green)',
+  'Malaysia': 'var(--color-google-yellow)',
+  'Philippines': '#9334e6',
+  'Singapore': '#e8710a',
+};
+
+const countryFlags: Record<string, string> = {
+  'Vietnam': '🇻🇳',
+  'Thailand': '🇹🇭',
+  'Indonesia': '🇮🇩',
+  'Malaysia': '🇲🇾',
+  'Philippines': '🇵🇭',
+  'Singapore': '🇸🇬',
+  'APAC': '🌏',
+};
+
+const color = countryColors[country] || 'var(--color-google-blue)';
+const flag = countryFlags[country] || '🌏';
+---
+
+<article class="case-study-card" data-country={country}>
+  <div class="card-accent" style={`background: ${color}`}></div>
+  <div class="card-body">
+    <div class="card-meta">
+      <span class="card-flag">{flag}</span>
+      <span class="card-country" style={`color: ${color}`}>{country}</span>
+      <span class="card-divider">|</span>
+      <span class="card-industry">{industry}</span>
+    </div>
+    <h3 class="card-title">
+      <a href={url}>{title}</a>
+    </h3>
+    <p class="card-desc">{description}</p>
+    <div class="card-footer">
+      <span class="card-metric">{metric}</span>
+      <span class="card-product">{googleProduct}</span>
+    </div>
+  </div>
+</article>
+
+<style>
+  .case-study-card {
+    background: white;
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+  }
+
+  .case-study-card:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
+  }
+
+  .card-accent {
+    height: 4px;
+  }
+
+  .card-body {
+    padding: 1.25rem 1.5rem;
+  }
+
+  .card-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.8rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .card-flag {
+    font-size: 1rem;
+  }
+
+  .card-country {
+    font-weight: 600;
+  }
+
+  .card-divider {
+    color: var(--color-border);
+  }
+
+  .card-industry {
+    color: var(--color-text-muted);
+  }
+
+  .card-title {
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem;
+    line-height: 1.4;
+  }
+
+  .card-title a {
+    color: var(--color-text);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+
+  .card-title a:hover {
+    color: var(--color-google-blue);
+  }
+
+  .card-desc {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    line-height: 1.6;
+    margin: 0 0 1rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
+  .card-metric {
+    background: #e6f4ea;
+    color: #137333;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.25rem 0.65rem;
+    border-radius: 100px;
+  }
+
+  .card-product {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    font-weight: 500;
+  }
+</style>

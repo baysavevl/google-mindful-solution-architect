@@ -1,0 +1,320 @@
+---
+interface Props {
+  countryCounts: Record<string, number>;
+}
+
+const { countryCounts } = Astro.props;
+
+const countries = [
+  { id: 'Vietnam', label: 'Vietnam', short: 'VN' },
+  { id: 'Thailand', label: 'Thailand', short: 'TH' },
+  { id: 'Indonesia', label: 'Indonesia', short: 'ID' },
+  { id: 'Malaysia', label: 'Malaysia', short: 'MY' },
+  { id: 'Philippines', label: 'Philippines', short: 'PH' },
+  { id: 'Singapore', label: 'Singapore', short: 'SG' },
+];
+---
+
+<div class="sea-map-container">
+  <div class="map-wrapper">
+    <svg viewBox="0 0 800 500" class="sea-map" id="sea-map" xmlns="http://www.w3.org/2000/svg">
+      <!-- Background water -->
+      <rect width="800" height="500" fill="#e8f4fd" rx="12"/>
+
+      <!-- Thailand -->
+      <path
+        class="country-path"
+        data-country="Thailand"
+        d="M180,80 L210,80 L220,100 L230,120 L225,150 L230,180 L220,210 L210,240 L200,250 L190,240 L185,220 L190,200 L185,180 L180,160 L175,130 L180,100 Z"
+        fill="#dadce0"
+      />
+      <text x="200" y="170" class="country-label" data-country="Thailand">TH</text>
+
+      <!-- Vietnam -->
+      <path
+        class="country-path"
+        data-country="Vietnam"
+        d="M280,70 L295,75 L300,95 L290,120 L285,145 L280,160 L275,180 L280,200 L290,225 L295,250 L290,275 L280,285 L270,270 L265,250 L268,230 L265,210 L270,190 L268,170 L272,150 L275,125 L270,100 L275,80 Z"
+        fill="#dadce0"
+      />
+      <text x="278" y="180" class="country-label" data-country="Vietnam">VN</text>
+
+      <!-- Philippines -->
+      <path
+        class="country-path"
+        data-country="Philippines"
+        d="M420,100 L435,95 L440,110 L435,130 L430,145 L440,155 L445,175 L440,195 L430,210 L420,220 L425,235 L420,250 L410,245 L415,225 L410,210 L415,190 L410,170 L415,150 L410,135 L415,115 Z"
+        fill="#dadce0"
+      />
+      <text x="425" y="175" class="country-label" data-country="Philippines">PH</text>
+
+      <!-- Malaysia (peninsula) -->
+      <path
+        class="country-path"
+        data-country="Malaysia"
+        d="M200,260 L220,255 L240,260 L255,270 L260,290 L250,310 L235,315 L220,310 L210,300 L200,285 Z"
+        fill="#dadce0"
+      />
+      <!-- Malaysia (Borneo part) -->
+      <path
+        class="country-path"
+        data-country="Malaysia"
+        d="M340,280 L380,270 L400,280 L410,300 L400,315 L380,320 L360,315 L345,300 Z"
+        fill="#dadce0"
+      />
+      <text x="230" y="288" class="country-label" data-country="Malaysia">MY</text>
+
+      <!-- Singapore -->
+      <circle
+        class="country-path"
+        data-country="Singapore"
+        cx="248" cy="328" r="8"
+        fill="#dadce0"
+      />
+      <text x="248" y="350" class="country-label" data-country="Singapore">SG</text>
+
+      <!-- Indonesia -->
+      <path
+        class="country-path"
+        data-country="Indonesia"
+        d="M200,360 L250,345 L300,350 L350,345 L400,350 L430,360 L460,355 L490,360 L500,375 L480,385 L450,380 L420,385 L390,380 L360,385 L330,380 L300,385 L270,380 L240,385 L210,380 L195,375 Z"
+        fill="#dadce0"
+      />
+      <!-- Indonesia (Sulawesi/East) -->
+      <path
+        class="country-path"
+        data-country="Indonesia"
+        d="M500,330 L530,320 L550,330 L560,350 L550,370 L530,375 L510,365 L505,345 Z"
+        fill="#dadce0"
+      />
+      <text x="370" y="370" class="country-label" data-country="Indonesia">ID</text>
+
+      <!-- Country tooltips (positioned via JS) -->
+    </svg>
+
+    <!-- Tooltip -->
+    <div class="map-tooltip" id="map-tooltip"></div>
+  </div>
+
+  <!-- Country tabs below map -->
+  <div class="country-tabs" id="country-tabs">
+    <button class="country-tab active" data-country="All">
+      All Countries
+      <span class="tab-count">{Object.values(countryCounts).reduce((a, b) => a + b, 0)}</span>
+    </button>
+    {countries.map(c => (
+      <button
+        class:list={["country-tab", { disabled: !countryCounts[c.id] }]}
+        data-country={c.id}
+        disabled={!countryCounts[c.id]}
+      >
+        {c.label}
+        <span class="tab-count">{countryCounts[c.id] || 0}</span>
+      </button>
+    ))}
+  </div>
+</div>
+
+<style>
+  .sea-map-container {
+    margin: 2rem 0;
+  }
+
+  .map-wrapper {
+    position: relative;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .sea-map {
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+    border: 1px solid var(--color-border);
+  }
+
+  .country-path {
+    cursor: pointer;
+    transition: fill 0.2s ease, filter 0.2s ease;
+    stroke: white;
+    stroke-width: 1.5;
+  }
+
+  .country-path:hover,
+  .country-path.active {
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.15));
+  }
+
+  .country-path[data-country="Vietnam"]:hover,
+  .country-path[data-country="Vietnam"].active { fill: var(--color-google-blue); }
+
+  .country-path[data-country="Thailand"]:hover,
+  .country-path[data-country="Thailand"].active { fill: var(--color-google-red); }
+
+  .country-path[data-country="Indonesia"]:hover,
+  .country-path[data-country="Indonesia"].active { fill: var(--color-google-green); }
+
+  .country-path[data-country="Malaysia"]:hover,
+  .country-path[data-country="Malaysia"].active { fill: var(--color-google-yellow); }
+
+  .country-path[data-country="Philippines"]:hover,
+  .country-path[data-country="Philippines"].active { fill: #9334e6; }
+
+  .country-path[data-country="Singapore"]:hover,
+  .country-path[data-country="Singapore"].active { fill: #e8710a; }
+
+  .country-label {
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 600;
+    fill: #5f6368;
+    text-anchor: middle;
+    pointer-events: none;
+  }
+
+  .map-tooltip {
+    position: absolute;
+    background: var(--color-text);
+    color: white;
+    padding: 0.4rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s;
+    white-space: nowrap;
+    z-index: 10;
+  }
+
+  .map-tooltip::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: var(--color-text);
+  }
+
+  .country-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+    margin-top: 1.25rem;
+  }
+
+  .country-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 1rem;
+    border-radius: 100px;
+    font-size: 0.85rem;
+    font-family: var(--font-sans);
+    font-weight: 500;
+    background: white;
+    color: var(--color-text-muted);
+    border: 1px solid var(--color-border);
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .country-tab:hover:not(:disabled) {
+    background: #e8f0fe;
+    border-color: #aecbfa;
+    color: var(--color-google-blue);
+  }
+
+  .country-tab.active {
+    background: var(--color-google-blue);
+    border-color: var(--color-google-blue);
+    color: white;
+  }
+
+  .country-tab.active .tab-count {
+    background: rgba(255, 255, 255, 0.25);
+    color: white;
+  }
+
+  .country-tab:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  .tab-count {
+    background: var(--color-bg-subtle);
+    padding: 0.1rem 0.4rem;
+    border-radius: 100px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+  }
+
+  @media (max-width: 640px) {
+    .map-wrapper {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  const map = document.getElementById('sea-map');
+  const tooltip = document.getElementById('map-tooltip');
+  const tabs = document.getElementById('country-tabs');
+  let activeCountry = 'All';
+
+  // Tooltip on hover
+  map?.querySelectorAll('.country-path').forEach(path => {
+    path.addEventListener('mouseenter', (e) => {
+      const country = (e.target as Element).getAttribute('data-country');
+      const countTab = tabs?.querySelector(`[data-country="${country}"] .tab-count`);
+      const count = countTab?.textContent || '0';
+      tooltip!.textContent = `${country}: ${count} stories`;
+      tooltip!.style.opacity = '1';
+    });
+
+    path.addEventListener('mousemove', (e) => {
+      const rect = map!.getBoundingClientRect();
+      const me = e as MouseEvent;
+      tooltip!.style.left = `${me.clientX - rect.left}px`;
+      tooltip!.style.top = `${me.clientY - rect.top - 40}px`;
+    });
+
+    path.addEventListener('mouseleave', () => {
+      tooltip!.style.opacity = '0';
+    });
+
+    path.addEventListener('click', (e) => {
+      const country = (e.target as Element).getAttribute('data-country');
+      if (country) selectCountry(country);
+    });
+  });
+
+  // Tab clicks
+  tabs?.querySelectorAll('.country-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      const country = tab.getAttribute('data-country');
+      if (country) selectCountry(country);
+    });
+  });
+
+  function selectCountry(country: string) {
+    if (activeCountry === country) country = 'All';
+    activeCountry = country;
+
+    // Update tabs
+    tabs?.querySelectorAll('.country-tab').forEach(t => {
+      t.classList.toggle('active', t.getAttribute('data-country') === country);
+    });
+
+    // Update map
+    map?.querySelectorAll('.country-path').forEach(p => {
+      p.classList.toggle('active', country !== 'All' && p.getAttribute('data-country') === country);
+    });
+
+    // Dispatch custom event for blog grid filtering
+    document.dispatchEvent(new CustomEvent('country-filter', { detail: { country } }));
+  }
+</script>

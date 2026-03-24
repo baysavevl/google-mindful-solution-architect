@@ -11,6 +11,11 @@ const blog = defineCollection({
     updatedDate: z.coerce.date().optional(),
     category: z.string().optional(),
     tags: z.array(z.string()).optional(),
+    country: z.string().optional(),
+    industry: z.string().optional(),
+    metric: z.string().optional(),
+    googleProduct: z.string().optional(),
+    source: z.string().optional(),
   }),
 });
 
@@ -22,6 +27,7 @@ const projects = defineCollection({
     pubDate: z.coerce.date(),
     updatedDate: z.coerce.date().optional(),
     featured: z.boolean().optional(),
+    category: z.string().optional(),
   }),
 });
 
