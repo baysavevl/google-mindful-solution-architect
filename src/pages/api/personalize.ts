@@ -4,7 +4,8 @@ import { checkAndConsume, LIMITS } from '../../lib/state';
 export const prerender = false;
 
 const GEMINI_KEY = import.meta.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY;
-const MODEL = 'gemini-2.5-flash';
+const PRIMARY_MODEL = 'gemini-2.5-flash';
+const FALLBACK_MODEL = 'gemini-2.5-flash-lite';
 const TG_TOKEN = import.meta.env.TELEGRAM_BOT_TOKEN || process.env.TELEGRAM_BOT_TOKEN;
 const TG_CHAT  = import.meta.env.TELEGRAM_CHAT_ID   || process.env.TELEGRAM_CHAT_ID;
 
@@ -89,25 +90,28 @@ ${Object.entries(ctx.catalogHints).map(([k, v]: any) => `- ${k}: ${v}`).join('\n
 
 Now write the personalized JSON response.`;
 
-  try {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${GEMINI_KEY}`;
-    const r = await fetch(url, {
+  async function callModel(modelName: string) {
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${GEMINI_KEY}`;
+    return fetch(url, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({
         systemInstruction: { parts: [{ text: SYSTEM }] },
         contents: [{ role: 'user', parts: [{ text: userMsg }] }],
-        generationConfig: {
-          temperature: 0.8,
-          maxOutputTokens: 800,
-          responseMimeType: 'application/json',
-        },
+        generationConfig: { temperature: 0.8, maxOutputTokens: 800, responseMimeType: 'application/json' },
       }),
     });
+  }
 
+  try {
+    let r = await callModel(PRIMARY_MODEL);
+    if (!r.ok && [429, 500, 503].includes(r.status)) {
+      console.warn('[personalize] primary failed', r.status, '— fallback');
+      r = await callModel(FALLBACK_MODEL);
+    }
     if (!r.ok) {
       const txt = await r.text();
-      await reportError(`Gemini ${r.status}`, `personalize\nip=${ip}\n${txt}`);
+      await reportError(`Gemini ${r.status}`, `personalize\ntried=${PRIMARY_MODEL},${FALLBACK_MODEL}\nip=${ip}\n${txt}`);
       return new Response(JSON.stringify({ ok: false, fallback: true }), { status: 500 });
     }
 

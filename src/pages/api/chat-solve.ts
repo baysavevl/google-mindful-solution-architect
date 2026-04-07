@@ -4,7 +4,8 @@ import { checkAndConsume, LIMITS } from '../../lib/state';
 export const prerender = false;
 
 const GEMINI_KEY = import.meta.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY;
-const MODEL = 'gemini-2.5-flash';
+const PRIMARY_MODEL = 'gemini-2.5-flash';
+const FALLBACK_MODEL = 'gemini-2.5-flash-lite';
 const TG_TOKEN = import.meta.env.TELEGRAM_BOT_TOKEN || process.env.TELEGRAM_BOT_TOKEN;
 const TG_CHAT  = import.meta.env.TELEGRAM_CHAT_ID   || process.env.TELEGRAM_CHAT_ID;
 
@@ -90,19 +91,15 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     last.parts[0].text = `[STAGE/CONTEXT: ${contextHint}]\n\n${last.parts[0].text}`;
   }
 
-  try {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${GEMINI_KEY}`;
-    const r = await fetch(url, {
+  async function callModel(modelName: string) {
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${GEMINI_KEY}`;
+    return fetch(url, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({
         systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
         contents,
-        generationConfig: {
-          temperature: 0.7,
-          maxOutputTokens: 600,
-          topP: 0.95,
-        },
+        generationConfig: { temperature: 0.7, maxOutputTokens: 600, topP: 0.95 },
         safetySettings: [
           { category: 'HARM_CATEGORY_HARASSMENT',        threshold: 'BLOCK_ONLY_HIGH' },
           { category: 'HARM_CATEGORY_HATE_SPEECH',       threshold: 'BLOCK_ONLY_HIGH' },
@@ -111,11 +108,22 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
         ],
       }),
     });
+  }
+
+  try {
+    let r = await callModel(PRIMARY_MODEL);
+    let modelUsed = PRIMARY_MODEL;
+    // Auto-fallback on 503 / 429 / 500 to lighter model
+    if (!r.ok && [429, 500, 503].includes(r.status)) {
+      console.warn('[gemini] primary failed', r.status, '— retrying with', FALLBACK_MODEL);
+      r = await callModel(FALLBACK_MODEL);
+      modelUsed = FALLBACK_MODEL;
+    }
 
     if (!r.ok) {
       const txt = await r.text();
       console.warn('[gemini]', r.status, txt);
-      await reportError(`Gemini ${r.status}`, `model=${MODEL}\nip=${ip}\n${txt}`);
+      await reportError(`Gemini ${r.status}`, `tried=${PRIMARY_MODEL},${FALLBACK_MODEL}\nip=${ip}\n${txt}`);
       return new Response(JSON.stringify({
         error: `gemini ${r.status}`,
         reply: "I'm having trouble reaching the AI right now. Please try again in a moment, or leave your contact in the form below."
@@ -125,7 +133,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     const data = await r.json();
     const reply = data?.candidates?.[0]?.content?.parts?.map((p: any) => p.text).join('') || "Sorry, I didn't catch that — could you rephrase?";
     if (!data?.candidates?.[0]?.content?.parts) {
-      await reportError('Gemini empty reply', `model=${MODEL}\nip=${ip}\n${JSON.stringify(data).slice(0, 800)}`);
+      await reportError('Gemini empty reply', `model=${modelUsed}\nip=${ip}\n${JSON.stringify(data).slice(0, 800)}`);
     }
 
     return new Response(JSON.stringify({ ok: true, reply }), {

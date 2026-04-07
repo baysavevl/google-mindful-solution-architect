@@ -763,13 +763,42 @@ const base = import.meta.env.BASE_URL;
     ],'init-chips');
   }
 
-  // ── Solve mode: progress bar (new order) ──
-  const SOLVE_STEPS = ['init','city','industry','persona','product','competitor','results','solutions','lead'];
+  // ── Solve mode: progress bar (default 9 stages, +3 optional refine = 12) ──
+  const SOLVE_STEPS_DEFAULT = ['init','city','industry','persona','product','competitor','results','solutions','lead'];
+  const SOLVE_STEPS_REFINED = ['init','city','industry','persona','product','competitor','budget','goal','value','results','solutions','lead'];
   const SOLVE_LABELS = {
     init:'Pick your goal', city:'Choose location', industry:'Pick industry',
     persona:'Target customer', product:'Describe your business', competitor:'Competitors',
+    budget:'Budget range', goal:'Conversion goal', value:'Customer value',
     results:'Market & budget', solutions:'Your playbook', lead:'Talk to expert',
   };
+  function getSolveSteps(ss){ return ss && ss.refining ? SOLVE_STEPS_REFINED : SOLVE_STEPS_DEFAULT; }
+
+  // ── Persona share heuristic (approx. % of online pop) ──
+  function personaShare(personaText){
+    const t=(personaText||'').toLowerCase();
+    if(/gen z|18-24|sinh viên/.test(t)) return 0.15;
+    if(/grad|22-28|22-30/.test(t))     return 0.12;
+    if(/young pro|25-35/.test(t))      return 0.17;
+    if(/mid-career|35-45/.test(t))     return 0.16;
+    if(/working mom/.test(t))          return 0.13;
+    if(/high-net|hnw|affluent/.test(t))return 0.03;
+    if(/senior|50\+/.test(t))          return 0.22;
+    if(/traveler/.test(t))             return 0.10;
+    if(/eco|sustain/.test(t))          return 0.08;
+    if(/bargain|deal/.test(t))         return 0.25;
+    if(/sme owner|small business owner/.test(t)) return 0.05;
+    if(/parent.*young kid|parent of young/.test(t)) return 0.12;
+    return 0.10;
+  }
+  // ── Competitor density adjustment ──
+  function competitorAdj(competitorText){
+    if(!competitorText || /^\(no competitors|^skip/i.test(competitorText)) return 1.0;
+    const named = competitorText.split(/[,;]|\band\b|\bvà\b|\n/).map(s=>s.trim()).filter(s=>s.length>1).length;
+    if(named>=4) return 0.7;
+    if(named>=2) return 0.9;
+    return 1.05;
+  }
 
   // ── Action-level signals to Telegram ──
   function trackAction(label, extra){
@@ -789,24 +818,31 @@ const base = import.meta.env.BASE_URL;
       wrap.hidden=true; return;
     }
     wrap.hidden=false;
-    const stage=t.solveState.stage||'init';
-    let idx=SOLVE_STEPS.indexOf(stage); if(idx<0)idx=0;
-    if(stage==='gemini') idx=SOLVE_STEPS.length-1;
-    const pct=Math.round(((idx+1)/SOLVE_STEPS.length)*100);
+    const ss=t.solveState;
+    const steps=getSolveSteps(ss);
+    const stage=ss.stage||'init';
+    let idx=steps.indexOf(stage); if(idx<0)idx=0;
+    if(stage==='gemini') idx=steps.length-1;
+    const pct=Math.round(((idx+1)/steps.length)*100);
     document.getElementById('ms-progress-bar').style.setProperty('--p',pct+'%');
-    document.getElementById('ms-progress-text').textContent=`Step ${Math.min(idx+1,SOLVE_STEPS.length)}/${SOLVE_STEPS.length} — ${SOLVE_LABELS[stage]||''}`;
+    document.getElementById('ms-progress-text').textContent=`Step ${Math.min(idx+1,steps.length)}/${steps.length} — ${SOLVE_LABELS[stage]||''}`;
   }
 
   // ── Combined results card: TAM, SAM, reachable, budget tiers ──
-  function reachablePeople(cityKey, industryKey){
-    if(!markets || !markets.cities[cityKey]) return null;
-    const c=markets.cities[cityKey];
-    const ind=c.industries[industryKey];
+  // Now factors persona segment + competitor density.
+  function reachablePeople(ss){
+    if(!markets || !ss.cityKey || !markets.cities[ss.cityKey]) return null;
+    const c=markets.cities[ss.cityKey];
+    const ind=c.industries[ss.industryKey];
     if(!ind) return null;
-    // Heuristic: SAM share of city's digital population, then × industry interest factor (~10%)
     const onlinePop = c.population * c.internet_penetration;
-    const interestShare = 0.10; // ~10% of online population shows category interest
-    return Math.round(onlinePop * interestShare);
+    const interestShare = 0.10;                  // ~10% category interest
+    const personaPct   = personaShare(ss.persona); // demographic slice
+    const compAdj      = competitorAdj(ss.competitors);
+    // Reachable = online × interest × persona × competitor adjustment
+    // Note: persona × interest both gate the slice; we blend rather than multiply twice
+    const blendedShare = Math.max(0.02, (interestShare + personaPct) / 2);
+    return Math.round(onlinePop * blendedShare * compAdj);
   }
 
   function addResultsCard(ss){
@@ -814,7 +850,7 @@ const base = import.meta.env.BASE_URL;
     const c=markets.cities[ss.cityKey];
     const ind=c.industries[ss.industryKey];
     const meta=markets.industries_meta[ss.industryKey];
-    const reach=reachablePeople(ss.cityKey, ss.industryKey);
+    const reach=reachablePeople(ss);
     const baseMonthly = ind.sam * 0.0002 / 12;
     const tiers = [
       { name:'Starter',    mult: 0.4, kpi:'Test what works' },
@@ -855,7 +891,7 @@ const base = import.meta.env.BASE_URL;
         </div>
       </div>
 
-      <div class="sv-card-note">⚠️ <b>Quick estimate from a basic calculator</b> — directional only. *Reachable buyers ≈ 10% of online population showing category interest. To get the real picture, layer in social listening, competitor research, and a 1-2 week Google Ads test campaign to measure actual CTR, CPC, and intent in your niche.</div>`;
+      <div class="sv-card-note">⚠️ <b>Quick estimate from a basic calculator</b> — directional only. *Reachable buyers ≈ blend of category interest + your selected persona segment, adjusted for competitor density. To get the real picture, layer in social listening, competitor research, and a 1-2 week Google Ads test campaign to measure actual CTR, CPC, and intent in your niche.</div>`;
     el().appendChild(card); el().scrollTop=el().scrollHeight;
     return { city: c.name, industry: meta.label, tam: ind.tam, sam: ind.sam, growth: ind.growth, reach };
   }
@@ -1082,6 +1118,131 @@ const base = import.meta.env.BASE_URL;
     addSolveChips([{ label:'⏭ Skip — I don\'t know', onClick:()=>handleSolveQ('(no competitors specified)') }]);
   }
 
+  // Refine gate after competitor — choose to deepen or skip
+  function renderRefineGate(t){
+    addSolveChips([
+      { label:'🔍 Refine for accuracy (3 quick questions)', onClick:()=>{
+        trackAction('chat:refine-yes');
+        const ss=t.solveState;
+        ss.refining=true; ss.stage='budget'; updateProgress(); lockInput('Pick a budget above...');
+        const q='What\'s your current monthly marketing budget?';
+        addBot(`<p>${esc(q)}</p>`); t.messages.push({role:'bot',html:`<p>${esc(q)}</p>`});
+        renderBudgetChips(); save();
+      }},
+      { label:'⏭ Skip to results', onClick:()=>{
+        trackAction('chat:refine-no');
+        proceedToResults(t);
+      }},
+    ]);
+  }
+  function renderBudgetChips(){
+    const items=[
+      { label:'💰 < $500/mo',     v:'<$500' },
+      { label:'💰 $500–$2K/mo',   v:'$500–$2K' },
+      { label:'💰 $2K–$10K/mo',   v:'$2K–$10K' },
+      { label:'💰 $10K–$50K/mo',  v:'$10K–$50K' },
+      { label:'💰 $50K+/mo',      v:'$50K+' },
+      { label:'🤷 Not sure yet',  v:'Not sure' },
+    ];
+    addSolveChips(items.map(it=>({label:it.label,onClick:()=>handleRefineChoice('budget',it.v)})));
+  }
+  function renderGoalChips(){
+    const items=[
+      { label:'🛒 Online sales',       v:'sales' },
+      { label:'📋 Lead generation',    v:'leads' },
+      { label:'✍️ Sign-ups / accounts', v:'signups' },
+      { label:'📱 App installs',        v:'app-installs' },
+      { label:'📞 Phone calls',         v:'calls' },
+      { label:'👁 Brand awareness',     v:'awareness' },
+    ];
+    addSolveChips(items.map(it=>({label:it.label,onClick:()=>handleRefineChoice('goal',it.v)})));
+  }
+  function handleRefineChoice(kind, value){
+    const t=getTh(activeId); if(!t) return;
+    const ss=t.solveState;
+    if(kind==='budget'){
+      ss.refinedBudget=value;
+      addUser(value); t.messages.push({role:'user',text:value});
+      trackAction('chat:r-budget',value);
+      ss.stage='goal'; updateProgress(); lockInput('Pick a goal above...');
+      const q='What\'s your primary conversion goal?';
+      addBot(`<p>${esc(q)}</p>`); t.messages.push({role:'bot',html:`<p>${esc(q)}</p>`});
+      renderGoalChips(); save();
+    } else if(kind==='goal'){
+      ss.refinedGoal=value;
+      addUser(value); t.messages.push({role:'user',text:value});
+      trackAction('chat:r-goal',value);
+      ss.stage='value'; updateProgress(); unlockInput();
+      const q='What\'s the average value of one customer or order? (e.g., "$50 per order" or "$1200 lifetime")';
+      addBot(`<p>${esc(q)}</p>`); t.messages.push({role:'bot',html:`<p>${esc(q)}</p>`});
+      addSolveChips([{ label:'⏭ Skip', onClick:()=>handleSolveQ('(skipped)') }]);
+      save();
+    }
+  }
+  function proceedToResults(t){
+    const ss=t.solveState;
+    ss.stage='results'; updateProgress(); lockInput('Tap the button above...');
+    const intro="Awesome — here's your market snapshot based on what you shared:";
+    addBot(`<p>${esc(intro)}</p>`); t.messages.push({role:'bot',html:`<p>${esc(intro)}</p>`});
+    const data=addResultsCard(ss);
+    if(data) ss.marketData=data;
+    setTimeout(()=>{ renderStrategyCta(t); }, 600);
+    save();
+  }
+  function renderStrategyCta(t){
+    const ss=t.solveState;
+    addCtaButton('✨ Find my best Google Ads strategy', '', async ()=>{
+      trackAction('chat:cta-strategy');
+      ss.stage='solutions'; updateProgress();
+
+      showTyping();
+      const personalized = await personalizeSolutions(ss);
+      hideTyping();
+
+      let introText, picksToShow, isPersonalized=false;
+      if(personalized){
+        introText = personalized.intro || 'Here are the top 3 Google Ads solutions tailored to your business:';
+        picksToShow = personalized.picks;
+        isPersonalized = true;
+      } else {
+        introText = 'Here are the top 3 Google Ads solutions I recommend for you:';
+        picksToShow = pickSolutions(ss);
+      }
+      await addBotStream(introText);
+      t.messages.push({role:'bot',html:md(introText)});
+      addSolutionsCard(ss, picksToShow, { personalized: isPersonalized });
+
+      if(personalized && personalized.insight){
+        setTimeout(async ()=>{
+          const insightLine = '💡 ' + personalized.insight;
+          await addBotStream(insightLine);
+          t.messages.push({role:'bot',html:md(insightLine)});
+        }, 500);
+      }
+
+      setTimeout(()=>{
+        addCtaButton('🤝 Get expert help from a Google Ads Solution Architect', 'secondary', ()=>{
+          trackAction('chat:cta-expert');
+          ss.stage='lead'; updateProgress();
+          const intro3="Perfect — leave your details and our Google Ads Solution Architect will reach out within 24 hours to dive into the technical setup and solve your specific challenges.";
+          addBot(`<p>${esc(intro3)}</p>`);
+          t.messages.push({role:'bot',html:`<p>${esc(intro3)}</p>`});
+          if(!ss.leadShown){ ss.leadShown=true; addLeadForm(t); }
+          ss.stage='gemini';
+          const followup="Or ask me anything else about budgets, targeting, or which campaign to start with first.";
+          setTimeout(()=>{
+            addBot(`<p>${esc(followup)}</p>`);
+            t.messages.push({role:'bot',html:`<p>${esc(followup)}</p>`});
+            unlockInput(); save();
+          },600);
+          save();
+        });
+        save();
+      }, 700);
+      save();
+    });
+  }
+
   // Build context hint string for Gemini
   function buildContextHint(t){
     const ss=t.solveState||{};
@@ -1155,74 +1316,17 @@ const base = import.meta.env.BASE_URL;
     }
     if(ss.stage==='competitor'){
       ss.competitors=q; trackAction('chat:competitor', q.slice(0,60));
-      ss.stage='results'; updateProgress(); lockInput('Tap the button above...');
-
-      const intro="Awesome — here's your market snapshot based on what you shared:";
-      showTyping(); await new Promise(r=>setTimeout(r,300)); hideTyping();
-      addBot(`<p>${esc(intro)}</p>`); t.messages.push({role:'bot',html:`<p>${esc(intro)}</p>`});
-
-      // Results card with TAM/SAM/reachable/budget
-      const data=addResultsCard(ss);
-      if(data) ss.marketData=data;
-
-      // CTA: Find best Google Ads strategy (AI-personalized)
-      setTimeout(()=>{
-        addCtaButton('✨ Find my best Google Ads strategy', '', async ()=>{
-          trackAction('chat:cta-strategy');
-          ss.stage='solutions'; updateProgress();
-
-          // Try AI personalization (consumes 1 rate-limit slot)
-          showTyping();
-          const personalized = await personalizeSolutions(ss);
-          hideTyping();
-
-          let introText, picksToShow, isPersonalized=false;
-          if(personalized){
-            introText = personalized.intro || 'Here are the top 3 Google Ads solutions tailored to your business:';
-            picksToShow = personalized.picks;
-            isPersonalized = true;
-          } else {
-            introText = 'Here are the top 3 Google Ads solutions I recommend for you:';
-            picksToShow = pickSolutions(ss);
-          }
-
-          await addBotStream(introText);
-          t.messages.push({role:'bot',html:md(introText)});
-          addSolutionsCard(ss, picksToShow, { personalized: isPersonalized });
-
-          if(personalized && personalized.insight){
-            setTimeout(async ()=>{
-              const insightLine = '💡 ' + personalized.insight;
-              await addBotStream(insightLine);
-              t.messages.push({role:'bot',html:md(insightLine)});
-            }, 500);
-          }
-
-          // Next CTA: dive deeper with specialist
-          setTimeout(()=>{
-            addCtaButton('🤝 Get expert help from a Google Ads architect', 'secondary', ()=>{
-              trackAction('chat:cta-expert');
-              ss.stage='lead'; updateProgress();
-              const intro3="Perfect — leave your details and our Google Ads architect will reach out within 24 hours to dive into the technical setup and solve your specific challenges.";
-              addBot(`<p>${esc(intro3)}</p>`);
-              t.messages.push({role:'bot',html:`<p>${esc(intro3)}</p>`});
-              if(!ss.leadShown){ ss.leadShown=true; addLeadForm(t); }
-              ss.stage='gemini';
-              const followup="Or ask me anything else about budgets, targeting, or which campaign to start with first.";
-              setTimeout(()=>{
-                addBot(`<p>${esc(followup)}</p>`);
-                t.messages.push({role:'bot',html:`<p>${esc(followup)}</p>`});
-                unlockInput();
-                save();
-              },600);
-              save();
-            });
-            save();
-          }, 700);
-          save();
-        });
-        save();
-      }, 600);
+      // Show refine gate — user picks deeper or skips
+      const ask='Want to refine your numbers with 3 more questions for a sharper recommendation, or skip to results?';
+      showTyping(); await new Promise(r=>setTimeout(r,250)); hideTyping();
+      addBot(`<p>${esc(ask)}</p>`); t.messages.push({role:'bot',html:`<p>${esc(ask)}</p>`});
+      lockInput('Pick an option above...');
+      renderRefineGate(t);
+      save(); return;
+    }
+    if(ss.stage==='value'){
+      ss.refinedValue=q; trackAction('chat:r-value', q.slice(0,60));
+      proceedToResults(t);
       save(); return;
     }
     if(ss.stage==='gemini'){
