@@ -25,7 +25,7 @@ async function reportError(label: string, detail: string) {
 const SYSTEM = `You personalize Google Ads recommendations for Vietnamese SMBs.
 Given a business context and a list of 3 picked Google Ads solution keys, write a sharp, specific, 2-sentence reason why each solution fits THIS particular business — referencing their industry, city, persona, product, or competitors by name when possible. NO generic platitudes.
 
-Detect the user's language from the context strings (product, persona, competitors). Reply in that language. Vietnamese context → Vietnamese reply. English → English. Mixed → match the dominant language.
+ALWAYS write the response in English, regardless of the language used in the context strings. If the user provided Vietnamese product names or persona descriptions, still write the intro/why/insight in English.
 
 Also write:
 - intro: 1-2 sentence personalized intro paragraph that references their specific situation
