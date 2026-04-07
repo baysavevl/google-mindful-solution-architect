@@ -142,13 +142,13 @@
     }
   },
   "industries_meta": {
-    "f&b": { "label": "Food & Beverage", "icon": "🍜" },
-    "fashion": { "label": "Fashion & Apparel", "icon": "👗" },
-    "education": { "label": "Education & Training", "icon": "🎓" },
-    "real-estate": { "label": "Real Estate", "icon": "🏠" },
-    "beauty-cosmetics": { "label": "Beauty & Cosmetics", "icon": "💄" },
-    "health-wellness": { "label": "Health & Wellness", "icon": "💊" },
-    "tech-saas": { "label": "Tech / SaaS", "icon": "💻" },
-    "tourism": { "label": "Tourism & Hospitality", "icon": "✈️" }
+    "f&b":              { "label": "Food & Beverage",       "icon": "🍜", "intent_rate": 0.55, "cpc_low": 0.30, "cpc_high": 0.90, "conv_rate": 0.04 },
+    "fashion":          { "label": "Fashion & Apparel",     "icon": "👗", "intent_rate": 0.40, "cpc_low": 0.40, "cpc_high": 1.20, "conv_rate": 0.025 },
+    "education":        { "label": "Education & Training",  "icon": "🎓", "intent_rate": 0.10, "cpc_low": 1.50, "cpc_high": 3.50, "conv_rate": 0.03 },
+    "real-estate":      { "label": "Real Estate",           "icon": "🏠", "intent_rate": 0.04, "cpc_low": 2.00, "cpc_high": 5.50, "conv_rate": 0.015 },
+    "beauty-cosmetics": { "label": "Beauty & Cosmetics",    "icon": "💄", "intent_rate": 0.32, "cpc_low": 0.80, "cpc_high": 2.00, "conv_rate": 0.035 },
+    "health-wellness":  { "label": "Health & Wellness",     "icon": "💊", "intent_rate": 0.20, "cpc_low": 1.50, "cpc_high": 3.50, "conv_rate": 0.025 },
+    "tech-saas":        { "label": "Tech / SaaS",           "icon": "💻", "intent_rate": 0.06, "cpc_low": 2.00, "cpc_high": 6.00, "conv_rate": 0.02 },
+    "tourism":          { "label": "Tourism & Hospitality", "icon": "✈️", "intent_rate": 0.18, "cpc_low": 0.60, "cpc_high": 1.80, "conv_rate": 0.03 }
   }
 }

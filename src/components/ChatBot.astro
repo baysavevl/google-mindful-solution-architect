@@ -757,10 +757,221 @@ const base = import.meta.env.BASE_URL;
   function renderSolveInitChips(){
     addSolveChips([
       { label:'📱 Market my new app/service', onClick:()=>solveStart('new-product') },
-      { label:'📈 Grow my existing business',   onClick:()=>solveStart('grow') },
-      { label:'🔧 Optimize my campaigns',    onClick:()=>solveStart('optimize') },
+      { label:'📈 Grow my existing business', onClick:()=>solveStart('grow') },
+      { label:'🔧 Optimize my campaigns',     onClick:()=>solveStart('optimize') },
+      { label:'🛠 Fix a technical issue',     onClick:()=>solveStart('tech') },
       { label:'💬 Other — describe in your own words', onClick:()=>solveStart('open') },
     ],'init-chips');
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  // TECHNICAL ISSUE TROUBLESHOOTING TREE
+  // ═══════════════════════════════════════════════════════════════
+  const TECH_AREAS = {
+    tracking: {
+      label: '📊 Tracking & Conversions', icon: '📊',
+      questions: [
+        { id:'firing',   q:'Are your conversions firing reliably in Google Ads (showing recent counts)?' },
+        { id:'ga4',      q:'Is GA4 linked to your Google Ads account?' },
+        { id:'values',   q:'Are conversion VALUES (revenue) being passed through?' },
+        { id:'enhanced', q:'Have you implemented Enhanced Conversions for Web or Leads?' },
+        { id:'recent',   q:'Did you recently change your website code or GTM container?' },
+        { id:'attribution', q:'Are you on data-driven attribution (not last-click)?' },
+      ],
+      diagnose(a){
+        const issues=[], help=[];
+        if(a.firing!=='yes'){ issues.push('Conversions not firing — usually GTM trigger misconfig or tag missing on the confirmation page.'); help.push('Diagnose with GTM Preview & Tag Assistant; fix trigger conditions; validate dataLayer events.'); }
+        if(a.ga4!=='yes'){ issues.push('GA4 not linked — you\'re missing audience signals and import-as-conversion options.'); help.push('Link GA4 ↔ Google Ads (5 min); import key GA4 events as conversions.'); }
+        if(a.values==='no'){ issues.push('No revenue values passing — you cannot use Target ROAS bidding without this.'); help.push('Pass dynamic value via dataLayer purchase event; switch bid strategy to tROAS once data flows.'); }
+        if(a.enhanced!=='yes'){ issues.push('No Enhanced Conversions — losing 5-15% of measurable conversions to ad blockers and iOS restrictions.'); help.push('Implement Enhanced Conversions for Leads (form_id) or Web (hashed email/phone) via gtag or GTM.'); }
+        if(a.recent==='yes'){ issues.push('Recent code change is the prime suspect — most "broken tracking" tickets stem from a deploy.'); help.push('Compare tag firing logs before/after deploy; check if conversion page URL changed; rollback or hotfix.'); }
+        if(a.attribution==='no'){ issues.push('Last-click attribution undervalues YouTube/Display/upper-funnel touches.'); help.push('Switch to Data-Driven Attribution (DDA) — usually a 10-20% lift in attributed conversions.'); }
+        return { issues, help };
+      },
+    },
+    performance: {
+      label: '📉 Campaign Performance', icon: '📉',
+      questions: [
+        { id:'sudden',  q:'Has performance dropped suddenly in the last 2-4 weeks?' },
+        { id:'cpc_up',  q:'Is your CPC noticeably higher than 1-2 months ago?' },
+        { id:'impr',    q:'Are impressions much lower than before?' },
+        { id:'qs',      q:'Do most of your keywords have Quality Score 6 or below?' },
+        { id:'budget_cap', q:'Are your campaigns "limited by budget" most days?' },
+        { id:'creative_age', q:'Have your ads been running unchanged for 60+ days?' },
+      ],
+      diagnose(a){
+        const issues=[], help=[];
+        if(a.sudden==='yes'){ issues.push('Sudden drop = check for: tracking break, bid strategy change, new competitor, policy disapproval, or seasonality shift.'); help.push('Audit Change History; check Recommendations for warnings; verify tracking still fires.'); }
+        if(a.cpc_up==='yes'){ issues.push('Rising CPC usually signals new auction pressure or quality score erosion.'); help.push('Run an auction insights report; refresh ad copy; tighten match types; add negative keywords.'); }
+        if(a.impr==='yes'){ issues.push('Low impressions — likely budget cap, low search lost (rank), or aggressive negatives.'); help.push('Check Search Lost IS (rank vs budget); raise CPC ceilings or rewrite ads to lift rank.'); }
+        if(a.qs==='yes'){ issues.push('Low Quality Score = expensive clicks. Rooted in CTR, ad relevance, or LP experience.'); help.push('Rewrite ads to match top search queries; improve LP load speed and copy match; tighten ad groups.'); }
+        if(a.budget_cap==='yes'){ issues.push('Budget-capped campaigns leave money on the table — Google can\'t scale winners.'); help.push('Either raise budget on profitable campaigns OR switch to a Portfolio bid strategy with shared budget.'); }
+        if(a.creative_age==='yes'){ issues.push('Creative fatigue — same ads for 60+ days lose CTR and Quality Score.'); help.push('Refresh ads monthly; add 4-5 RSA headlines; A/B test new angles.'); }
+        return { issues, help };
+      },
+    },
+    disapproval: {
+      label: '🚫 Ad Disapprovals & Policy', icon: '🚫',
+      questions: [
+        { id:'disapproved',    q:'Do you have ads currently disapproved or limited?' },
+        { id:'category',       q:'Is your business in a sensitive category (healthcare, finance, gambling, alcohol)?' },
+        { id:'lp_match',       q:'Does your landing page content match your ad copy exactly?' },
+        { id:'verified',       q:'Is your account fully verified (Advertiser identity verification)?' },
+        { id:'misleading',     q:'Are your ads making any superlative claims (best, #1, guaranteed)?' },
+      ],
+      diagnose(a){
+        const issues=[], help=[];
+        if(a.disapproved==='yes'){ issues.push('Active disapprovals are blocking spend. Each disapproval has a specific policy reason.'); help.push('Click each disapproved ad → read the exact policy reason → fix and request review.'); }
+        if(a.category==='yes'){ issues.push('Sensitive verticals require certifications (e.g., LegitScript for pharma, financial services license).'); help.push('Apply for the required certification through the Google Ads policy hub before re-running ads.'); }
+        if(a.lp_match==='no'){ issues.push('LP-ad mismatch is the #1 disapproval cause for "Destination not working" / "Misleading content".'); help.push('Update LP headlines + body to mirror ad copy; remove broken links; ensure mobile loads.'); }
+        if(a.verified==='no'){ issues.push('Unverified advertiser → ads run with reduced reach until verification completes.'); help.push('Submit advertiser identity docs in Account Settings → Verification (takes 3-5 days).'); }
+        if(a.misleading==='yes'){ issues.push('Superlative claims without proof = "Misleading representations" disapproval.'); help.push('Either remove the claim or add cited proof on the landing page (e.g., "G2 #1 in 2025").'); }
+        return { issues, help };
+      },
+    },
+    targeting: {
+      label: '🎯 Audience & Targeting', icon: '🎯',
+      questions: [
+        { id:'wasted_geo',  q:'Are you seeing impressions from countries/cities you don\'t serve?' },
+        { id:'audiences',   q:'Have you added Custom Segments or In-Market Audiences as observation?' },
+        { id:'remarketing', q:'Is your remarketing list at least 1,000 active users?' },
+        { id:'first_party', q:'Have you uploaded a Customer Match list?' },
+        { id:'broad',       q:'Are you running Broad Match keywords with Smart Bidding?' },
+      ],
+      diagnose(a){
+        const issues=[], help=[];
+        if(a.wasted_geo==='yes'){ issues.push('Geographic leakage burns budget on the wrong audience.'); help.push('Switch location targeting from "Presence or interest" to "Presence" only; add country exclusions.'); }
+        if(a.audiences==='no'){ issues.push('Without audience signals, Smart Bidding has less context to optimize.'); help.push('Add 3-5 In-Market and Custom Segments as observation (not targeting) — let bidding learn the patterns.'); }
+        if(a.remarketing==='no'){ issues.push('Remarketing pools under 1K can\'t serve effectively across most placements.'); help.push('Lower membership duration to 540 days; combine list rules; promote upper-funnel content to grow list.'); }
+        if(a.first_party==='no'){ issues.push('Missing Customer Match = missing the highest-intent audience signal you own.'); help.push('Upload hashed customer emails/phones via Customer Match (free); use as observation across PMax/Search.'); }
+        if(a.broad==='no'){ issues.push('Broad Match + Smart Bidding is now the recommended modern setup — no S-bidding = leaving reach on the table.'); help.push('Test Broad Match keywords in a separate ad group with tCPA/tROAS bidding; monitor SQR weekly.'); }
+        return { issues, help };
+      },
+    },
+    account: {
+      label: '💳 Account & Billing', icon: '💳',
+      questions: [
+        { id:'suspended',  q:'Is your Google Ads account suspended or on hold?' },
+        { id:'payment',    q:'Has a recent payment failed or card expired?' },
+        { id:'mcc',        q:'Are you using a Manager (MCC) account to manage multiple accounts?' },
+        { id:'two_factor', q:'Is 2-factor authentication enabled on the account owner login?' },
+        { id:'access',     q:'Do you have multiple users with the right access levels?' },
+      ],
+      diagnose(a){
+        const issues=[], help=[];
+        if(a.suspended==='yes'){ issues.push('Suspension stops ALL spend immediately. Reasons: circumventing systems, suspicious payment, policy strikes.'); help.push('Read the suspension email carefully; submit appeal with documentation; do NOT create a new account (will also suspend).'); }
+        if(a.payment==='yes'){ issues.push('Failed payments pause campaigns. Repeated failures lock the account.'); help.push('Update card immediately; manually trigger payment from Billing → Summary; consider monthly invoicing if eligible.'); }
+        if(a.mcc==='no'){ issues.push('Single accounts get harder to manage past 3-5 brands/clients. MCC unlocks consolidated billing and reporting.'); help.push('Create an MCC (free) and link existing accounts; set up cross-account negative lists and shared assets.'); }
+        if(a.two_factor==='no'){ issues.push('No 2FA = high risk of account hijack and crypto-spam disapprovals.'); help.push('Enable 2FA on the primary login + add a backup admin email; consider Advanced Protection for the owner account.'); }
+        if(a.access==='no'){ issues.push('Single-user accounts are a bus factor of 1; no segregation between media buyer and finance.'); help.push('Add users with role-based access: Standard for media buyers, Read-only for stakeholders, Email-only for billing alerts.'); }
+        return { issues, help };
+      },
+    },
+  };
+
+  function renderTechAreaChips(){
+    const items = Object.entries(TECH_AREAS).map(([k,v])=>({
+      label: v.label, onClick: ()=>startTechArea(k),
+    }));
+    addSolveChips(items);
+  }
+
+  function startTechArea(areaKey){
+    const t=getTh(activeId); if(!t) return;
+    const ss=t.solveState;
+    ss.techArea = areaKey;
+    ss.techAnswers = {};
+    ss.techQIdx = 0;
+    const area = TECH_AREAS[areaKey];
+    addUser(area.label); t.messages.push({role:'user',text:area.label});
+    trackAction('chat:tech-area', areaKey);
+    askNextTechQuestion();
+  }
+
+  function askNextTechQuestion(){
+    const t=getTh(activeId); if(!t) return;
+    const ss=t.solveState;
+    const area=TECH_AREAS[ss.techArea];
+    const idx=ss.techQIdx||0;
+    if(idx >= area.questions.length){
+      // All answered → render diagnosis
+      finishTechFlow();
+      return;
+    }
+    const qObj=area.questions[idx];
+    const q=`(${idx+1}/${area.questions.length}) ${qObj.q}`;
+    addBot(`<p>${esc(q)}</p>`); t.messages.push({role:'bot',html:`<p>${esc(q)}</p>`});
+    lockInput('Pick an answer above...');
+    addSolveChips([
+      { label:'✅ Yes',     onClick:()=>answerTechQ('yes') },
+      { label:'❌ No',      onClick:()=>answerTechQ('no') },
+      { label:'🤷 Not sure', onClick:()=>answerTechQ('unsure') },
+    ]);
+    save();
+  }
+
+  function answerTechQ(ans){
+    const t=getTh(activeId); if(!t) return;
+    const ss=t.solveState;
+    const area=TECH_AREAS[ss.techArea];
+    const idx=ss.techQIdx||0;
+    const qObj=area.questions[idx];
+    ss.techAnswers[qObj.id]=ans;
+    addUser(ans==='yes'?'Yes':ans==='no'?'No':'Not sure');
+    t.messages.push({role:'user',text:ans});
+    trackAction('chat:tech-ans', `${qObj.id}=${ans}`);
+    ss.techQIdx = idx + 1;
+    setTimeout(()=>askNextTechQuestion(), 250);
+    save();
+  }
+
+  function finishTechFlow(){
+    const t=getTh(activeId); if(!t) return;
+    const ss=t.solveState;
+    const area=TECH_AREAS[ss.techArea];
+    const result = area.diagnose(ss.techAnswers);
+    const card=document.createElement('div');
+    card.className='sv-card sv-results';
+    card.innerHTML = `
+      <div class="sv-card-h">${area.icon} Diagnosis — ${esc(area.label.replace(/^\S+\s/,''))}</div>
+      ${result.issues.length === 0
+        ? '<div style="font-size:.85rem;color:#0d8043;padding:.5rem 0">✅ No obvious issues found from these questions. The problem may be more nuanced — talk to a specialist.</div>'
+        : `
+        <div class="sv-results-section">
+          <div class="sv-results-section-h">⚠️ Likely issues</div>
+          <ul style="margin:.3rem 0 .5rem 1rem;padding:0;font-size:.82rem;line-height:1.55;color:#202124">
+            ${result.issues.map(x=>`<li style="margin-bottom:.3rem">${esc(x)}</li>`).join('')}
+          </ul>
+        </div>
+        <div class="sv-results-section">
+          <div class="sv-results-section-h">🛠 What we can help you with</div>
+          <ul style="margin:.3rem 0 .5rem 1rem;padding:0;font-size:.82rem;line-height:1.55;color:#202124">
+            ${result.help.map(x=>`<li style="margin-bottom:.3rem">${esc(x)}</li>`).join('')}
+          </ul>
+        </div>`}
+      <div class="sv-card-note">This is a quick diagnosis from yes/no signals. A 30-min audit with a Google Ads Solution Architect will reveal the root cause.</div>`;
+    el().appendChild(card); el().scrollTop=el().scrollHeight;
+    trackAction('chat:tech-diagnose', ss.techArea);
+
+    // Lead form CTA
+    setTimeout(()=>{
+      addCtaButton('🤝 Get expert help from a Google Ads Solution Architect', 'secondary', ()=>{
+        trackAction('chat:cta-expert-tech');
+        ss.stage='lead';
+        const intro="Perfect — leave your details and our Google Ads Solution Architect will reach out within 24 hours to dive into the technical setup.";
+        addBot(`<p>${esc(intro)}</p>`); t.messages.push({role:'bot',html:`<p>${esc(intro)}</p>`});
+        if(!ss.leadShown){ ss.leadShown=true; addLeadForm(t); }
+        ss.stage='gemini';
+        setTimeout(()=>{
+          const followup="Or ask me follow-up technical questions — I'm here.";
+          addBot(`<p>${esc(followup)}</p>`); t.messages.push({role:'bot',html:`<p>${esc(followup)}</p>`});
+          unlockInput(); save();
+        }, 600);
+        save();
+      });
+      save();
+    }, 700);
+    save();
   }
 
   // ── Solve mode: progress bar (default 9 stages, +3 optional refine = 12) ──
@@ -771,8 +982,14 @@ const base = import.meta.env.BASE_URL;
     persona:'Target customer', product:'Describe your business', competitor:'Competitors',
     budget:'Budget range', goal:'Conversion goal', value:'Customer value',
     results:'Market & budget', solutions:'Your playbook', lead:'Talk to expert',
+    tech:'Technical diagnosis',
   };
-  function getSolveSteps(ss){ return ss && ss.refining ? SOLVE_STEPS_REFINED : SOLVE_STEPS_DEFAULT; }
+  const SOLVE_STEPS_TECH = ['init','tech','lead'];
+  function getSolveSteps(ss){
+    if(!ss) return SOLVE_STEPS_DEFAULT;
+    if(ss.intent==='tech') return SOLVE_STEPS_TECH;
+    return ss.refining ? SOLVE_STEPS_REFINED : SOLVE_STEPS_DEFAULT;
+  }
 
   // ── Persona share heuristic (approx. % of online pop) ──
   function personaShare(personaText){
@@ -829,20 +1046,51 @@ const base = import.meta.env.BASE_URL;
   }
 
   // ── Combined results card: TAM, SAM, reachable, budget tiers ──
-  // Now factors persona segment + competitor density.
-  function reachablePeople(ss){
-    if(!markets || !ss.cityKey || !markets.cities[ss.cityKey]) return null;
+  // Realistic calc using per-industry intent rate + persona segment + competitor density.
+  function reachableBreakdown(ss){
+    if(!markets || !ss.cityKey || !markets.cities[ss.cityKey] || ss.cityKey==='__other__') return null;
     const c=markets.cities[ss.cityKey];
     const ind=c.industries[ss.industryKey];
-    if(!ind) return null;
-    const onlinePop = c.population * c.internet_penetration;
-    const interestShare = 0.10;                  // ~10% category interest
-    const personaPct   = personaShare(ss.persona); // demographic slice
-    const compAdj      = competitorAdj(ss.competitors);
-    // Reachable = online × interest × persona × competitor adjustment
-    // Note: persona × interest both gate the slice; we blend rather than multiply twice
-    const blendedShare = Math.max(0.02, (interestShare + personaPct) / 2);
-    return Math.round(onlinePop * blendedShare * compAdj);
+    const meta=markets.industries_meta[ss.industryKey];
+    if(!ind || !meta) return null;
+    const onlinePop = Math.round(c.population * c.internet_penetration);
+    const intentRate = meta.intent_rate || 0.10;        // industry-specific
+    const personaPct = personaShare(ss.persona);         // demographic slice
+    const compAdj    = competitorAdj(ss.competitors);    // 0.7-1.05
+    // Active in-market buyers = online × industry intent rate
+    const inMarket = Math.round(onlinePop * intentRate);
+    // Persona-matched = in-market × persona share (lower bound: persona acts as a filter)
+    const personaMatched = Math.round(inMarket * personaPct);
+    // Final reachable after competitor density
+    const reachable = Math.round(personaMatched * compAdj);
+    return { onlinePop, intentRate, inMarket, personaPct, personaMatched, compAdj, reachable };
+  }
+  function reachablePeople(ss){
+    const b = reachableBreakdown(ss);
+    return b ? b.reachable : null;
+  }
+
+  // CPC × clicks-based realistic budget tiers (replaces SAM-derived formula)
+  function realisticBudgetTiers(ss){
+    if(!markets) return null;
+    const meta = markets.industries_meta[ss.industryKey];
+    if(!meta) return null;
+    const cpcMid = (meta.cpc_low + meta.cpc_high) / 2;
+    // City multiplier: SG/HK higher CPC, smaller VN cities lower
+    const cityMult = ({ 'singapore':1.6, 'hong-kong':1.5, 'kuala-lumpur':1.2, 'bangkok':1.1, 'jakarta':1.0,
+                       'ho-chi-minh-city':1.0, 'hanoi':1.0, 'da-nang':0.8, 'can-tho':0.75, 'hai-phong':0.85 }[ss.cityKey]) || 1.0;
+    const adjCpc = cpcMid * cityMult;
+    // Clicks/month per tier
+    const tiers = [
+      { name:'Starter',    clicks: 600,   kpi:'Test what works' },
+      { name:'Growth',     clicks: 2500,  kpi:'Scale winners' },
+      { name:'Aggressive', clicks: 8000,  kpi:'Capture share' },
+    ];
+    return tiers.map(t => {
+      const lo = Math.round(t.clicks * adjCpc * 0.75);
+      const hi = Math.round(t.clicks * adjCpc * 1.25);
+      return { name: t.name, kpi: t.kpi, lo, hi, clicks: t.clicks };
+    });
   }
 
   function addResultsCard(ss){
@@ -850,20 +1098,19 @@ const base = import.meta.env.BASE_URL;
     const c=markets.cities[ss.cityKey];
     const ind=c.industries[ss.industryKey];
     const meta=markets.industries_meta[ss.industryKey];
-    const reach=reachablePeople(ss);
-    const baseMonthly = ind.sam * 0.0002 / 12;
-    const tiers = [
-      { name:'Starter',    mult: 0.4, kpi:'Test what works' },
-      { name:'Growth',     mult: 1.0, kpi:'Scale winners' },
-      { name:'Aggressive', mult: 2.5, kpi:'Capture share' },
-    ];
+    const breakdown = reachableBreakdown(ss);
+    const tiers = realisticBudgetTiers(ss) || [];
+
+    const fmtPct = n => Math.round(n*100)+'%';
+    const compTxt = breakdown.compAdj < 1 ? `${Math.round((1-breakdown.compAdj)*100)}% lower (crowded)` : breakdown.compAdj > 1 ? `${Math.round((breakdown.compAdj-1)*100)}% higher (open)` : 'neutral';
+
     const card=document.createElement('div');
     card.className='sv-card sv-results';
     card.innerHTML=`
       <div class="sv-card-h">📊 Your market snapshot — ${meta.icon} ${esc(meta.label)} in ${esc(c.name)}</div>
 
       <div class="sv-results-section">
-        <div class="sv-results-section-h">Market size</div>
+        <div class="sv-results-section-h">Category market size <span style="text-transform:none;font-weight:400;color:#9aa0a6">(consumer transaction value, not ad spend)</span></div>
         <div class="sv-card-grid">
           <div><div class="sv-stat-l">TAM (annual)</div><div class="sv-stat-v">${fmtMoney(ind.tam)}</div></div>
           <div><div class="sv-stat-l">SAM (digital)</div><div class="sv-stat-v">${fmtMoney(ind.sam)}</div></div>
@@ -872,28 +1119,34 @@ const base = import.meta.env.BASE_URL;
       </div>
 
       <div class="sv-results-section">
-        <div class="sv-results-section-h">People you can reach</div>
+        <div class="sv-results-section-h">People you can realistically reach</div>
         <div class="sv-card-grid">
-          <div><div class="sv-stat-l">City population</div><div class="sv-stat-v">${(c.population/1e6).toFixed(1)}M</div></div>
-          <div><div class="sv-stat-l">Online users</div><div class="sv-stat-v">${(c.population*c.internet_penetration/1e6).toFixed(1)}M</div></div>
-          <div><div class="sv-stat-l">Reachable buyers*</div><div class="sv-stat-v">~${(reach/1e3).toFixed(0)}K</div></div>
+          <div><div class="sv-stat-l">Online users</div><div class="sv-stat-v">${(breakdown.onlinePop/1e6).toFixed(1)}M</div></div>
+          <div><div class="sv-stat-l">In-market this year</div><div class="sv-stat-v">${(breakdown.inMarket/1e3).toFixed(0)}K</div></div>
+          <div><div class="sv-stat-l">Persona-matched buyers</div><div class="sv-stat-v">~${(breakdown.reachable/1e3).toFixed(1)}K</div></div>
+        </div>
+        <div style="font-size:.7rem;color:#5f6368;margin-top:.55rem;line-height:1.5">
+          <b>How we got there:</b> ${(breakdown.onlinePop/1e6).toFixed(1)}M online
+          × ${fmtPct(breakdown.intentRate)} actively shopping ${meta.label.toLowerCase()} (industry rate)
+          × ${fmtPct(breakdown.personaPct)} matching your persona
+          × competitor density ${compTxt}
+          = <b>~${(breakdown.reachable/1e3).toFixed(1)}K reachable</b>
         </div>
       </div>
 
       <div class="sv-results-section">
-        <div class="sv-results-section-h">Suggested monthly budget tiers</div>
+        <div class="sv-results-section-h">Realistic monthly budget tiers <span style="text-transform:none;font-weight:400;color:#9aa0a6">(CPC × clicks)</span></div>
         <div class="sv-card-grid">
-          ${tiers.map(t=>{
-            const lo=Math.round(baseMonthly*t.mult*0.7);
-            const hi=Math.round(baseMonthly*t.mult*1.3);
-            return `<div><div class="sv-stat-l">${t.name}</div><div class="sv-stat-v" style="font-size:.82rem">${fmtMoney(lo)}–${fmtMoney(hi)}</div><div class="sv-stat-l" style="margin-top:.2rem;text-transform:none;letter-spacing:0">${t.kpi}</div></div>`;
-          }).join('')}
+          ${tiers.map(t=>`<div><div class="sv-stat-l">${t.name}</div><div class="sv-stat-v" style="font-size:.82rem">${fmtMoney(t.lo)}–${fmtMoney(t.hi)}</div><div class="sv-stat-l" style="margin-top:.2rem;text-transform:none;letter-spacing:0">${t.kpi} • ~${t.clicks.toLocaleString()} clicks/mo</div></div>`).join('')}
+        </div>
+        <div style="font-size:.7rem;color:#5f6368;margin-top:.55rem;line-height:1.5">
+          Based on typical ${meta.label} CPC of <b>$${meta.cpc_low.toFixed(2)}–$${meta.cpc_high.toFixed(2)}</b> in this market, adjusted for city pricing.
         </div>
       </div>
 
-      <div class="sv-card-note">⚠️ <b>Quick estimate from a basic calculator</b> — directional only. *Reachable buyers ≈ blend of category interest + your selected persona segment, adjusted for competitor density. To get the real picture, layer in social listening, competitor research, and a 1-2 week Google Ads test campaign to measure actual CTR, CPC, and intent in your niche.</div>`;
+      <div class="sv-card-note">⚠️ <b>Directional estimates only.</b> Your inputs that shaped these numbers: <b>industry</b> sets the in-market intent rate, <b>persona</b> filters down to your demographic slice, and <b>competitor count</b> adjusts for market crowdedness. Real numbers come from a 1-2 week Google Ads test campaign — measure actual CTR, CPC, and conversion intent in YOUR niche.</div>`;
     el().appendChild(card); el().scrollTop=el().scrollHeight;
-    return { city: c.name, industry: meta.label, tam: ind.tam, sam: ind.sam, growth: ind.growth, reach };
+    return { city: c.name, industry: meta.label, tam: ind.tam, sam: ind.sam, growth: ind.growth, reach: breakdown.reachable };
   }
 
   // ── Big CTA button ──
@@ -936,6 +1189,14 @@ const base = import.meta.env.BASE_URL;
       const greet="Tell me about your situation — what problem are you trying to solve, and what have you tried so far? Bạn có thể viết tiếng Việt nếu muốn.";
       addBot(`<p>${esc(greet)}</p>`);
       t.messages.push({role:'bot',html:`<p>${esc(greet)}</p>`});
+      save(); return;
+    }
+
+    if(intent==='tech'){
+      t.solveState.stage='tech'; updateProgress(); lockInput('Pick an area above...');
+      const ask="Which technical area is giving you trouble? Pick one and I'll ask 5-6 yes/no questions to scope it down.";
+      addBot(`<p>${esc(ask)}</p>`); t.messages.push({role:'bot',html:`<p>${esc(ask)}</p>`});
+      renderTechAreaChips();
       save(); return;
     }
 
