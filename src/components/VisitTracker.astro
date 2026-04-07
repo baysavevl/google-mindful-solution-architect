@@ -1,0 +1,128 @@
+---
+// Tracks visitor sessions → /api/track-visit. No-ops on GitHub Pages (static-only build).
+const base = import.meta.env.BASE_URL;
+const apiEnabled = base === '/'; // Vercel only
+---
+
+{apiEnabled && (
+  <script is:inline define:vars={{ apiEnabled }}>
+    (function () {
+      if (!apiEnabled) return;
+      try {
+        var KEY = 'gads-visit-session';
+        var PAGES_KEY = 'gads-visit-pages';
+        var VISIT_COUNT_KEY = 'gads-visit-count';      // persists across sessions
+        var ENG_KEY = 'gads-visit-engagement';         // {maxScroll, clicks, firstClick, lastClick}
+        var startTs = Date.now();
+
+        // ── Visit count (returning visitor detection) ──
+        var visitCount = parseInt(localStorage.getItem(VISIT_COUNT_KEY) || '0', 10);
+        var session = null;
+        try { session = JSON.parse(sessionStorage.getItem(KEY) || 'null'); } catch (e) {}
+        if (!session) {
+          visitCount += 1;
+          localStorage.setItem(VISIT_COUNT_KEY, String(visitCount));
+        }
+
+        // ── Track pages in this session ──
+        var pages = [];
+        try { pages = JSON.parse(sessionStorage.getItem(PAGES_KEY) || '[]'); } catch (e) {}
+        if (pages[pages.length - 1] !== location.pathname) pages.push(location.pathname);
+        sessionStorage.setItem(PAGES_KEY, JSON.stringify(pages));
+
+        // ── Engagement state (per session) ──
+        var eng = { maxScroll: 0, clicks: 0, firstClick: null, lastClick: null };
+        try { eng = Object.assign(eng, JSON.parse(sessionStorage.getItem(ENG_KEY) || '{}')); } catch (e) {}
+        function saveEng() { try { sessionStorage.setItem(ENG_KEY, JSON.stringify(eng)); } catch (e) {} }
+
+        // Scroll depth
+        function calcScroll() {
+          var doc = document.documentElement, body = document.body;
+          var scrollTop = window.pageYOffset || doc.scrollTop;
+          var height = Math.max(doc.scrollHeight, body.scrollHeight) - window.innerHeight;
+          if (height <= 0) return 100;
+          return Math.min(100, Math.round((scrollTop / height) * 100));
+        }
+        var scrollT = null;
+        window.addEventListener('scroll', function () {
+          if (scrollT) return;
+          scrollT = setTimeout(function () {
+            scrollT = null;
+            var d = calcScroll();
+            if (d > eng.maxScroll) { eng.maxScroll = d; saveEng(); }
+          }, 250);
+        }, { passive: true });
+
+        // Click tracking
+        document.addEventListener('click', function (e) {
+          eng.clicks += 1;
+          var tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : '?';
+          var label = '';
+          if (e.target) {
+            label = (e.target.innerText || e.target.textContent || e.target.getAttribute && (e.target.getAttribute('aria-label') || e.target.getAttribute('href')) || '').trim().slice(0, 40);
+          }
+          var desc = location.pathname + ' [' + tag + ']' + (label ? ' "' + label + '"' : '');
+          if (!eng.firstClick) eng.firstClick = desc;
+          eng.lastClick = desc;
+          saveEng();
+        }, true);
+
+        // Parse UTM
+        var qp = new URLSearchParams(location.search);
+        var utm = {};
+        ['utm_source','utm_medium','utm_campaign','utm_term','utm_content'].forEach(function (k) {
+          var v = qp.get(k); if (v) utm[k] = v;
+        });
+
+        if (!session) {
+          fetch('/api/track-visit', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({
+              event: 'start',
+              landing: location.pathname + location.search,
+              referrer: document.referrer,
+              language: navigator.language,
+              screen: (screen.width || 0) + 'x' + (screen.height || 0),
+              utm: utm,
+              visitCount: visitCount,
+            }),
+          })
+            .then(function (r) { return r.json(); })
+            .then(function (d) {
+              if (d && d.sessionId) {
+                sessionStorage.setItem(KEY, JSON.stringify({ id: d.sessionId, startTs: startTs }));
+              }
+            })
+            .catch(function () {});
+        }
+
+        // End-of-session beacon
+        function sendEnd() {
+          var s = null;
+          try { s = JSON.parse(sessionStorage.getItem(KEY) || 'null'); } catch (e) {}
+          if (!s) return;
+          var endPages = [];
+          try { endPages = JSON.parse(sessionStorage.getItem(PAGES_KEY) || '[]'); } catch (e) {}
+          var payload = JSON.stringify({
+            event: 'end',
+            sessionId: s.id,
+            durationMs: Date.now() - s.startTs,
+            pages: endPages,
+            maxScroll: eng.maxScroll,
+            clickCount: eng.clicks,
+            firstClick: eng.firstClick,
+            lastClick: eng.lastClick,
+          });
+          var blob = new Blob([payload], { type: 'application/json' });
+          if (navigator.sendBeacon) navigator.sendBeacon('/api/track-visit', blob);
+          else fetch('/api/track-visit', { method: 'POST', headers: { 'content-type': 'application/json' }, body: payload, keepalive: true });
+        }
+
+        window.addEventListener('pagehide', sendEnd);
+      } catch (e) {
+        // silent
+      }
+    })();
+  </script>
+)}

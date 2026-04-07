@@ -2,6 +2,7 @@
 import "../styles/global.css";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
+import VisitTracker from "../components/VisitTracker.astro";
 
 interface Props {
   title: string;
@@ -34,5 +35,6 @@ const siteTitle = `${title} | Google Ads Solutions Architect`;
       <slot />
     </main>
     <Footer />
+    <VisitTracker />
   </body>
 </html>

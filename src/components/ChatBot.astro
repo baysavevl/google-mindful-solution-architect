@@ -15,6 +15,14 @@ const base = import.meta.env.BASE_URL;
 
   <!-- Right: conversation -->
   <div class="ms-main">
+    <div class="ms-tabs">
+      <button class="ms-tab on" id="ms-tab-discover" data-mode="discover">
+        <span class="ms-tab-ic">💡</span> Discover Google Ads
+      </button>
+      <button class="ms-tab" id="ms-tab-solve" data-mode="solve">
+        <span class="ms-tab-ic">🎯</span> Solve Your Problems
+      </button>
+    </div>
     <div class="ms-messages" id="ms-messages"></div>
     <div class="ms-input-wrap">
       <div class="ms-input-row">
@@ -262,17 +270,87 @@ const base = import.meta.env.BASE_URL;
     white-space: nowrap;
   }
 
+  /* ═══ Mode tabs ═══ */
+  .ms-tabs {
+    display: flex; gap: 0; border-bottom: 1px solid #e8eaed;
+    background: #fff; flex-shrink: 0;
+  }
+  .ms-tab {
+    flex: 1; padding: 0.7rem 0.9rem; background: none; border: none;
+    cursor: pointer; font-family: var(--font-sans);
+    font-size: 0.78rem; font-weight: 500; color: #5f6368;
+    border-bottom: 2px solid transparent;
+    transition: all 0.15s; display: flex; align-items: center;
+    justify-content: center; gap: 0.35rem;
+  }
+  .ms-tab:hover { background: #f8f9fa; color: #202124; }
+  .ms-tab.on { color: #1a73e8; border-bottom-color: #1a73e8; background: #f8fbff; }
+  .ms-tab-ic { font-size: 0.95rem; }
+
+  /* ═══ Market card (Solve mode) ═══ */
+  .sv-card {
+    align-self: flex-start; max-width: 88%;
+    border: 1px solid #dadce0; border-radius: 12px;
+    padding: 0.85rem 1rem; margin: 12px 0 2px;
+    background: linear-gradient(135deg, #f8fbff 0%, #fff 100%);
+    font-size: 0.85rem; animation: fadeIn 0.3s ease;
+  }
+  .sv-card-h {
+    font-weight: 600; color: #1a73e8; font-size: 0.82rem;
+    margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.4rem;
+  }
+  .sv-card-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem 0.85rem;
+    margin-top: 0.5rem;
+  }
+  .sv-stat-l { color: #5f6368; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.03em; }
+  .sv-stat-v { color: #202124; font-weight: 600; font-size: 0.95rem; }
+  .sv-card-note { font-size: 0.7rem; color: #9aa0a6; margin-top: 0.6rem; font-style: italic; }
+
+  /* ═══ Lead form (Solve mode) ═══ */
+  .sv-form {
+    align-self: flex-start; max-width: 88%; width: 100%;
+    border: 1px solid #dadce0; border-radius: 12px;
+    padding: 1rem; margin: 12px 0 2px; background: #fff;
+    animation: fadeIn 0.3s ease;
+  }
+  .sv-form-h { font-weight: 600; color: #202124; font-size: 0.88rem; margin-bottom: 0.6rem; }
+  .sv-form-sub { font-size: 0.78rem; color: #5f6368; margin-bottom: 0.85rem; }
+  .sv-form input, .sv-form textarea {
+    width: 100%; padding: 0.55rem 0.75rem; margin-bottom: 0.55rem;
+    border: 1px solid #dadce0; border-radius: 8px; font-size: 0.85rem;
+    font-family: var(--font-sans); color: #202124; outline: none;
+    transition: border 0.15s; box-sizing: border-box;
+  }
+  .sv-form input:focus, .sv-form textarea:focus { border-color: #1a73e8; }
+  .sv-form textarea { resize: vertical; min-height: 60px; }
+  .sv-form-btn {
+    width: 100%; padding: 0.65rem; background: #1a73e8; color: #fff;
+    border: none; border-radius: 8px; font-weight: 500; font-size: 0.88rem;
+    cursor: pointer; transition: background 0.15s;
+  }
+  .sv-form-btn:hover { background: #1557b0; }
+  .sv-form-btn:disabled { background: #9aa0a6; cursor: not-allowed; }
+  .sv-form-ok { color: #0d8043; font-size: 0.85rem; padding: 0.5rem 0; font-weight: 500; }
+
+  /* Solve mode chip variants */
+  .bub-chip.sv { color: #5f2e8c; }
+  .bub-chip.sv:hover { background: #f3e8ff; border-color: #5f2e8c; }
+
   @media (max-width: 640px) {
     .ms-side { display: none; }
     .messenger { height: 480px; }
+    .ms-tab { font-size: 0.72rem; padding: 0.55rem 0.4rem; }
+    .sv-card-grid { grid-template-columns: 1fr; }
   }
 </style>
 
 <script>
   import { ChatEngine } from '../scripts/chat-engine.js';
 
-  const STORE='gads-v6', MAX=5, TTL=10*60*1000;
-  let engine=null, threads=[], activeId=null, lastWho=null;
+  const STORE='gads-v7', MAX=5, TTL=30*60*1000;
+  const API_BASE = import.meta.env.BASE_URL === '/' ? '' : null; // null = API disabled (GH Pages)
+  let engine=null, threads=[], activeId=null, lastWho=null, markets=null;
 
   function load(){try{const r=localStorage.getItem(STORE);if(!r)return[];return JSON.parse(r).filter(t=>Date.now()-t.ts<TTL)}catch{return[]}}
   function save(){try{localStorage.setItem(STORE,JSON.stringify(threads))}catch{}}
@@ -280,6 +358,62 @@ const base = import.meta.env.BASE_URL;
 
   async function initEngine(){
     try{const r=await fetch(import.meta.env.BASE_URL+'data/knowledge-base.json');engine=new ChatEngine(await r.json())}catch(e){console.warn(e)}
+  }
+  async function initMarkets(){
+    try{const r=await fetch(import.meta.env.BASE_URL+'data/markets.json');markets=await r.json()}catch(e){console.warn('markets load',e)}
+  }
+  function fmtMoney(n){
+    if(n>=1e9)return '$'+(n/1e9).toFixed(1)+'B';
+    if(n>=1e6)return '$'+(n/1e6).toFixed(0)+'M';
+    if(n>=1e3)return '$'+(n/1e3).toFixed(0)+'K';
+    return '$'+n;
+  }
+
+  // ── Gemini rate limits (client-enforced) ──
+  const RL = { perSession: 5, perUser: 10 };
+  function todayKey(){ return new Date(new Date().getTime()+7*3600000).toISOString().slice(0,10); }
+  function rlGet(scope){
+    const k='gads-rl-'+scope;
+    try{const r=JSON.parse(localStorage.getItem(k)||'null'); if(r&&r.date===todayKey())return r.count; }catch{}
+    return 0;
+  }
+  function rlInc(scope){
+    const k='gads-rl-'+scope, n=rlGet(scope)+1;
+    try{localStorage.setItem(k,JSON.stringify({date:todayKey(),count:n}));}catch{}
+    return n;
+  }
+  function rlSessionGet(){ try{return parseInt(sessionStorage.getItem('gads-rl-sess')||'0',10);}catch{return 0;} }
+  function rlSessionInc(){ const n=rlSessionGet()+1; try{sessionStorage.setItem('gads-rl-sess',String(n));}catch{} return n; }
+  function rlCheck(){
+    if(rlSessionGet()>=RL.perSession) return { ok:false, reason:'session', msg:`You've used your ${RL.perSession} AI requests for this session. Open a new tab tomorrow to reset, or fill the contact form below.` };
+    if(rlGet('user')>=RL.perUser) return { ok:false, reason:'user', msg:`You've used your daily ${RL.perUser} AI requests. Come back tomorrow, or fill the contact form to reach a specialist.` };
+    return { ok:true };
+  }
+
+  // ── Budget calculator card ──
+  function addBudgetCard(marketData){
+    if(!marketData) return;
+    // Heuristic: capture small slice of SAM, scaled by tier
+    const sam = marketData.sam || 0;
+    const baseMonthly = sam * 0.0002 / 12; // 0.02% annual share / 12 months
+    const tiers = [
+      { name:'Starter',    mult: 0.4, kpi:'Learn what works' },
+      { name:'Growth',     mult: 1.0, kpi:'Scale winners' },
+      { name:'Aggressive', mult: 2.5, kpi:'Capture share fast' },
+    ];
+    const card=document.createElement('div');
+    card.className='sv-card';
+    card.innerHTML=`
+      <div class="sv-card-h">💰 Suggested monthly budget tiers</div>
+      <div class="sv-card-grid" style="grid-template-columns:1fr 1fr 1fr">
+        ${tiers.map(t=>{
+          const lo=Math.round(baseMonthly*t.mult*0.7);
+          const hi=Math.round(baseMonthly*t.mult*1.3);
+          return `<div><div class="sv-stat-l">${t.name}</div><div class="sv-stat-v" style="font-size:.82rem">${fmtMoney(lo)}–${fmtMoney(hi)}</div><div class="sv-stat-l" style="margin-top:.2rem;text-transform:none;letter-spacing:0">${t.kpi}</div></div>`;
+        }).join('')}
+      </div>
+      <div class="sv-card-note">Derived from SAM × test-share. Treat as a starting point; actual budget depends on CPC and goals.</div>`;
+    el().appendChild(card); el().scrollTop=el().scrollHeight;
   }
 
   function esc(t){const d=document.createElement('div');d.textContent=t;return d.innerHTML}
@@ -344,6 +478,85 @@ const base = import.meta.env.BASE_URL;
     el().appendChild(wrap); el().scrollTop=el().scrollHeight;
   }
 
+  // ── Solve mode: add chips with custom labels + payloads ──
+  function addSolveChips(items, idAttr){
+    const wrap=document.createElement('div');
+    wrap.className='bub-chips';
+    if(idAttr) wrap.id=idAttr;
+    items.forEach(it=>{
+      const c=document.createElement('button');
+      c.className='bub-chip sv'; c.textContent=it.label;
+      c.addEventListener('click',()=>{ wrap.remove(); it.onClick(); });
+      wrap.appendChild(c);
+    });
+    el().appendChild(wrap); el().scrollTop=el().scrollHeight;
+  }
+
+  // ── Solve mode: render market card ──
+  function addMarketCard(cityKey, industryKey){
+    if(!markets || !markets.cities[cityKey] || !markets.cities[cityKey].industries[industryKey]) return;
+    const city=markets.cities[cityKey];
+    const ind=city.industries[industryKey];
+    const meta=markets.industries_meta[industryKey];
+    const card=document.createElement('div');
+    card.className='sv-card';
+    card.innerHTML=`
+      <div class="sv-card-h">${meta.icon} ${esc(meta.label)} — ${esc(city.name)}</div>
+      <div class="sv-card-grid">
+        <div><div class="sv-stat-l">Population</div><div class="sv-stat-v">${(city.population/1e6).toFixed(1)}M</div></div>
+        <div><div class="sv-stat-l">Internet reach</div><div class="sv-stat-v">${Math.round(city.internet_penetration*100)}%</div></div>
+        <div><div class="sv-stat-l">TAM (annual)</div><div class="sv-stat-v">${fmtMoney(ind.tam)}</div></div>
+        <div><div class="sv-stat-l">SAM (digital)</div><div class="sv-stat-v">${fmtMoney(ind.sam)}</div></div>
+        <div><div class="sv-stat-l">YoY growth</div><div class="sv-stat-v">${(ind.growth*100).toFixed(0)}%</div></div>
+      </div>
+      <div class="sv-card-note">Estimates from curated dataset. Use as a directional benchmark.</div>`;
+    el().appendChild(card); el().scrollTop=el().scrollHeight;
+    return { city: city.name, industry: meta.label, tam: ind.tam, sam: ind.sam, growth: ind.growth };
+  }
+
+  // ── Solve mode: render lead form ──
+  function addLeadForm(t){
+    const form=document.createElement('div');
+    form.className='sv-form';
+    form.innerHTML=`
+      <div class="sv-form-h">🤝 Let's connect you with a specialist</div>
+      <div class="sv-form-sub">Leave your info and we'll reach out within 24h. No spam.</div>
+      <input type="text" id="lf-name" placeholder="Your name *" />
+      <input type="text" id="lf-contact" placeholder="Email or phone *" />
+      <input type="text" id="lf-business" placeholder="Business / product (optional)" />
+      <textarea id="lf-notes" placeholder="Anything else we should know? (optional)"></textarea>
+      <button class="sv-form-btn" id="lf-submit">Send</button>`;
+    el().appendChild(form); el().scrollTop=el().scrollHeight;
+
+    form.querySelector('#lf-submit').addEventListener('click', async ()=>{
+      const name=form.querySelector('#lf-name').value.trim();
+      const contact=form.querySelector('#lf-contact').value.trim();
+      const business=form.querySelector('#lf-business').value.trim();
+      const notes=form.querySelector('#lf-notes').value.trim();
+      if(!name||!contact){ showNotice('Name and contact required'); return; }
+      const btn=form.querySelector('#lf-submit'); btn.disabled=true; btn.textContent='Sending...';
+
+      if(API_BASE===null){
+        // Static deploy — fake success
+        form.innerHTML='<div class="sv-form-ok">✓ Thanks! (demo mode — backend disabled)</div>';
+        return;
+      }
+      try{
+        const ss=t.solveState||{};
+        const r=await fetch('/api/lead-submit',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({
+          name, contact, business, notes,
+          city: ss.cityName||'', industry: ss.industryName||'',
+          conversation: (ss.history||[]).map(h=>({role:h.role,text:h.text})),
+        })});
+        const d=await r.json();
+        if(d.ok){ form.innerHTML='<div class="sv-form-ok">✓ Thanks! We\'ll reach out within 24h.</div>'; }
+        else { btn.disabled=false; btn.textContent='Send'; showNotice('Submit failed — try again'); }
+      }catch(e){
+        btn.disabled=false; btn.textContent='Send'; showNotice('Network error');
+      }
+    });
+  }
+
   // ── Streaming bot response ──
   async function addBotStream(raw, opts={}){
     const b=document.createElement('div');
@@ -390,10 +603,26 @@ const base = import.meta.env.BASE_URL;
   }
 
   function getTh(id){return threads.find(t=>t.id===id)}
-  function newTh(){
+  function currentMode(){const t=getTh(activeId);return (t&&t.mode)||'discover'}
+  function newTh(mode){
+    mode = mode || 'discover';
     if(threads.length>=MAX){showNotice(`Max ${MAX} chats. Delete one to create a new chat.`);return}
-    const t={id:gid(),title:'',messages:[],ts:Date.now()};threads.push(t);activeId=t.id;
-    save();renderChat();renderSB();document.getElementById('ms-input').focus();
+    const t={id:gid(),title:'',messages:[],ts:Date.now(),mode:mode,solveState:{stage:'init',history:[]}};
+    threads.push(t);activeId=t.id;
+    save();renderChat();renderSB();syncTabs();document.getElementById('ms-input').focus();
+  }
+  function syncTabs(){
+    const m=currentMode();
+    document.getElementById('ms-tab-discover').classList.toggle('on',m==='discover');
+    document.getElementById('ms-tab-solve').classList.toggle('on',m==='solve');
+  }
+  function switchMode(mode){
+    const t=getTh(activeId);
+    if(t && (t.mode||'discover')===mode){ syncTabs(); return; }
+    // Find existing thread of that mode, else create new
+    const existing = threads.find(x=>(x.mode||'discover')===mode);
+    if(existing){ activeId=existing.id; save(); renderChat(); renderSB(); syncTabs(); }
+    else { newTh(mode); }
   }
   function delTh(id){
     threads=threads.filter(t=>t.id!==id);
@@ -405,16 +634,243 @@ const base = import.meta.env.BASE_URL;
   function renderChat(){
     el().innerHTML=''; lastWho=null;
     const t=getTh(activeId);
+    const mode=(t&&t.mode)||'discover';
     if(!t||!t.messages.length){
-      addBot('<p>Hi! I\'m your <strong>Google Ads Solutions Architect</strong>. Ask me about campaigns, bidding, tracking, optimization, or success stories.</p>');
-      addChips();
+      if(mode==='solve'){
+        addBot('<p>Hi! I\'m here to help you <strong>solve a real business problem</strong> with Google Ads. Tell me what\'s on your mind — in any language. Or pick one to start:</p>');
+        renderSolveInitChips();
+      } else {
+        addBot('<p>Hi! I\'m your <strong>Google Ads Solutions Architect</strong>. Ask me about campaigns, bidding, tracking, optimization, or success stories.</p>');
+        addChips();
+      }
     } else {
       for(const m of t.messages){if(m.role==='user')addUser(m.text);else addBot(m.html)}
     }
   }
 
+  // ── Solve mode: initial intent chips ──
+  function renderSolveInitChips(){
+    addSolveChips([
+      { label:'📱 Market a new app/service', onClick:()=>solveStart('new-product') },
+      { label:'📈 Grow existing business',   onClick:()=>solveStart('grow') },
+      { label:'🔧 Optimize my campaigns',    onClick:()=>solveStart('optimize') },
+      { label:'💬 Other — describe in your own words', onClick:()=>solveStart('open') },
+    ],'init-chips');
+  }
+
+  async function solveStart(intent){
+    const t=getTh(activeId); if(!t)return;
+    t.solveState = t.solveState || { stage:'init', history:[] };
+    t.solveState.intent = intent;
+
+    if(intent==='open'){
+      // Skip scripted flow → straight to Gemini open dialogue
+      t.solveState.stage='gemini';
+      const greet="Tell me about your situation — what problem are you trying to solve, and what have you tried so far? Bạn có thể viết tiếng Việt nếu muốn.";
+      addBot(`<p>${esc(greet)}</p>`);
+      t.messages.push({role:'bot',html:`<p>${esc(greet)}</p>`});
+      save(); return;
+    }
+
+    // Scripted: ask product description first
+    t.solveState.stage='product';
+    const labelMap={ 'new-product':'a new app or service', 'grow':'your existing business', 'optimize':'your current campaigns' };
+    const q=`Great — let's dig into ${labelMap[intent]}. In one or two sentences, what is it and who is it for?`;
+    addBot(`<p>${esc(q)}</p>`);
+    t.messages.push({role:'bot',html:`<p>${esc(q)}</p>`});
+    save();
+  }
+
+  function renderCityChips(){
+    if(!markets) return;
+    const items = Object.entries(markets.cities).map(([k,v])=>({
+      label:'📍 '+v.name, onClick:()=>handleSolveChoice('city',k)
+    }));
+    items.push({ label:'🌏 Other / not listed', onClick:()=>handleSolveChoice('city','__other__') });
+    addSolveChips(items);
+  }
+  function renderIndustryChips(){
+    if(!markets) return;
+    const items = Object.entries(markets.industries_meta).map(([k,v])=>({
+      label:`${v.icon} ${v.label}`, onClick:()=>handleSolveChoice('industry',k)
+    }));
+    addSolveChips(items);
+  }
+
+  function handleSolveChoice(kind, value){
+    const t=getTh(activeId); if(!t)return;
+    const ss=t.solveState;
+    if(kind==='city'){
+      ss.cityKey=value;
+      ss.cityName = (value==='__other__'?'Other':(markets&&markets.cities[value]?markets.cities[value].name:value));
+      addUser(ss.cityName); t.messages.push({role:'user',text:ss.cityName});
+      ss.stage='industry';
+      const q='Which industry best fits your business?';
+      addBot(`<p>${esc(q)}</p>`); t.messages.push({role:'bot',html:`<p>${esc(q)}</p>`});
+      renderIndustryChips();
+      save();
+    } else if(kind==='industry'){
+      ss.industryKey=value;
+      ss.industryName = markets.industries_meta[value]?.label || value;
+      addUser(ss.industryName); t.messages.push({role:'user',text:ss.industryName});
+
+      // Show market card if we have data
+      if(ss.cityKey && ss.cityKey!=='__other__'){
+        const data=addMarketCard(ss.cityKey, ss.industryKey);
+        if(data) ss.marketData=data;
+      }
+      ss.stage='persona';
+      const q='Now tell me about your ideal customer — pick a persona below or describe in your own words.';
+      addBot(`<p>${esc(q)}</p>`); t.messages.push({role:'bot',html:`<p>${esc(q)}</p>`});
+      renderPersonaChips();
+      save();
+    }
+  }
+
+  // Persona library — quick-select chips
+  function renderPersonaChips(){
+    const personas=[
+      { label:'🎓 Gen Z student (18-24)', value:'Gen Z students aged 18-24, price-sensitive, mobile-first, value brand authenticity and social proof' },
+      { label:'👩 Working mom (25-40)',   value:'Working mothers aged 25-40, time-poor, value convenience and family safety, decide based on reviews' },
+      { label:'💼 Young professional',    value:'Urban young professionals aged 25-35, mid-to-high income, career-focused, willing to pay for quality and time savings' },
+      { label:'🏠 SME owner',             value:'Small business owners aged 30-50, ROI-driven, risk-averse, need clear proof of value before buying' },
+      { label:'👴 Senior (50+)',          value:'Adults aged 50+, value trust and personal service, prefer phone or in-person, less price-sensitive for quality' },
+      { label:'🧒 Parent of young kids',  value:'Parents of children under 12, prioritize safety and education, research extensively before purchase' },
+    ];
+    addSolveChips(personas.map(p=>({label:p.label,onClick:()=>handleSolveQ(p.value)})));
+  }
+
+  // Competitor stage chips (allow skip)
+  function renderCompetitorSkip(){
+    addSolveChips([{ label:'⏭ Skip — I don\'t know', onClick:()=>handleSolveQ('(no competitors specified)') }]);
+  }
+
+  // Build context hint string for Gemini
+  function buildContextHint(t){
+    const ss=t.solveState||{};
+    const parts=[];
+    parts.push('stage='+ss.stage);
+    if(ss.intent) parts.push('intent='+ss.intent);
+    if(ss.product) parts.push('product='+ss.product);
+    if(ss.cityName) parts.push('city='+ss.cityName);
+    if(ss.industryName) parts.push('industry='+ss.industryName);
+    if(ss.marketData) parts.push('market_data='+JSON.stringify(ss.marketData));
+    if(ss.persona) parts.push('persona='+ss.persona);
+    return parts.join(' | ');
+  }
+
+  async function callGemini(t, userText){
+    if(API_BASE===null){
+      // GH Pages — fallback message
+      return "Solve mode requires the live backend. Visit the deployed Vercel site to chat with the AI.";
+    }
+    const ss=t.solveState||{};
+    ss.history = ss.history || [];
+    ss.history.push({role:'user',text:userText});
+    try{
+      const r=await fetch('/api/chat-solve',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({
+        history: ss.history,
+        contextHint: buildContextHint(t),
+      })});
+      const d=await r.json();
+      // Server-side global/IP rate limit hit
+      if(r.status===429 && d.reply){
+        ss.history.push({role:'model',text:d.reply});
+        return d.reply;
+      }
+      const reply=d.reply||"Sorry, I'm having trouble responding right now.";
+      ss.history.push({role:'model',text:reply});
+      return reply;
+    }catch(e){
+      return "Network error reaching the AI. Please try again.";
+    }
+  }
+
+  // Solve mode message handler — runs scripted state machine then hands off to Gemini
+  async function handleSolveQ(q){
+    const t=getTh(activeId); if(!t)return;
+    addUser(q); t.messages.push({role:'user',text:q});
+    if(!t.title){t.title=q.length>28?q.slice(0,28)+'…':q;renderSB()}
+    const chips=document.getElementById('init-chips'); if(chips)chips.remove();
+
+    const ss = t.solveState = t.solveState || { stage:'init', history:[] };
+
+    // Scripted progression
+    if(ss.stage==='init'){
+      // Treat free text as 'open' branch
+      ss.intent='open'; ss.stage='gemini';
+    }
+    if(ss.stage==='product'){
+      ss.product=q; ss.stage='city';
+      const ask='Which city or province are you targeting?';
+      showTyping(); await new Promise(r=>setTimeout(r,300)); hideTyping();
+      addBot(`<p>${esc(ask)}</p>`); t.messages.push({role:'bot',html:`<p>${esc(ask)}</p>`});
+      renderCityChips();
+      save(); return;
+    }
+    if(ss.stage==='persona'){
+      ss.persona=q; ss.stage='competitor';
+      const ask='Who are your top 1-3 competitors? (list names, or skip)';
+      showTyping(); await new Promise(r=>setTimeout(r,250)); hideTyping();
+      addBot(`<p>${esc(ask)}</p>`); t.messages.push({role:'bot',html:`<p>${esc(ask)}</p>`});
+      renderCompetitorSkip();
+      save(); return;
+    }
+    if(ss.stage==='competitor'){
+      ss.competitors=q; ss.stage='gemini';
+      // Show budget card derived from market data
+      if(ss.marketData){ addBudgetCard(ss.marketData); }
+
+      // Rate limit check
+      const rl=rlCheck();
+      if(!rl.ok){
+        addBot(`<p>${esc(rl.msg)}</p>`);
+        t.messages.push({role:'bot',html:`<p>${esc(rl.msg)}</p>`});
+        if(!ss.leadShown){ ss.leadShown=true; setTimeout(()=>addLeadForm(t),300); }
+        save(); return;
+      }
+      rlInc('user'); rlSessionInc();
+
+      ss.history = ss.history || [];
+      const seed = `My business: ${ss.product||'(see context)'}\nLocation: ${ss.cityName||'?'}\nIndustry: ${ss.industryName||'?'}\nTarget customer: ${ss.persona||'?'}\nCompetitors: ${q}\n\nBased on this, give me your initial read in 3-4 sentences and recommend a starting Google Ads playbook (campaign type, targeting, KPI). Then ask me ONE follow-up question to refine.`;
+      showTyping();
+      const reply = await callGemini(t, seed);
+      hideTyping();
+      await addBotStream(reply);
+      t.messages.push({role:'bot',html:md(reply)});
+      const turnCount = (ss.history||[]).filter(h=>h.role==='model').length;
+      if(turnCount>=2 && !ss.leadShown){ ss.leadShown=true; setTimeout(()=>addLeadForm(t),400); }
+      save(); return;
+    }
+    if(ss.stage==='gemini'){
+      // Rate limit check
+      const rl=rlCheck();
+      if(!rl.ok){
+        addBot(`<p>${esc(rl.msg)}</p>`);
+        t.messages.push({role:'bot',html:`<p>${esc(rl.msg)}</p>`});
+        if(!ss.leadShown){ ss.leadShown=true; setTimeout(()=>addLeadForm(t),300); }
+        save(); return;
+      }
+      rlInc('user'); rlSessionInc();
+
+      showTyping();
+      const reply = await callGemini(t, q);
+      hideTyping();
+      await addBotStream(reply);
+      t.messages.push({role:'bot',html:md(reply)});
+      // Offer lead form after a few turns or if Gemini mentions specialist
+      const turnCount = (ss.history||[]).filter(h=>h.role==='model').length;
+      if((turnCount>=3 || /specialist|chuyên gia|connect/i.test(reply)) && !ss.leadShown){
+        ss.leadShown=true;
+        setTimeout(()=>addLeadForm(t),400);
+      }
+      save(); return;
+    }
+  }
+
   async function handleQ(q){
     const t=getTh(activeId);if(!t)return;
+    if((t.mode||'discover')==='solve'){ return handleSolveQ(q); }
     addUser(q); t.messages.push({role:'user',text:q});
     if(!t.title){t.title=q.length>28?q.slice(0,28)+'…':q;renderSB()}
     const chips=document.getElementById('init-chips');if(chips)chips.remove();
@@ -429,11 +885,16 @@ const base = import.meta.env.BASE_URL;
 
   // ── Boot ──
   initEngine();
+  initMarkets();
   threads=load();
-  if(!threads.length){const t={id:gid(),title:'',messages:[],ts:Date.now()};threads.push(t)}
-  activeId=threads[0].id; save(); renderChat(); renderSB();
+  if(!threads.length){const t={id:gid(),title:'',messages:[],ts:Date.now(),mode:'discover',solveState:{stage:'init',history:[]}};threads.push(t)}
+  // Backfill mode for legacy threads
+  threads.forEach(t=>{ if(!t.mode) t.mode='discover'; if(!t.solveState) t.solveState={stage:'init',history:[]}; });
+  activeId=threads[0].id; save(); renderChat(); renderSB(); syncTabs();
 
-  document.getElementById('ms-new').addEventListener('click',newTh);
+  document.getElementById('ms-new').addEventListener('click',()=>newTh(currentMode()));
+  document.getElementById('ms-tab-discover').addEventListener('click',()=>switchMode('discover'));
+  document.getElementById('ms-tab-solve').addEventListener('click',()=>switchMode('solve'));
   const inp=document.getElementById('ms-input'),btn=document.getElementById('ms-send');
   function sub(){const q=inp.value.trim();if(!q)return;inp.value='';handleQ(q)}
   btn.addEventListener('click',sub);

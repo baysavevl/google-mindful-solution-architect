@@ -1,0 +1,94 @@
+{
+  "_meta": {
+    "currency": "USD",
+    "note": "Curated estimates for major Vietnam cities. TAM = total addressable market (annual spend). SAM = serviceable addressable market (digital-reachable share). Numbers are directional, not audited.",
+    "updated": "2026-04-07"
+  },
+  "cities": {
+    "ho-chi-minh-city": {
+      "name": "Ho Chi Minh City",
+      "population": 9300000,
+      "internet_penetration": 0.78,
+      "industries": {
+        "f&b": { "tam": 4200000000, "sam": 1100000000, "growth": 0.12 },
+        "fashion": { "tam": 2800000000, "sam": 950000000, "growth": 0.09 },
+        "education": { "tam": 1900000000, "sam": 720000000, "growth": 0.15 },
+        "real-estate": { "tam": 6500000000, "sam": 1400000000, "growth": 0.06 },
+        "beauty-cosmetics": { "tam": 1600000000, "sam": 680000000, "growth": 0.14 },
+        "health-wellness": { "tam": 1800000000, "sam": 540000000, "growth": 0.13 },
+        "tech-saas": { "tam": 900000000, "sam": 410000000, "growth": 0.22 },
+        "tourism": { "tam": 2200000000, "sam": 880000000, "growth": 0.11 }
+      }
+    },
+    "hanoi": {
+      "name": "Hanoi",
+      "population": 8400000,
+      "internet_penetration": 0.76,
+      "industries": {
+        "f&b": { "tam": 3600000000, "sam": 920000000, "growth": 0.11 },
+        "fashion": { "tam": 2200000000, "sam": 780000000, "growth": 0.08 },
+        "education": { "tam": 2100000000, "sam": 820000000, "growth": 0.16 },
+        "real-estate": { "tam": 5800000000, "sam": 1250000000, "growth": 0.05 },
+        "beauty-cosmetics": { "tam": 1300000000, "sam": 540000000, "growth": 0.13 },
+        "health-wellness": { "tam": 1500000000, "sam": 470000000, "growth": 0.12 },
+        "tech-saas": { "tam": 850000000, "sam": 380000000, "growth": 0.21 },
+        "tourism": { "tam": 1900000000, "sam": 760000000, "growth": 0.10 }
+      }
+    },
+    "da-nang": {
+      "name": "Da Nang",
+      "population": 1230000,
+      "internet_penetration": 0.74,
+      "industries": {
+        "f&b": { "tam": 520000000, "sam": 140000000, "growth": 0.13 },
+        "fashion": { "tam": 290000000, "sam": 110000000, "growth": 0.08 },
+        "education": { "tam": 260000000, "sam": 95000000, "growth": 0.14 },
+        "real-estate": { "tam": 980000000, "sam": 220000000, "growth": 0.07 },
+        "beauty-cosmetics": { "tam": 180000000, "sam": 78000000, "growth": 0.13 },
+        "health-wellness": { "tam": 210000000, "sam": 64000000, "growth": 0.12 },
+        "tech-saas": { "tam": 140000000, "sam": 62000000, "growth": 0.20 },
+        "tourism": { "tam": 1400000000, "sam": 580000000, "growth": 0.18 }
+      }
+    },
+    "can-tho": {
+      "name": "Can Tho",
+      "population": 1240000,
+      "internet_penetration": 0.68,
+      "industries": {
+        "f&b": { "tam": 410000000, "sam": 98000000, "growth": 0.10 },
+        "fashion": { "tam": 220000000, "sam": 76000000, "growth": 0.07 },
+        "education": { "tam": 190000000, "sam": 64000000, "growth": 0.13 },
+        "real-estate": { "tam": 540000000, "sam": 120000000, "growth": 0.06 },
+        "beauty-cosmetics": { "tam": 130000000, "sam": 52000000, "growth": 0.12 },
+        "health-wellness": { "tam": 160000000, "sam": 46000000, "growth": 0.11 },
+        "tech-saas": { "tam": 70000000, "sam": 28000000, "growth": 0.18 },
+        "tourism": { "tam": 380000000, "sam": 140000000, "growth": 0.12 }
+      }
+    },
+    "hai-phong": {
+      "name": "Hai Phong",
+      "population": 2090000,
+      "internet_penetration": 0.71,
+      "industries": {
+        "f&b": { "tam": 620000000, "sam": 150000000, "growth": 0.10 },
+        "fashion": { "tam": 340000000, "sam": 110000000, "growth": 0.07 },
+        "education": { "tam": 280000000, "sam": 96000000, "growth": 0.13 },
+        "real-estate": { "tam": 920000000, "sam": 200000000, "growth": 0.06 },
+        "beauty-cosmetics": { "tam": 180000000, "sam": 72000000, "growth": 0.12 },
+        "health-wellness": { "tam": 220000000, "sam": 64000000, "growth": 0.11 },
+        "tech-saas": { "tam": 110000000, "sam": 44000000, "growth": 0.18 },
+        "tourism": { "tam": 480000000, "sam": 180000000, "growth": 0.11 }
+      }
+    }
+  },
+  "industries_meta": {
+    "f&b": { "label": "Food & Beverage", "icon": "🍜" },
+    "fashion": { "label": "Fashion & Apparel", "icon": "👗" },
+    "education": { "label": "Education & Training", "icon": "🎓" },
+    "real-estate": { "label": "Real Estate", "icon": "🏠" },
+    "beauty-cosmetics": { "label": "Beauty & Cosmetics", "icon": "💄" },
+    "health-wellness": { "label": "Health & Wellness", "icon": "💊" },
+    "tech-saas": { "label": "Tech / SaaS", "icon": "💻" },
+    "tourism": { "label": "Tourism & Hospitality", "icon": "✈️" }
+  }
+}
