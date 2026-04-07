@@ -72,23 +72,33 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     marketData: body.marketData || null,
     pickedKeys: Array.isArray(body.pickedKeys) ? body.pickedKeys : [],
     catalogHints: body.catalogHints || {},
+    refinedBudget: body.refinedBudget || '',
+    refinedGoal: body.refinedGoal || '',
+    refinedValue: body.refinedValue || '',
   };
 
+  const refinedBlock = (ctx.refinedBudget || ctx.refinedGoal || ctx.refinedValue)
+    ? `\nRefined inputs the user gave us (USE THESE — reference budget/goal/value explicitly in your reasoning):
+- Monthly budget: ${ctx.refinedBudget || '(not specified)'}
+- Primary conversion goal: ${ctx.refinedGoal || '(not specified)'}
+- Average customer value / order: ${ctx.refinedValue || '(not specified)'}`
+    : '';
+
   const userMsg = `Business context:
-- Goal: ${ctx.intent}
+- Initial intent: ${ctx.intent}
 - City: ${ctx.city}
 - Industry: ${ctx.industry}
 - Target customer: ${ctx.persona}
 - Product/business: ${ctx.product}
 - Competitors: ${ctx.competitors || '(none specified)'}
-- Market data: TAM ${ctx.marketData?.tam || '?'}, SAM ${ctx.marketData?.sam || '?'}, growth ${ctx.marketData?.growth || '?'}, reachable ${ctx.marketData?.reach || '?'}
+- Market data: TAM ${ctx.marketData?.tam || '?'}, SAM ${ctx.marketData?.sam || '?'}, growth ${ctx.marketData?.growth || '?'}, reachable ${ctx.marketData?.reach || '?'}${refinedBlock}
 
 The 3 picked Google Ads solution keys (in priority order): ${ctx.pickedKeys.join(', ')}
 
 Solution names (for reference):
 ${Object.entries(ctx.catalogHints).map(([k, v]: any) => `- ${k}: ${v}`).join('\n')}
 
-Now write the personalized JSON response.`;
+Now write the personalized JSON response. If refined inputs are present, your "why" sentences MUST reference the budget tier, goal type, and customer value where relevant — that's the whole point of personalization.`;
 
   async function callModel(modelName: string) {
     const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${GEMINI_KEY}`;

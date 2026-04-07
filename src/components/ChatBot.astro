@@ -1022,46 +1022,97 @@ const base = import.meta.env.BASE_URL;
   };
 
   function pickSolutions(ss){
-    // Returns top 3 solution keys with reasoning, ordered by fit
     const intent = ss.intent || 'grow';
     const ind = ss.industryKey || '';
+    const goal = ss.refinedGoal || '';
+    const budget = ss.refinedBudget || '';
     const product = (ss.product||'').toLowerCase();
     const isApp = /\b(app|application|mobile app|ứng dụng)\b/.test(product);
     const isEcom = /\b(shop|store|ecommerce|e-commerce|sell|product|cửa hàng)\b/.test(product) || ind==='fashion' || ind==='beauty-cosmetics';
+    const lowBudget = budget==='<$500' || budget==='$500–$2K';
 
     const picks=[];
-    if(intent==='new-product'){
-      if(isApp) picks.push({k:'app',  why:`Your product is an app — App Campaigns drive installs across Search, YouTube, Play, and Display from one budget.`});
-      picks.push({k:'pmax',           why:`Performance Max uses Google's AI to find buyers across every channel — ideal when you're learning what works for a new launch.`});
-      picks.push({k:'demand',         why:`Demand Gen builds awareness with visual creatives on YouTube Shorts, Discover, and Gmail — critical when no one knows your brand yet.`});
-      if(picks.length<3) picks.push({k:'search', why:`Search captures the few people already typing related queries — small budget, high intent.`});
+
+    // ── GOAL-driven priority (overrides intent ordering) ──
+    if(goal==='app-installs' || isApp){
+      picks.push({k:'app',     why:`Your goal is app installs — App Campaigns are purpose-built for this, driving installs across Search, Play, YouTube and Display from one automated budget.`});
+      picks.push({k:'pmax',    why:`Performance Max layered on top finds high-LTV users beyond the install moment.`});
+      picks.push({k:'demand',  why:`Demand Gen on YouTube Shorts builds the awareness pipeline that feeds future installs.`});
+    } else if(goal==='sales'){
+      picks.push({k:'search',  why:`Sales is your goal — Search captures the highest-intent buyers who are already typing "${ss.industryName||'your category'}" queries.`});
+      if(isEcom) picks.push({k:'shopping', why:`With a product catalog, Shopping shows price + image directly in results — typically the highest ROAS channel for e-commerce.`});
+      else       picks.push({k:'pmax',     why:`Performance Max scales conversions beyond Search by finding lookalike buyers on every Google surface.`});
+      picks.push({k:'pmax',                why:`Performance Max scales conversions beyond Search by finding lookalike buyers on every Google surface.`});
+    } else if(goal==='leads'){
+      picks.push({k:'search',  why:`Lead gen lives or dies on Search — the people typing "${ss.industryName||'your service'} near me" are your warmest prospects.`});
+      picks.push({k:'demand',  why:`Demand Gen with lead-form ads on YouTube and Discover captures interest higher in the funnel before they search.`});
+      picks.push({k:'pmax',    why:`Performance Max optimizes for lead conversions across Google's full network using your offline conversion data.`});
+    } else if(goal==='signups'){
+      picks.push({k:'search',  why:`Sign-ups need Search to capture branded + category queries with high intent.`});
+      picks.push({k:'pmax',    why:`Performance Max optimizes the entire funnel from impression to completed sign-up.`});
+      picks.push({k:'demand',  why:`Demand Gen drives top-of-funnel awareness from people who don't know they need you yet.`});
+    } else if(goal==='calls'){
+      picks.push({k:'search',  why:`Phone-call goal → Search with call extensions and call-only ads sends qualified callers straight to you.`});
+      picks.push({k:'pmax',    why:`Performance Max with phone-call conversion tracking scales the same outcome across more channels.`});
+      picks.push({k:'display', why:`Display retargeting reminds people who looked but didn't call — adds a second chance.`});
+    } else if(goal==='awareness'){
+      picks.push({k:'youtube', why:`Awareness goal → YouTube TrueView and Bumper ads deliver the lowest cost-per-thousand-impressions on premium video inventory.`});
+      picks.push({k:'demand',  why:`Demand Gen extends awareness across YouTube Shorts, Discover and Gmail with strong visual storytelling.`});
+      picks.push({k:'display', why:`Display fills the long tail with high-frequency brand exposure across millions of sites.`});
+    }
+    // ── Fallback to intent-driven picks if no goal specified ──
+    else if(intent==='new-product'){
+      picks.push({k:'pmax',    why:`Performance Max uses Google's AI to find buyers across every channel — ideal when you're learning what works for a new launch.`});
+      picks.push({k:'demand',  why:`Demand Gen builds awareness with visual creatives on YouTube Shorts, Discover, and Gmail — critical when no one knows your brand yet.`});
+      picks.push({k:'search',  why:`Search captures the few people already typing related queries — small budget, high intent.`});
     } else if(intent==='grow'){
-      picks.push({k:'search',         why:`Your business already exists, so people are searching for you and your category — Search captures that warm demand first.`});
-      picks.push({k:'pmax',           why:`Layer Performance Max to scale beyond Search and find lookalike buyers across YouTube, Display, and Discover.`});
+      picks.push({k:'search',  why:`Your business already exists, so people are searching for you and your category — Search captures that warm demand first.`});
+      picks.push({k:'pmax',    why:`Layer Performance Max to scale beyond Search and find lookalike buyers across YouTube, Display, and Discover.`});
       if(isEcom) picks.push({k:'shopping', why:`With a product catalog, Shopping ads show price + image right in results — highest CTR for retail.`});
       else       picks.push({k:'demand',   why:`Demand Gen brings new audiences into your funnel with rich visual creatives.`});
     } else if(intent==='optimize'){
-      picks.push({k:'smart',          why:`Migrate to Smart Bidding (Target ROAS or Maximize Conversions) — Google's AI optimizes bids per auction using signals you can't see.`});
-      picks.push({k:'search',         why:`Audit Search query reports for waste; add negative keywords; tighten match types — quick wins before scaling.`});
-      picks.push({k:'display',        why:`Add a Display retargeting layer to recover the 95%+ of visitors who don't convert on first visit.`});
+      picks.push({k:'smart',   why:`Migrate to Smart Bidding (Target ROAS or Maximize Conversions) — Google's AI optimizes bids per auction using signals you can't see.`});
+      picks.push({k:'search',  why:`Audit Search query reports for waste; add negative keywords; tighten match types — quick wins before scaling.`});
+      picks.push({k:'display', why:`Add a Display retargeting layer to recover the 95%+ of visitors who don't convert on first visit.`});
     } else {
       picks.push({k:'search',  why:`Start with Search to capture existing demand.`});
       picks.push({k:'pmax',    why:`Add Performance Max to expand reach efficiently.`});
       picks.push({k:'demand',  why:`Use Demand Gen for visual brand-building.`});
     }
 
-    // Industry overrides — boost relevant solution
+    // ── Industry overrides — visual / long-cycle / inspiration ──
     if(ind==='fashion' || ind==='beauty-cosmetics'){
-      if(!picks.find(p=>p.k==='demand')) picks.unshift({k:'demand', why:`${ss.industryName} is highly visual — Demand Gen on YouTube Shorts and Discover converts browsers into buyers.`});
+      if(!picks.find(p=>p.k==='demand') && goal!=='app-installs') picks.unshift({k:'demand', why:`${ss.industryName} is highly visual — Demand Gen on YouTube Shorts and Discover converts browsers into buyers.`});
     }
     if(ind==='real-estate'){
       if(!picks.find(p=>p.k==='display')) picks.push({k:'display', why:`Real estate buyers research for weeks — Display retargeting keeps you top-of-mind through the long decision cycle.`});
     }
-    if(ind==='tourism'){
+    if(ind==='tourism' && goal!=='app-installs'){
       if(!picks.find(p=>p.k==='youtube')) picks.unshift({k:'youtube', why:`Travel decisions are inspiration-driven — YouTube TrueView ads turn dreaming into booking.`});
     }
 
-    return picks.slice(0,3);
+    // ── Low-budget guard: collapse to 1-2 highest-leverage picks ──
+    let dedup=[]; const seen=new Set();
+    for(const p of picks){ if(seen.has(p.k))continue; seen.add(p.k); dedup.push(p); }
+    if(lowBudget){
+      // Replace 3rd pick with a focus warning embedded in tag
+      dedup = dedup.slice(0, 2);
+      const focus = dedup[0];
+      if(focus){ focus.why = `With a ${budget}/mo budget, focus EVERYTHING on this one channel first. ${focus.why}`; }
+    }
+    return dedup.slice(0,3);
+  }
+
+  // Budget reality note rendered alongside solutions
+  function budgetRealityNote(ss){
+    const b=ss.refinedBudget;
+    if(!b || b==='Not sure') return null;
+    if(b==='<$500')      return '⚠️ Under $500/mo is tight — pick ONE channel and don\'t split your spend. Expect a 4-8 week learning period before signal becomes useful.';
+    if(b==='$500–$2K')   return '💡 $500–$2K/mo can run 1-2 channels well. Avoid Performance Max here (PMax needs ~$3K/mo to learn properly).';
+    if(b==='$2K–$10K')   return '✅ $2K–$10K/mo is the sweet spot for running 2-3 channels in parallel and getting real conversion data within 2-4 weeks.';
+    if(b==='$10K–$50K')  return '🚀 $10K–$50K/mo unlocks the full playbook — run all 3 picks plus retargeting and start A/B testing creatives.';
+    if(b==='$50K+')      return '🔥 At $50K+/mo you can run multi-market experiments, video production, and dedicated landing pages per audience segment.';
+    return null;
   }
 
   function addSolutionsCard(ss, picks, opts){
@@ -1100,6 +1151,7 @@ const base = import.meta.env.BASE_URL;
         intent: ss.intent, cityName: ss.cityName, industryName: ss.industryName,
         persona: ss.persona, product: ss.product, competitors: ss.competitors,
         marketData: ss.marketData, pickedKeys, catalogHints,
+        refinedBudget: ss.refinedBudget || '', refinedGoal: ss.refinedGoal || '', refinedValue: ss.refinedValue || '',
       })});
       const d=await r.json();
       if(!d.ok || d.fallback) return null;
@@ -1212,12 +1264,21 @@ const base = import.meta.env.BASE_URL;
       t.messages.push({role:'bot',html:md(introText)});
       addSolutionsCard(ss, picksToShow, { personalized: isPersonalized });
 
+      // Budget reality note (if user did refine path)
+      const bn = budgetRealityNote(ss);
+      if(bn){
+        setTimeout(async ()=>{
+          await addBotStream(bn);
+          t.messages.push({role:'bot',html:md(bn)});
+        }, 350);
+      }
+
       if(personalized && personalized.insight){
         setTimeout(async ()=>{
           const insightLine = '💡 ' + personalized.insight;
           await addBotStream(insightLine);
           t.messages.push({role:'bot',html:md(insightLine)});
-        }, 500);
+        }, bn ? 900 : 500);
       }
 
       setTimeout(()=>{
