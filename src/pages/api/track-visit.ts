@@ -134,6 +134,15 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     });
   }
 
+  if (event === 'action') {
+    const label = String(body.label || 'action').slice(0, 80);
+    const extra = String(body.extra || '').slice(0, 200);
+    const sid = String(body.sessionId || '').slice(0, 20);
+    const msg = `🎬 <code>${esc(sid || '?')}</code>  <b>${esc(label)}</b>${extra ? `\n   ↳ ${esc(extra)}` : ''}`;
+    await tg(msg, { silent: true });
+    return new Response(JSON.stringify({ ok: true }), { headers: { 'content-type': 'application/json' } });
+  }
+
   if (event === 'end') {
     const dur = Number(body.durationMs) || 0;
     const pages: string[] = body.pages || [];
