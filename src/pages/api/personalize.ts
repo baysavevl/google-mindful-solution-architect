@@ -1,0 +1,129 @@
+import type { APIRoute } from 'astro';
+import { checkAndConsume, LIMITS } from '../../lib/state';
+
+export const prerender = false;
+
+const GEMINI_KEY = import.meta.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY;
+const MODEL = 'gemini-2.0-flash';
+const TG_TOKEN = import.meta.env.TELEGRAM_BOT_TOKEN || process.env.TELEGRAM_BOT_TOKEN;
+const TG_CHAT  = import.meta.env.TELEGRAM_CHAT_ID   || process.env.TELEGRAM_CHAT_ID;
+
+async function reportError(label: string, detail: string) {
+  if (!TG_TOKEN || !TG_CHAT) return;
+  try {
+    await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
+      method: 'POST', headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        chat_id: TG_CHAT,
+        text: `🚨 <b>Personalize error: ${label}</b>\n<pre>${detail.slice(0, 1500).replace(/[<>&]/g, c => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;' }[c]!))}</pre>`,
+        parse_mode: 'HTML', disable_notification: true,
+      }),
+    });
+  } catch {}
+}
+
+const SYSTEM = `You personalize Google Ads recommendations for Vietnamese SMBs.
+Given a business context and a list of 3 picked Google Ads solution keys, write a sharp, specific, 2-sentence reason why each solution fits THIS particular business — referencing their industry, city, persona, product, or competitors by name when possible. NO generic platitudes.
+
+Detect the user's language from the context strings (product, persona, competitors). Reply in that language. Vietnamese context → Vietnamese reply. English → English. Mixed → match the dominant language.
+
+Also write:
+- intro: 1-2 sentence personalized intro paragraph that references their specific situation
+- insight: 1 sentence highlighting the biggest opportunity OR risk you see in their market data
+
+Reply ONLY in valid JSON, no markdown fences, no preamble:
+{
+  "intro": "...",
+  "solutions": [
+    { "key": "<solution_key>", "why": "..." },
+    { "key": "<solution_key>", "why": "..." },
+    { "key": "<solution_key>", "why": "..." }
+  ],
+  "insight": "..."
+}`;
+
+export const POST: APIRoute = async ({ request, clientAddress }) => {
+  if (!GEMINI_KEY) {
+    await reportError('GEMINI_API_KEY missing', 'Cannot personalize.');
+    return new Response(JSON.stringify({ ok: false, fallback: true }), { status: 500 });
+  }
+
+  const ip = (request.headers.get('x-forwarded-for') || clientAddress || 'unknown').split(',')[0].trim();
+  const rl = checkAndConsume(ip);
+  if (!rl.ok) {
+    return new Response(JSON.stringify({ ok: false, rateLimited: true, reason: rl.reason, fallback: true }), {
+      status: 429, headers: { 'content-type': 'application/json' },
+    });
+  }
+
+  let body: any = {};
+  try { body = await request.json(); } catch {
+    return new Response(JSON.stringify({ ok: false, error: 'bad json', fallback: true }), { status: 400 });
+  }
+
+  const ctx = {
+    intent: body.intent || '',
+    city: body.cityName || '',
+    industry: body.industryName || '',
+    persona: body.persona || '',
+    product: body.product || '',
+    competitors: body.competitors || '',
+    marketData: body.marketData || null,
+    pickedKeys: Array.isArray(body.pickedKeys) ? body.pickedKeys : [],
+    catalogHints: body.catalogHints || {},
+  };
+
+  const userMsg = `Business context:
+- Goal: ${ctx.intent}
+- City: ${ctx.city}
+- Industry: ${ctx.industry}
+- Target customer: ${ctx.persona}
+- Product/business: ${ctx.product}
+- Competitors: ${ctx.competitors || '(none specified)'}
+- Market data: TAM ${ctx.marketData?.tam || '?'}, SAM ${ctx.marketData?.sam || '?'}, growth ${ctx.marketData?.growth || '?'}, reachable ${ctx.marketData?.reach || '?'}
+
+The 3 picked Google Ads solution keys (in priority order): ${ctx.pickedKeys.join(', ')}
+
+Solution names (for reference):
+${Object.entries(ctx.catalogHints).map(([k, v]: any) => `- ${k}: ${v}`).join('\n')}
+
+Now write the personalized JSON response.`;
+
+  try {
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${GEMINI_KEY}`;
+    const r = await fetch(url, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        systemInstruction: { parts: [{ text: SYSTEM }] },
+        contents: [{ role: 'user', parts: [{ text: userMsg }] }],
+        generationConfig: {
+          temperature: 0.8,
+          maxOutputTokens: 800,
+          responseMimeType: 'application/json',
+        },
+      }),
+    });
+
+    if (!r.ok) {
+      const txt = await r.text();
+      await reportError(`Gemini ${r.status}`, `personalize\nip=${ip}\n${txt}`);
+      return new Response(JSON.stringify({ ok: false, fallback: true }), { status: 500 });
+    }
+
+    const data = await r.json();
+    const raw = data?.candidates?.[0]?.content?.parts?.map((p: any) => p.text).join('') || '';
+    let parsed: any;
+    try { parsed = JSON.parse(raw); } catch {
+      await reportError('JSON parse failed', `raw=${raw.slice(0, 600)}`);
+      return new Response(JSON.stringify({ ok: false, fallback: true }), { status: 500 });
+    }
+
+    return new Response(JSON.stringify({ ok: true, ...parsed }), {
+      headers: { 'content-type': 'application/json' },
+    });
+  } catch (e: any) {
+    await reportError('exception', `ip=${ip}\n${String(e?.message || e)}`);
+    return new Response(JSON.stringify({ ok: false, fallback: true }), { status: 500 });
+  }
+};

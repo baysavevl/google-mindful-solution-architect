@@ -1028,13 +1028,15 @@ const base = import.meta.env.BASE_URL;
     return picks.slice(0,3);
   }
 
-  function addSolutionsCard(ss){
-    const picks=pickSolutions(ss);
+  function addSolutionsCard(ss, picks, opts){
+    picks = picks || pickSolutions(ss);
+    opts = opts || {};
     const wrap=document.createElement('div');
     wrap.className='sv-solutions';
     const cityLine = ss.cityName ? ` in <b>${esc(ss.cityName)}</b>` : '';
+    const aiBadge = opts.personalized ? ' <span style="font-size:.65rem;background:#e8f0fe;color:#1a73e8;padding:.15rem .5rem;border-radius:100px;font-weight:600;text-transform:uppercase;letter-spacing:.03em;">✨ AI-personalized</span>' : '';
     wrap.innerHTML=`
-      <div class="sv-sol-h">🎯 Top recommended solutions for ${esc(ss.industryName||'your business')}${cityLine}</div>
+      <div class="sv-sol-h">🎯 Top recommended solutions for ${esc(ss.industryName||'your business')}${cityLine}${aiBadge}</div>
       <div class="sv-sol-grid">
         ${picks.map((p,i)=>{
           const sol=SOLUTIONS_CATALOG[p.k];
@@ -1048,6 +1050,31 @@ const base = import.meta.env.BASE_URL;
         }).join('')}
       </div>`;
     el().appendChild(wrap); el().scrollTop=el().scrollHeight;
+  }
+
+  // ── Call /api/personalize to get AI-tailored "why" sentences ──
+  async function personalizeSolutions(ss){
+    if(API_BASE===null) return null;
+    const picks = pickSolutions(ss);
+    const pickedKeys = picks.map(p=>p.k);
+    const catalogHints = {};
+    pickedKeys.forEach(k=>{ catalogHints[k] = SOLUTIONS_CATALOG[k].name + ' — ' + SOLUTIONS_CATALOG[k].tag; });
+    try{
+      const r=await fetch('/api/personalize',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({
+        intent: ss.intent, cityName: ss.cityName, industryName: ss.industryName,
+        persona: ss.persona, product: ss.product, competitors: ss.competitors,
+        marketData: ss.marketData, pickedKeys, catalogHints,
+      })});
+      const d=await r.json();
+      if(!d.ok || d.fallback) return null;
+      // Merge AI rationales into picks (preserve order)
+      const merged = pickedKeys.map(k=>{
+        const aiItem = (d.solutions||[]).find(s=>s.key===k);
+        const baseWhy = picks.find(p=>p.k===k)?.why || '';
+        return { k, why: aiItem?.why || baseWhy };
+      });
+      return { picks: merged, intro: d.intro || '', insight: d.insight || '' };
+    }catch{ return null; }
   }
 
   // Competitor stage chips (allow skip)
@@ -1138,15 +1165,38 @@ const base = import.meta.env.BASE_URL;
       const data=addResultsCard(ss);
       if(data) ss.marketData=data;
 
-      // CTA: Find best Google Ads strategy
+      // CTA: Find best Google Ads strategy (AI-personalized)
       setTimeout(()=>{
-        addCtaButton('✨ Find my best Google Ads strategy', '', ()=>{
+        addCtaButton('✨ Find my best Google Ads strategy', '', async ()=>{
           trackAction('chat:cta-strategy');
           ss.stage='solutions'; updateProgress();
-          const intro2='Here are the top 3 Google Ads solutions I recommend for you:';
-          addBot(`<p>${esc(intro2)}</p>`);
-          t.messages.push({role:'bot',html:`<p>${esc(intro2)}</p>`});
-          addSolutionsCard(ss);
+
+          // Try AI personalization (consumes 1 rate-limit slot)
+          showTyping();
+          const personalized = await personalizeSolutions(ss);
+          hideTyping();
+
+          let introText, picksToShow, isPersonalized=false;
+          if(personalized){
+            introText = personalized.intro || 'Here are the top 3 Google Ads solutions tailored to your business:';
+            picksToShow = personalized.picks;
+            isPersonalized = true;
+          } else {
+            introText = 'Here are the top 3 Google Ads solutions I recommend for you:';
+            picksToShow = pickSolutions(ss);
+          }
+
+          await addBotStream(introText);
+          t.messages.push({role:'bot',html:md(introText)});
+          addSolutionsCard(ss, picksToShow, { personalized: isPersonalized });
+
+          if(personalized && personalized.insight){
+            setTimeout(async ()=>{
+              const insightLine = '💡 ' + personalized.insight;
+              await addBotStream(insightLine);
+              t.messages.push({role:'bot',html:md(insightLine)});
+            }, 500);
+          }
 
           // Next CTA: dive deeper with specialist
           setTimeout(()=>{
@@ -1221,11 +1271,21 @@ const base = import.meta.env.BASE_URL;
   initEngine();
   initMarkets();
   threads=load();
-  if(!threads.length){const t={id:gid(),title:'',messages:[],ts:Date.now(),mode:'solve',solveState:{stage:'init',history:[]}};threads.push(t)}
   // Backfill mode for legacy threads
   threads.forEach(t=>{ if(!t.mode) t.mode='discover'; if(!t.solveState) t.solveState={stage:'init',history:[]}; });
-  activeId=threads[0].id; save(); renderChat(); renderSB(); syncTabs(); updateProgress();
-  if((getTh(activeId).mode||'discover')==='solve' && getTh(activeId).solveState.stage==='init') lockInput('Pick a goal above to start...');
+  // Always prefer a Solve thread on boot. Create one if none exists.
+  let solveThread = threads.find(t=>t.mode==='solve');
+  if(!solveThread){
+    solveThread={id:gid(),title:'',messages:[],ts:Date.now(),mode:'solve',solveState:{stage:'init',history:[]}};
+    threads.unshift(solveThread);
+  }
+  activeId=solveThread.id;
+  save(); renderChat(); renderSB(); syncTabs(); updateProgress();
+  const ss=solveThread.solveState||{};
+  if(ss.stage==='init') lockInput('Pick a goal above to start...');
+  else if(ss.stage==='city'||ss.stage==='industry') lockInput('Pick an option above...');
+  else if(ss.stage==='results') lockInput('Tap the button above...');
+  else unlockInput();
 
   document.getElementById('ms-new').addEventListener('click',()=>newTh(currentMode()));
   document.getElementById('ms-tab-discover').addEventListener('click',()=>switchMode('discover'));
