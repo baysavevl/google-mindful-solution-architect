@@ -79,6 +79,66 @@
         "tech-saas": { "tam": 110000000, "sam": 44000000, "growth": 0.18 },
         "tourism": { "tam": 480000000, "sam": 180000000, "growth": 0.11 }
       }
+    },
+    "singapore": {
+      "name": "Singapore",
+      "population": 5920000,
+      "internet_penetration": 0.96,
+      "industries": {
+        "f&b": { "tam": 5800000000, "sam": 2200000000, "growth": 0.07 },
+        "fashion": { "tam": 3400000000, "sam": 1500000000, "growth": 0.06 },
+        "education": { "tam": 2800000000, "sam": 1300000000, "growth": 0.09 },
+        "real-estate": { "tam": 9800000000, "sam": 2400000000, "growth": 0.05 },
+        "beauty-cosmetics": { "tam": 2100000000, "sam": 1100000000, "growth": 0.08 },
+        "health-wellness": { "tam": 2900000000, "sam": 1200000000, "growth": 0.10 },
+        "tech-saas": { "tam": 4200000000, "sam": 2400000000, "growth": 0.18 },
+        "tourism": { "tam": 6500000000, "sam": 3100000000, "growth": 0.09 }
+      }
+    },
+    "bangkok": {
+      "name": "Bangkok",
+      "population": 10700000,
+      "internet_penetration": 0.85,
+      "industries": {
+        "f&b": { "tam": 4800000000, "sam": 1450000000, "growth": 0.10 },
+        "fashion": { "tam": 3100000000, "sam": 1100000000, "growth": 0.08 },
+        "education": { "tam": 2300000000, "sam": 920000000, "growth": 0.12 },
+        "real-estate": { "tam": 7200000000, "sam": 1700000000, "growth": 0.06 },
+        "beauty-cosmetics": { "tam": 2400000000, "sam": 1050000000, "growth": 0.13 },
+        "health-wellness": { "tam": 2100000000, "sam": 780000000, "growth": 0.12 },
+        "tech-saas": { "tam": 1300000000, "sam": 620000000, "growth": 0.20 },
+        "tourism": { "tam": 8200000000, "sam": 3400000000, "growth": 0.14 }
+      }
+    },
+    "jakarta": {
+      "name": "Jakarta",
+      "population": 11200000,
+      "internet_penetration": 0.79,
+      "industries": {
+        "f&b": { "tam": 5100000000, "sam": 1350000000, "growth": 0.12 },
+        "fashion": { "tam": 3200000000, "sam": 1100000000, "growth": 0.10 },
+        "education": { "tam": 2400000000, "sam": 880000000, "growth": 0.14 },
+        "real-estate": { "tam": 6800000000, "sam": 1500000000, "growth": 0.07 },
+        "beauty-cosmetics": { "tam": 2200000000, "sam": 920000000, "growth": 0.15 },
+        "health-wellness": { "tam": 1900000000, "sam": 620000000, "growth": 0.13 },
+        "tech-saas": { "tam": 1100000000, "sam": 480000000, "growth": 0.23 },
+        "tourism": { "tam": 2400000000, "sam": 920000000, "growth": 0.10 }
+      }
+    },
+    "kuala-lumpur": {
+      "name": "Kuala Lumpur",
+      "population": 8400000,
+      "internet_penetration": 0.89,
+      "industries": {
+        "f&b": { "tam": 3800000000, "sam": 1250000000, "growth": 0.09 },
+        "fashion": { "tam": 2400000000, "sam": 920000000, "growth": 0.07 },
+        "education": { "tam": 1900000000, "sam": 780000000, "growth": 0.11 },
+        "real-estate": { "tam": 5100000000, "sam": 1300000000, "growth": 0.06 },
+        "beauty-cosmetics": { "tam": 1700000000, "sam": 760000000, "growth": 0.12 },
+        "health-wellness": { "tam": 1600000000, "sam": 540000000, "growth": 0.11 },
+        "tech-saas": { "tam": 950000000, "sam": 440000000, "growth": 0.19 },
+        "tourism": { "tam": 3200000000, "sam": 1300000000, "growth": 0.12 }
+      }
     }
   },
   "industries_meta": {

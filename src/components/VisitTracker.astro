@@ -97,11 +97,27 @@ const apiEnabled = base === '/'; // Vercel only
             .catch(function () {});
         }
 
+        // ── Intra-site navigation detection ──
+        // Only send END on TRUE exit (close tab, navigate to external site).
+        // Same-origin link clicks set this flag → pagehide skips END.
+        var intraNav = false;
+        document.addEventListener('click', function (e) {
+          var a = e.target && e.target.closest && e.target.closest('a[href]');
+          if (!a) return;
+          var href = a.getAttribute('href');
+          if (!href || href.indexOf('#') === 0) return;
+          try {
+            var url = new URL(href, location.origin);
+            if (url.origin === location.origin) intraNav = true;
+          } catch (err) {}
+        }, true);
+
         // End-of-session beacon
         function sendEnd() {
+          if (intraNav) { intraNav = false; return; } // skip — same-site navigation
           var s = null;
           try { s = JSON.parse(sessionStorage.getItem(KEY) || 'null'); } catch (e) {}
-          if (!s) return;
+          if (!s || s.ended) return;
           var endPages = [];
           try { endPages = JSON.parse(sessionStorage.getItem(PAGES_KEY) || '[]'); } catch (e) {}
           var payload = JSON.stringify({
@@ -117,6 +133,9 @@ const apiEnabled = base === '/'; // Vercel only
           var blob = new Blob([payload], { type: 'application/json' });
           if (navigator.sendBeacon) navigator.sendBeacon('/api/track-visit', blob);
           else fetch('/api/track-visit', { method: 'POST', headers: { 'content-type': 'application/json' }, body: payload, keepalive: true });
+          // Mark session as ended so a refresh doesn't double-send
+          s.ended = true;
+          try { sessionStorage.setItem(KEY, JSON.stringify(s)); } catch (e) {}
         }
 
         window.addEventListener('pagehide', sendEnd);

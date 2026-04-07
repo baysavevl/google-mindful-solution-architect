@@ -16,12 +16,16 @@ const base = import.meta.env.BASE_URL;
   <!-- Right: conversation -->
   <div class="ms-main">
     <div class="ms-tabs">
-      <button class="ms-tab on" id="ms-tab-discover" data-mode="discover">
+      <button class="ms-tab on" id="ms-tab-solve" data-mode="solve">
+        <span class="ms-tab-ic">🎯</span> Solve My Problems
+      </button>
+      <button class="ms-tab" id="ms-tab-discover" data-mode="discover">
         <span class="ms-tab-ic">💡</span> Discover Google Ads
       </button>
-      <button class="ms-tab" id="ms-tab-solve" data-mode="solve">
-        <span class="ms-tab-ic">🎯</span> Solve Your Problems
-      </button>
+    </div>
+    <div class="ms-progress" id="ms-progress" hidden>
+      <div class="ms-progress-bar" id="ms-progress-bar"></div>
+      <div class="ms-progress-text" id="ms-progress-text"></div>
     </div>
     <div class="ms-messages" id="ms-messages"></div>
     <div class="ms-input-wrap">
@@ -337,6 +341,64 @@ const base = import.meta.env.BASE_URL;
   .bub-chip.sv { color: #5f2e8c; }
   .bub-chip.sv:hover { background: #f3e8ff; border-color: #5f2e8c; }
 
+  /* ═══ Progress bar ═══ */
+  .ms-progress {
+    padding: 0.5rem 1rem 0.4rem; border-bottom: 1px solid #f1f3f4;
+    background: #fafbfc; flex-shrink: 0;
+  }
+  .ms-progress-bar {
+    height: 4px; background: #e8eaed; border-radius: 100px; overflow: hidden;
+    position: relative;
+  }
+  .ms-progress-bar::after {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+    width: var(--p, 0%); background: linear-gradient(90deg, #1a73e8, #5f2e8c);
+    border-radius: 100px; transition: width 0.4s ease;
+  }
+  .ms-progress-text {
+    font-size: 0.7rem; color: #5f6368; margin-top: 0.3rem; text-align: center;
+    font-weight: 500; letter-spacing: 0.02em;
+  }
+
+  /* ═══ Locked input (waiting for chip selection) ═══ */
+  .ms-input-row.locked {
+    opacity: 0.5; pointer-events: none; background: #f1f3f4;
+  }
+  .ms-input-row.locked input { cursor: not-allowed; }
+  .ms-input-row.locked input::placeholder { color: #9aa0a6; font-style: italic; }
+
+  /* ═══ Solutions card (top recommendations) ═══ */
+  .sv-solutions {
+    align-self: flex-start; max-width: 95%; width: 100%;
+    margin: 12px 0 2px; animation: fadeIn 0.3s ease;
+  }
+  .sv-sol-h {
+    font-weight: 600; color: #202124; font-size: 0.88rem;
+    margin-bottom: 0.6rem; display: flex; align-items: center; gap: 0.4rem;
+  }
+  .sv-sol-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 0.6rem;
+  }
+  .sv-sol-item {
+    border: 1px solid #dadce0; border-radius: 12px; padding: 0.85rem;
+    background: #fff; transition: all 0.15s; position: relative;
+  }
+  .sv-sol-item:hover { border-color: #1a73e8; box-shadow: 0 2px 8px rgba(26,115,232,0.08); }
+  .sv-sol-item.top {
+    border-color: #1a73e8;
+    background: linear-gradient(135deg, #f8fbff 0%, #fff 100%);
+  }
+  .sv-sol-badge {
+    position: absolute; top: -8px; left: 12px; font-size: 0.65rem;
+    background: #1a73e8; color: #fff; padding: 0.15rem 0.5rem;
+    border-radius: 100px; font-weight: 600; letter-spacing: 0.02em; text-transform: uppercase;
+  }
+  .sv-sol-icon { font-size: 1.4rem; margin-bottom: 0.35rem; }
+  .sv-sol-name { font-weight: 600; font-size: 0.86rem; color: #202124; margin-bottom: 0.2rem; }
+  .sv-sol-why { font-size: 0.75rem; color: #5f6368; line-height: 1.5; }
+  .sv-sol-tag { font-size: 0.66rem; color: #1a73e8; font-weight: 600; margin-top: 0.4rem; text-transform: uppercase; letter-spacing: 0.03em; }
+
   @media (max-width: 640px) {
     .ms-side { display: none; }
     .messenger { height: 480px; }
@@ -509,7 +571,7 @@ const base = import.meta.env.BASE_URL;
         <div><div class="sv-stat-l">SAM (digital)</div><div class="sv-stat-v">${fmtMoney(ind.sam)}</div></div>
         <div><div class="sv-stat-l">YoY growth</div><div class="sv-stat-v">${(ind.growth*100).toFixed(0)}%</div></div>
       </div>
-      <div class="sv-card-note">Estimates from curated dataset. Use as a directional benchmark.</div>`;
+      <div class="sv-card-note">⚠️ <b>This is a quick estimate from a basic calculator</b> — directional only. To get a real picture of your <i>actually-reachable</i> market you'll want to layer in social listening, competitor research, and a small Google Ads test campaign (1-2 weeks, low budget) to measure real CTR, CPC, and conversion intent in your specific niche. Use these numbers as a starting compass, not a destination.</div>`;
     el().appendChild(card); el().scrollTop=el().scrollHeight;
     return { city: city.name, industry: meta.label, tam: ind.tam, sam: ind.sam, growth: ind.growth };
   }
@@ -605,11 +667,13 @@ const base = import.meta.env.BASE_URL;
   function getTh(id){return threads.find(t=>t.id===id)}
   function currentMode(){const t=getTh(activeId);return (t&&t.mode)||'discover'}
   function newTh(mode){
-    mode = mode || 'discover';
+    mode = mode || 'solve';
     if(threads.length>=MAX){showNotice(`Max ${MAX} chats. Delete one to create a new chat.`);return}
     const t={id:gid(),title:'',messages:[],ts:Date.now(),mode:mode,solveState:{stage:'init',history:[]}};
     threads.push(t);activeId=t.id;
-    save();renderChat();renderSB();syncTabs();document.getElementById('ms-input').focus();
+    save();renderChat();renderSB();syncTabs();updateProgress();
+    if(mode==='solve') lockInput('Pick a goal above to start...'); else unlockInput();
+    document.getElementById('ms-input').focus();
   }
   function syncTabs(){
     const m=currentMode();
@@ -619,9 +683,14 @@ const base = import.meta.env.BASE_URL;
   function switchMode(mode){
     const t=getTh(activeId);
     if(t && (t.mode||'discover')===mode){ syncTabs(); return; }
-    // Find existing thread of that mode, else create new
     const existing = threads.find(x=>(x.mode||'discover')===mode);
-    if(existing){ activeId=existing.id; save(); renderChat(); renderSB(); syncTabs(); }
+    if(existing){
+      activeId=existing.id; save(); renderChat(); renderSB(); syncTabs(); updateProgress();
+      const ss=existing.solveState||{};
+      if(mode==='solve' && ss.stage==='init') lockInput('Pick a goal above to start...');
+      else if(mode==='solve' && (ss.stage==='city'||ss.stage==='industry')) lockInput('Pick an option above...');
+      else unlockInput();
+    }
     else { newTh(mode); }
   }
   function delTh(id){
@@ -651,11 +720,48 @@ const base = import.meta.env.BASE_URL;
   // ── Solve mode: initial intent chips ──
   function renderSolveInitChips(){
     addSolveChips([
-      { label:'📱 Market a new app/service', onClick:()=>solveStart('new-product') },
-      { label:'📈 Grow existing business',   onClick:()=>solveStart('grow') },
+      { label:'📱 Market my new app/service', onClick:()=>solveStart('new-product') },
+      { label:'📈 Grow my existing business',   onClick:()=>solveStart('grow') },
       { label:'🔧 Optimize my campaigns',    onClick:()=>solveStart('optimize') },
       { label:'💬 Other — describe in your own words', onClick:()=>solveStart('open') },
     ],'init-chips');
+  }
+
+  // ── Solve mode: progress bar ──
+  const SOLVE_STEPS = ['init','product','city','industry','persona','competitor','solution'];
+  const SOLVE_LABELS = {
+    init:'Pick your goal', product:'Describe your business', city:'Choose location',
+    industry:'Pick industry', persona:'Target customer', competitor:'Competitors', solution:'Your playbook',
+  };
+  function updateProgress(){
+    const t=getTh(activeId);
+    const wrap=document.getElementById('ms-progress');
+    if(!t || (t.mode||'discover')!=='solve' || !t.solveState || t.solveState.intent==='open'){
+      wrap.hidden=true; return;
+    }
+    wrap.hidden=false;
+    const stage=t.solveState.stage||'init';
+    let idx=SOLVE_STEPS.indexOf(stage); if(idx<0)idx=0;
+    if(stage==='gemini') idx=SOLVE_STEPS.length-1;
+    const pct=Math.round(((idx+1)/SOLVE_STEPS.length)*100);
+    document.getElementById('ms-progress-bar').style.setProperty('--p',pct+'%');
+    document.getElementById('ms-progress-text').textContent=`Step ${Math.min(idx+1,SOLVE_STEPS.length)}/${SOLVE_STEPS.length} — ${SOLVE_LABELS[stage]||''}`;
+  }
+
+  // ── Lock/unlock input field ──
+  function lockInput(placeholder){
+    const row=document.querySelector('.ms-input-row');
+    const inp=document.getElementById('ms-input');
+    row.classList.add('locked');
+    inp.placeholder = placeholder || 'Pick an option above first...';
+    inp.disabled = true;
+  }
+  function unlockInput(){
+    const row=document.querySelector('.ms-input-row');
+    const inp=document.getElementById('ms-input');
+    row.classList.remove('locked');
+    inp.placeholder = 'Type a message...';
+    inp.disabled = false;
   }
 
   async function solveStart(intent){
@@ -664,17 +770,17 @@ const base = import.meta.env.BASE_URL;
     t.solveState.intent = intent;
 
     if(intent==='open'){
-      // Skip scripted flow → straight to Gemini open dialogue
       t.solveState.stage='gemini';
+      updateProgress(); unlockInput();
       const greet="Tell me about your situation — what problem are you trying to solve, and what have you tried so far? Bạn có thể viết tiếng Việt nếu muốn.";
       addBot(`<p>${esc(greet)}</p>`);
       t.messages.push({role:'bot',html:`<p>${esc(greet)}</p>`});
       save(); return;
     }
 
-    // Scripted: ask product description first
     t.solveState.stage='product';
-    const labelMap={ 'new-product':'a new app or service', 'grow':'your existing business', 'optimize':'your current campaigns' };
+    updateProgress(); unlockInput();
+    const labelMap={ 'new-product':'your new app or service', 'grow':'your existing business', 'optimize':'your current campaigns' };
     const q=`Great — let's dig into ${labelMap[intent]}. In one or two sentences, what is it and who is it for?`;
     addBot(`<p>${esc(q)}</p>`);
     t.messages.push({role:'bot',html:`<p>${esc(q)}</p>`});
@@ -704,7 +810,7 @@ const base = import.meta.env.BASE_URL;
       ss.cityKey=value;
       ss.cityName = (value==='__other__'?'Other':(markets&&markets.cities[value]?markets.cities[value].name:value));
       addUser(ss.cityName); t.messages.push({role:'user',text:ss.cityName});
-      ss.stage='industry';
+      ss.stage='industry'; updateProgress(); lockInput('Pick an industry above...');
       const q='Which industry best fits your business?';
       addBot(`<p>${esc(q)}</p>`); t.messages.push({role:'bot',html:`<p>${esc(q)}</p>`});
       renderIndustryChips();
@@ -714,12 +820,11 @@ const base = import.meta.env.BASE_URL;
       ss.industryName = markets.industries_meta[value]?.label || value;
       addUser(ss.industryName); t.messages.push({role:'user',text:ss.industryName});
 
-      // Show market card if we have data
       if(ss.cityKey && ss.cityKey!=='__other__'){
         const data=addMarketCard(ss.cityKey, ss.industryKey);
         if(data) ss.marketData=data;
       }
-      ss.stage='persona';
+      ss.stage='persona'; updateProgress(); unlockInput();
       const q='Now tell me about your ideal customer — pick a persona below or describe in your own words.';
       addBot(`<p>${esc(q)}</p>`); t.messages.push({role:'bot',html:`<p>${esc(q)}</p>`});
       renderPersonaChips();
@@ -727,17 +832,100 @@ const base = import.meta.env.BASE_URL;
     }
   }
 
-  // Persona library — quick-select chips
+  // Persona library — quick-select chips (expanded)
   function renderPersonaChips(){
     const personas=[
-      { label:'🎓 Gen Z student (18-24)', value:'Gen Z students aged 18-24, price-sensitive, mobile-first, value brand authenticity and social proof' },
-      { label:'👩 Working mom (25-40)',   value:'Working mothers aged 25-40, time-poor, value convenience and family safety, decide based on reviews' },
-      { label:'💼 Young professional',    value:'Urban young professionals aged 25-35, mid-to-high income, career-focused, willing to pay for quality and time savings' },
-      { label:'🏠 SME owner',             value:'Small business owners aged 30-50, ROI-driven, risk-averse, need clear proof of value before buying' },
-      { label:'👴 Senior (50+)',          value:'Adults aged 50+, value trust and personal service, prefer phone or in-person, less price-sensitive for quality' },
-      { label:'🧒 Parent of young kids',  value:'Parents of children under 12, prioritize safety and education, research extensively before purchase' },
+      { label:'🎓 Gen Z student (18-24)',     value:'Gen Z students aged 18-24, price-sensitive, mobile-first, value brand authenticity and social proof, discover via TikTok/Instagram' },
+      { label:'🎒 University grad (22-28)',   value:'Recent university graduates aged 22-28, starting careers, building independence, willing to invest in self-improvement' },
+      { label:'💼 Young professional (25-35)',value:'Urban young professionals aged 25-35, mid-to-high income, career-focused, willing to pay for quality and time savings' },
+      { label:'👔 Mid-career (35-45)',         value:'Mid-career professionals aged 35-45, established income, focused on family and lifestyle quality, brand-loyal' },
+      { label:'👩 Working mom (25-40)',        value:'Working mothers aged 25-40, time-poor, value convenience and family safety, decide based on reviews and recommendations' },
+      { label:'🧒 Parent of young kids',       value:'Parents of children under 12, prioritize safety and education, research extensively before purchase' },
+      { label:'🏠 SME owner',                  value:'Small business owners aged 30-50, ROI-driven, risk-averse, need clear proof of value before buying' },
+      { label:'💰 High-net-worth (40-60)',     value:'Affluent individuals aged 40-60, premium-brand-oriented, value exclusivity and white-glove service over price' },
+      { label:'👴 Senior (50+)',               value:'Adults aged 50+, value trust and personal service, prefer phone or in-person, less price-sensitive for quality' },
+      { label:'🧳 Frequent traveler',          value:'Frequent business or leisure travelers, mobile-first, value convenience, loyalty programs, and booking ease' },
+      { label:'🌱 Eco-conscious millennial',   value:'Millennials aged 28-40 who prioritize sustainability, ethical brands, and willing to pay premium for eco-friendly products' },
+      { label:'🛒 Bargain hunter',             value:'Deal-seekers across age groups, motivated by discounts, flash sales, and bundles, compare prices extensively before buying' },
     ];
     addSolveChips(personas.map(p=>({label:p.label,onClick:()=>handleSolveQ(p.value)})));
+  }
+
+  // ═══ Solutions catalog & picker (rule-based, no LLM) ═══
+  const SOLUTIONS_CATALOG = {
+    'pmax':     { icon:'🚀', name:'Performance Max',     tag:'Best for new launches' },
+    'search':   { icon:'🔍', name:'Search Ads',          tag:'Best for high-intent demand' },
+    'demand':   { icon:'✨', name:'Demand Gen',          tag:'Best for awareness & visuals' },
+    'youtube':  { icon:'🎬', name:'YouTube Ads',         tag:'Best for storytelling' },
+    'shopping': { icon:'🛍️', name:'Shopping Ads',        tag:'Best for e-commerce SKUs' },
+    'app':      { icon:'📱', name:'App Campaigns',       tag:'Best for app installs' },
+    'display':  { icon:'🖼️', name:'Display + Retargeting', tag:'Best for re-engagement' },
+    'smart':    { icon:'🧠', name:'Smart Bidding upgrade', tag:'Best for optimization' },
+  };
+
+  function pickSolutions(ss){
+    // Returns top 3 solution keys with reasoning, ordered by fit
+    const intent = ss.intent || 'grow';
+    const ind = ss.industryKey || '';
+    const product = (ss.product||'').toLowerCase();
+    const isApp = /\b(app|application|mobile app|ứng dụng)\b/.test(product);
+    const isEcom = /\b(shop|store|ecommerce|e-commerce|sell|product|cửa hàng)\b/.test(product) || ind==='fashion' || ind==='beauty-cosmetics';
+
+    const picks=[];
+    if(intent==='new-product'){
+      if(isApp) picks.push({k:'app',  why:`Your product is an app — App Campaigns drive installs across Search, YouTube, Play, and Display from one budget.`});
+      picks.push({k:'pmax',           why:`Performance Max uses Google's AI to find buyers across every channel — ideal when you're learning what works for a new launch.`});
+      picks.push({k:'demand',         why:`Demand Gen builds awareness with visual creatives on YouTube Shorts, Discover, and Gmail — critical when no one knows your brand yet.`});
+      if(picks.length<3) picks.push({k:'search', why:`Search captures the few people already typing related queries — small budget, high intent.`});
+    } else if(intent==='grow'){
+      picks.push({k:'search',         why:`Your business already exists, so people are searching for you and your category — Search captures that warm demand first.`});
+      picks.push({k:'pmax',           why:`Layer Performance Max to scale beyond Search and find lookalike buyers across YouTube, Display, and Discover.`});
+      if(isEcom) picks.push({k:'shopping', why:`With a product catalog, Shopping ads show price + image right in results — highest CTR for retail.`});
+      else       picks.push({k:'demand',   why:`Demand Gen brings new audiences into your funnel with rich visual creatives.`});
+    } else if(intent==='optimize'){
+      picks.push({k:'smart',          why:`Migrate to Smart Bidding (Target ROAS or Maximize Conversions) — Google's AI optimizes bids per auction using signals you can't see.`});
+      picks.push({k:'search',         why:`Audit Search query reports for waste; add negative keywords; tighten match types — quick wins before scaling.`});
+      picks.push({k:'display',        why:`Add a Display retargeting layer to recover the 95%+ of visitors who don't convert on first visit.`});
+    } else {
+      picks.push({k:'search',  why:`Start with Search to capture existing demand.`});
+      picks.push({k:'pmax',    why:`Add Performance Max to expand reach efficiently.`});
+      picks.push({k:'demand',  why:`Use Demand Gen for visual brand-building.`});
+    }
+
+    // Industry overrides — boost relevant solution
+    if(ind==='fashion' || ind==='beauty-cosmetics'){
+      if(!picks.find(p=>p.k==='demand')) picks.unshift({k:'demand', why:`${ss.industryName} is highly visual — Demand Gen on YouTube Shorts and Discover converts browsers into buyers.`});
+    }
+    if(ind==='real-estate'){
+      if(!picks.find(p=>p.k==='display')) picks.push({k:'display', why:`Real estate buyers research for weeks — Display retargeting keeps you top-of-mind through the long decision cycle.`});
+    }
+    if(ind==='tourism'){
+      if(!picks.find(p=>p.k==='youtube')) picks.unshift({k:'youtube', why:`Travel decisions are inspiration-driven — YouTube TrueView ads turn dreaming into booking.`});
+    }
+
+    return picks.slice(0,3);
+  }
+
+  function addSolutionsCard(ss){
+    const picks=pickSolutions(ss);
+    const wrap=document.createElement('div');
+    wrap.className='sv-solutions';
+    const cityLine = ss.cityName ? ` in <b>${esc(ss.cityName)}</b>` : '';
+    wrap.innerHTML=`
+      <div class="sv-sol-h">🎯 Top recommended solutions for ${esc(ss.industryName||'your business')}${cityLine}</div>
+      <div class="sv-sol-grid">
+        ${picks.map((p,i)=>{
+          const sol=SOLUTIONS_CATALOG[p.k];
+          return `<div class="sv-sol-item ${i===0?'top':''}">
+            ${i===0?'<div class="sv-sol-badge">Top pick</div>':''}
+            <div class="sv-sol-icon">${sol.icon}</div>
+            <div class="sv-sol-name">${esc(sol.name)}</div>
+            <div class="sv-sol-why">${esc(p.why)}</div>
+            <div class="sv-sol-tag">${esc(sol.tag)}</div>
+          </div>`;
+        }).join('')}
+      </div>`;
+    el().appendChild(wrap); el().scrollTop=el().scrollHeight;
   }
 
   // Competitor stage chips (allow skip)
@@ -801,7 +989,7 @@ const base = import.meta.env.BASE_URL;
       ss.intent='open'; ss.stage='gemini';
     }
     if(ss.stage==='product'){
-      ss.product=q; ss.stage='city';
+      ss.product=q; ss.stage='city'; updateProgress(); lockInput('Pick a city above...');
       const ask='Which city or province are you targeting?';
       showTyping(); await new Promise(r=>setTimeout(r,300)); hideTyping();
       addBot(`<p>${esc(ask)}</p>`); t.messages.push({role:'bot',html:`<p>${esc(ask)}</p>`});
@@ -809,37 +997,34 @@ const base = import.meta.env.BASE_URL;
       save(); return;
     }
     if(ss.stage==='persona'){
-      ss.persona=q; ss.stage='competitor';
-      const ask='Who are your top 1-3 competitors? (list names, or skip)';
+      ss.persona=q; ss.stage='competitor'; updateProgress(); unlockInput();
+      const ask='Who are your top 1-3 competitors? Type their names, or tap Skip.';
       showTyping(); await new Promise(r=>setTimeout(r,250)); hideTyping();
       addBot(`<p>${esc(ask)}</p>`); t.messages.push({role:'bot',html:`<p>${esc(ask)}</p>`});
       renderCompetitorSkip();
       save(); return;
     }
     if(ss.stage==='competitor'){
-      ss.competitors=q; ss.stage='gemini';
-      // Show budget card derived from market data
-      if(ss.marketData){ addBudgetCard(ss.marketData); }
-
-      // Rate limit check
-      const rl=rlCheck();
-      if(!rl.ok){
-        addBot(`<p>${esc(rl.msg)}</p>`);
-        t.messages.push({role:'bot',html:`<p>${esc(rl.msg)}</p>`});
-        if(!ss.leadShown){ ss.leadShown=true; setTimeout(()=>addLeadForm(t),300); }
-        save(); return;
-      }
-      rlInc('user'); rlSessionInc();
-
-      ss.history = ss.history || [];
-      const seed = `My business: ${ss.product||'(see context)'}\nLocation: ${ss.cityName||'?'}\nIndustry: ${ss.industryName||'?'}\nTarget customer: ${ss.persona||'?'}\nCompetitors: ${q}\n\nBased on this, give me your initial read in 3-4 sentences and recommend a starting Google Ads playbook (campaign type, targeting, KPI). Then ask me ONE follow-up question to refine.`;
-      showTyping();
-      const reply = await callGemini(t, seed);
-      hideTyping();
-      await addBotStream(reply);
-      t.messages.push({role:'bot',html:md(reply)});
-      const turnCount = (ss.history||[]).filter(h=>h.role==='model').length;
-      if(turnCount>=2 && !ss.leadShown){ ss.leadShown=true; setTimeout(()=>addLeadForm(t),400); }
+      ss.competitors=q; ss.stage='solution';
+      updateProgress();
+      // 1) Solutions card (rule-based, no LLM)
+      const intro='Based on what you shared, here are my top recommendations:';
+      addBot(`<p>${esc(intro)}</p>`);
+      t.messages.push({role:'bot',html:`<p>${esc(intro)}</p>`});
+      addSolutionsCard(ss);
+      // 2) Budget tier card from market data
+      if(ss.marketData) addBudgetCard(ss.marketData);
+      // 3) Lead form pops up immediately
+      if(!ss.leadShown){ ss.leadShown=true; setTimeout(()=>addLeadForm(t),500); }
+      // 4) Move to gemini stage so further user messages go to AI for follow-up Q&A
+      ss.stage='gemini';
+      const followup="Want to dive deeper into any of these? Ask me anything about budgets, targeting, creatives, or which one to start with.";
+      setTimeout(()=>{
+        addBot(`<p>${esc(followup)}</p>`);
+        t.messages.push({role:'bot',html:`<p>${esc(followup)}</p>`});
+        unlockInput();
+        save();
+      },800);
       save(); return;
     }
     if(ss.stage==='gemini'){
@@ -887,10 +1072,11 @@ const base = import.meta.env.BASE_URL;
   initEngine();
   initMarkets();
   threads=load();
-  if(!threads.length){const t={id:gid(),title:'',messages:[],ts:Date.now(),mode:'discover',solveState:{stage:'init',history:[]}};threads.push(t)}
+  if(!threads.length){const t={id:gid(),title:'',messages:[],ts:Date.now(),mode:'solve',solveState:{stage:'init',history:[]}};threads.push(t)}
   // Backfill mode for legacy threads
   threads.forEach(t=>{ if(!t.mode) t.mode='discover'; if(!t.solveState) t.solveState={stage:'init',history:[]}; });
-  activeId=threads[0].id; save(); renderChat(); renderSB(); syncTabs();
+  activeId=threads[0].id; save(); renderChat(); renderSB(); syncTabs(); updateProgress();
+  if((getTh(activeId).mode||'discover')==='solve' && getTh(activeId).solveState.stage==='init') lockInput('Pick a goal above to start...');
 
   document.getElementById('ms-new').addEventListener('click',()=>newTh(currentMode()));
   document.getElementById('ms-tab-discover').addEventListener('click',()=>switchMode('discover'));

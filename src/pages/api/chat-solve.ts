@@ -5,6 +5,24 @@ export const prerender = false;
 
 const GEMINI_KEY = import.meta.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY;
 const MODEL = 'gemini-2.0-flash';
+const TG_TOKEN = import.meta.env.TELEGRAM_BOT_TOKEN || process.env.TELEGRAM_BOT_TOKEN;
+const TG_CHAT  = import.meta.env.TELEGRAM_CHAT_ID   || process.env.TELEGRAM_CHAT_ID;
+
+async function reportError(label: string, detail: string) {
+  if (!TG_TOKEN || !TG_CHAT) return;
+  try {
+    await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        chat_id: TG_CHAT,
+        text: `🚨 <b>AI error: ${label}</b>\n<pre>${detail.slice(0, 1500).replace(/[<>&]/g, c => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;' }[c]!))}</pre>`,
+        parse_mode: 'HTML',
+        disable_notification: true,
+      }),
+    });
+  } catch {}
+}
 
 const SYSTEM_PROMPT = `You are the "Solve Your Problems" co-pilot for Vietnamese small/medium businesses using Google Ads.
 
@@ -33,9 +51,10 @@ interface ChatTurn { role: 'user' | 'model'; text: string; }
 
 export const POST: APIRoute = async ({ request, clientAddress }) => {
   if (!GEMINI_KEY) {
+    await reportError('GEMINI_API_KEY missing', 'No GEMINI_API_KEY env var set in Vercel. Add it and redeploy.');
     return new Response(JSON.stringify({
       error: 'GEMINI_API_KEY not set',
-      reply: "I'm not configured yet — please set GEMINI_API_KEY in Vercel environment variables."
+      reply: "AI is not configured yet — the site owner has been notified. Please leave your contact in the form below."
     }), { status: 500, headers: { 'content-type': 'application/json' } });
   }
 
@@ -96,20 +115,25 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     if (!r.ok) {
       const txt = await r.text();
       console.warn('[gemini]', r.status, txt);
+      await reportError(`Gemini ${r.status}`, `model=${MODEL}\nip=${ip}\n${txt}`);
       return new Response(JSON.stringify({
         error: `gemini ${r.status}`,
-        reply: "I'm having trouble reaching the AI right now. Please try again in a moment."
+        reply: "I'm having trouble reaching the AI right now. Please try again in a moment, or leave your contact in the form below."
       }), { status: 500, headers: { 'content-type': 'application/json' } });
     }
 
     const data = await r.json();
     const reply = data?.candidates?.[0]?.content?.parts?.map((p: any) => p.text).join('') || "Sorry, I didn't catch that — could you rephrase?";
+    if (!data?.candidates?.[0]?.content?.parts) {
+      await reportError('Gemini empty reply', `model=${MODEL}\nip=${ip}\n${JSON.stringify(data).slice(0, 800)}`);
+    }
 
     return new Response(JSON.stringify({ ok: true, reply }), {
       headers: { 'content-type': 'application/json' },
     });
   } catch (e: any) {
     console.warn('[chat-solve]', e);
+    await reportError('chat-solve exception', `ip=${ip}\n${String(e?.message || e)}\n${e?.stack || ''}`);
     return new Response(JSON.stringify({
       error: String(e?.message || e),
       reply: "Connection error. Please try again."
