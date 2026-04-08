@@ -579,45 +579,60 @@ const base = import.meta.env.BASE_URL;
   function esc(t){const d=document.createElement('div');d.textContent=t;return d.innerHTML}
 
   // ── Glossary term auto-linker ──
-  // Replaces known Google Ads terms in bot HTML with links to /projects/knowledge-library?q=<term>
-  // (or future glossary route). Skip if inside an existing tag or attribute.
+  // Maps each term to the most relevant existing page on this site.
+  // Uses URL text-fragment (#:~:text=) so the browser scrolls to and highlights
+  // the term on the destination page. Falls back to KB search for terms with no
+  // dedicated page.
   const TERM_GLOSSARY = [
-    { re:/\b(GA4|Google Analytics 4)\b/g,           label:'GA4' },
-    { re:/\b(GTM|Google Tag Manager)\b/g,           label:'GTM' },
-    { re:/\b(Performance Max|PMax|pMax)\b/g,        label:'Performance Max' },
-    { re:/\b(Quality Score)\b/g,                    label:'Quality Score' },
-    { re:/\b(Smart Bidding)\b/g,                    label:'Smart Bidding' },
-    { re:/\b(Enhanced Conversions)\b/g,             label:'Enhanced Conversions' },
-    { re:/\b(Customer Match)\b/g,                   label:'Customer Match' },
-    { re:/\b(Demand Gen)\b/g,                       label:'Demand Gen' },
-    { re:/\b(Data-Driven Attribution|DDA)\b/g,      label:'DDA' },
-    { re:/\b(Target ROAS|tROAS)\b/g,                label:'tROAS' },
-    { re:/\b(Target CPA|tCPA)\b/g,                  label:'tCPA' },
-    { re:/\b(Responsive Search Ads|RSAs?)\b/g,      label:'RSA' },
-    { re:/\b(Manager Account|MCC)\b/g,              label:'MCC' },
-    { re:/\b(In-Market Audiences?)\b/g,             label:'In-Market Audiences' },
-    { re:/\b(Customer Match)\b/g,                   label:'Customer Match' },
-    { re:/\b(Search Lost IS|impression share)\b/gi, label:'impression share' },
-    { re:/\b(Auction Insights)\b/g,                 label:'Auction Insights' },
-    { re:/\b(Looker Studio)\b/g,                    label:'Looker Studio' },
-    { re:/\b(LegitScript)\b/g,                      label:'LegitScript' },
-    { re:/\b(Customer Match)\b/g,                   label:'Customer Match' },
+    // Quality Score → dedicated tips page
+    { re:/\b(Quality Score)\b/g,                          label:'Quality Score',  path:'tips-and-tricks/quality-score-optimization' },
+    // Smart Bidding family → dedicated tips page
+    { re:/\b(Smart Bidding)\b/g,                          label:'Smart Bidding',  path:'tips-and-tricks/smart-bidding-strategies' },
+    { re:/\b(Target ROAS|tROAS)\b/g,                      label:'Target ROAS',    path:'tips-and-tricks/smart-bidding-strategies' },
+    { re:/\b(Target CPA|tCPA)\b/g,                        label:'Target CPA',     path:'tips-and-tricks/smart-bidding-strategies' },
+    { re:/\b(Data-Driven Attribution|DDA)\b/g,            label:'Data-Driven Attribution', path:'tips-and-tricks/smart-bidding-strategies' },
+    // Audience targeting → dedicated tips page
+    { re:/\b(In-Market Audiences?)\b/g,                   label:'In-Market Audiences', path:'tips-and-tricks/audience-targeting-guide' },
+    { re:/\b(Customer Match)\b/g,                         label:'Customer Match', path:'tips-and-tricks/audience-targeting-guide' },
+    // Budget / impression share → dedicated tips page
+    { re:/\b(impression share|Search Lost IS)\b/gi,       label:'impression share', path:'tips-and-tricks/budget-optimization-tips' },
+    { re:/\b(budget cap|budget-capped)\b/gi,              label:'budget cap',     path:'tips-and-tricks/budget-optimization-tips' },
+    // Ad copy / RSA → dedicated tips page
+    { re:/\b(Responsive Search Ads?|RSAs?)\b/g,           label:'Responsive Search Ads', path:'tips-and-tricks/ad-copy-best-practices' },
+    // Tracking + analytics terms → KB search fallback
+    { re:/\b(GA4|Google Analytics 4)\b/g,                 label:'GA4',            kb:true },
+    { re:/\b(GTM|Google Tag Manager)\b/g,                 label:'Google Tag Manager', kb:true },
+    { re:/\b(Enhanced Conversions)\b/g,                   label:'Enhanced Conversions', kb:true },
+    { re:/\b(Auction Insights)\b/g,                       label:'Auction Insights', kb:true },
+    { re:/\b(Looker Studio)\b/g,                          label:'Looker Studio',  kb:true },
+    // Campaign types → KB search fallback
+    { re:/\b(Performance Max|PMax|pMax)\b/g,              label:'Performance Max', kb:true },
+    { re:/\b(Demand Gen)\b/g,                             label:'Demand Gen',     kb:true },
+    // Account & policy → KB search fallback
+    { re:/\b(Manager Account|MCC)\b/g,                    label:'Manager Account', kb:true },
+    { re:/\b(LegitScript)\b/g,                            label:'LegitScript',    kb:true },
   ];
   function linkifyTerms(html){
     if(!html) return html;
     const baseUrl = import.meta.env.BASE_URL;
-    // Split on tags so we only operate on text fragments
     const parts = html.split(/(<[^>]+>)/);
     for(let i=0;i<parts.length;i++){
-      if(parts[i].startsWith('<')) continue; // skip tags
+      if(parts[i].startsWith('<')) continue;
       let text = parts[i];
-      const linked = new Set(); // only link first occurrence per term per fragment
+      const linked = new Set();
       for(const t of TERM_GLOSSARY){
         if(linked.has(t.label)) continue;
         text = text.replace(t.re, (match)=>{
           if(linked.has(t.label)) return match;
           linked.add(t.label);
-          const url = `${baseUrl}projects/knowledge-library?q=${encodeURIComponent(t.label)}`;
+          let url;
+          if(t.kb){
+            url = `${baseUrl}projects/knowledge-library?q=${encodeURIComponent(t.label)}#:~:text=${encodeURIComponent(t.label)}`;
+          } else {
+            // Tips-and-tricks page + text fragment so the browser scrolls to
+            // and highlights the exact term on the destination page.
+            url = `${baseUrl}${t.path}#:~:text=${encodeURIComponent(t.label)}`;
+          }
           return `<a class="term-link" href="${url}" target="_blank" rel="noopener" title="Learn more about ${t.label}">${match}</a>`;
         });
       }
@@ -2379,7 +2394,7 @@ const base = import.meta.env.BASE_URL;
     const wrap=document.createElement('div');
     wrap.className='sv-solutions';
     const cityLine = ss.cityName ? ` in <b>${esc(ss.cityName)}</b>` : '';
-    const aiBadge = opts.personalized ? ' <span style="font-size:.65rem;background:#e8f0fe;color:#1a73e8;padding:.15rem .5rem;border-radius:100px;font-weight:600;text-transform:uppercase;letter-spacing:.03em;">✨ AI-personalized</span>' : '';
+    const aiBadge = opts.personalized ? ' <span style="font-size:.65rem;background:#e8f0fe;color:#1a73e8;padding:.15rem .5rem;border-radius:100px;font-weight:600;text-transform:uppercase;letter-spacing:.03em;">✨ Personalized for you</span>' : '';
     wrap.innerHTML=`
       <div class="sv-sol-h">🎯 Top recommended solutions for ${esc(ss.industryName||'your business')}${cityLine}${aiBadge}</div>
       <div class="sv-sol-grid">
@@ -2413,13 +2428,19 @@ const base = import.meta.env.BASE_URL;
       })});
       const d=await r.json();
       if(!d.ok || d.fallback) return null;
-      // Merge AI rationales into picks (preserve order)
+      // Truncate any over-long AI text as safety net (Gemini sometimes ignores word limits)
+      const clamp = (s, maxWords)=>{
+        if(!s) return s;
+        const words = s.trim().split(/\s+/);
+        if(words.length <= maxWords) return s.trim();
+        return words.slice(0, maxWords).join(' ').replace(/[,;:]$/,'') + '…';
+      };
       const merged = pickedKeys.map(k=>{
         const aiItem = (d.solutions||[]).find(s=>s.key===k);
         const baseWhy = picks.find(p=>p.k===k)?.why || '';
-        return { k, why: aiItem?.why || baseWhy };
+        return { k, why: clamp(aiItem?.why || baseWhy, 28) };
       });
-      return { picks: merged, intro: d.intro || '', insight: d.insight || '' };
+      return { picks: merged, intro: clamp(d.intro || '', 26), insight: clamp(d.insight || '', 28) };
     }catch{ return null; }
   }
 

@@ -24,13 +24,17 @@ async function reportError(label: string, detail: string) {
 }
 
 const SYSTEM = `You personalize Google Ads recommendations for Vietnamese SMBs.
-Given a business context and a list of 3 picked Google Ads solution keys, write a sharp, specific, 2-sentence reason why each solution fits THIS particular business — referencing their industry, city, persona, product, or competitors by name when possible. NO generic platitudes.
 
-ALWAYS write the response in English, regardless of the language used in the context strings. If the user provided Vietnamese product names or persona descriptions, still write the intro/why/insight in English.
+STRICT LENGTH RULES (do not violate):
+- Each "why" field: ONE sentence, maximum 22 words. Direct and specific. No fluff.
+- "intro" field: ONE short sentence, maximum 20 words.
+- "insight" field: ONE short sentence, maximum 22 words.
 
-Also write:
-- intro: 1-2 sentence personalized intro paragraph that references their specific situation
-- insight: 1 sentence highlighting the biggest opportunity OR risk you see in their market data
+CONTENT RULES:
+- Reference the user's industry, city, persona, product, or competitors by name when natural.
+- Always reply in English regardless of input language.
+- No generic platitudes ("this is a great choice"). Be concrete.
+- No "As a..." preambles. Get straight to the value.
 
 Reply ONLY in valid JSON, no markdown fences, no preamble:
 {
