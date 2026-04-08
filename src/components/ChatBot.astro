@@ -787,15 +787,14 @@ const base = import.meta.env.BASE_URL;
     }
   }
 
-  // ── Solve mode: initial intent chips ──
+  // ── Solve mode: initial intent chips (ordered) ──
   function renderSolveInitChips(){
     addSolveChips([
+      { label:'📱 Market my new app/service',                  onClick:()=>solveStart('new-product') },
+      { label:'📈 Grow my existing campaign',                  onClick:()=>solveStart('grow') },
+      { label:'🛠 Fix a technical issue',                      onClick:()=>solveStart('tech') },
       { label:'😩 I have a problem but don\'t know what it is', onClick:()=>solveStart('symptom') },
-      { label:'📱 Market my new app/service', onClick:()=>solveStart('new-product') },
-      { label:'📈 Grow my existing business', onClick:()=>solveStart('grow') },
-      { label:'🔧 Optimize my campaigns',     onClick:()=>solveStart('optimize') },
-      { label:'🛠 Fix a technical issue',     onClick:()=>solveStart('tech') },
-      { label:'💬 Other — describe in your own words', onClick:()=>solveStart('open') },
+      { label:'💬 Other — describe in your own words',          onClick:()=>solveStart('open') },
     ],'init-chips');
   }
 
@@ -1186,7 +1185,9 @@ const base = import.meta.env.BASE_URL;
   function renderSymptomLeaf(node){
     const t=getTh(activeId); if(!t) return;
     const ss=t.solveState;
+    ss.symptomLeafTitle = node.title;
     trackAction('chat:symptom-leaf', node.title.slice(0,40));
+    updateChatTitle(t);
 
     const card=document.createElement('div');
     card.className='sv-card sv-results';
@@ -1371,6 +1372,7 @@ const base = import.meta.env.BASE_URL;
     const area = TECH_AREAS[areaKey];
     addUser(area.label); t.messages.push({role:'user',text:area.label});
     trackAction('chat:tech-area', areaKey);
+    updateChatTitle(t);
     askNextTechQuestion();
   }
 
@@ -1467,16 +1469,21 @@ const base = import.meta.env.BASE_URL;
     init:'Pick your goal', city:'Choose location', industry:'Pick industry',
     persona:'Target customer', product:'Describe your business', competitor:'Competitors',
     budget:'Budget range', goal:'Conversion goal', value:'Customer value',
+    currentChannels:'Current channels', painPoint:'Where it hurts',
     results:'Market & budget', solutions:'Your playbook', lead:'Talk to expert',
     tech:'Technical diagnosis',
     symptom:'Find the real problem',
   };
+  // Grow flow inserts currentChannels + painPoint after industry
+  const SOLVE_STEPS_GROW = ['init','city','industry','currentChannels','painPoint','persona','product','competitor','results','solutions','lead'];
+  const SOLVE_STEPS_GROW_REFINED = ['init','city','industry','currentChannels','painPoint','persona','product','competitor','budget','goal','value','results','solutions','lead'];
   const SOLVE_STEPS_TECH = ['init','tech','lead'];
   const SOLVE_STEPS_SYMPTOM = ['init','symptom','lead'];
   function getSolveSteps(ss){
     if(!ss) return SOLVE_STEPS_DEFAULT;
     if(ss.intent==='tech') return SOLVE_STEPS_TECH;
     if(ss.intent==='symptom') return SOLVE_STEPS_SYMPTOM;
+    if(ss.intent==='grow') return ss.refining ? SOLVE_STEPS_GROW_REFINED : SOLVE_STEPS_GROW;
     return ss.refining ? SOLVE_STEPS_REFINED : SOLVE_STEPS_DEFAULT;
   }
 
@@ -1706,6 +1713,87 @@ const base = import.meta.env.BASE_URL;
     save();
   }
 
+  // ── Grow flow: current channels chips ──
+  function renderCurrentChannelsChips(){
+    const items=[
+      { label:'🔍 Google Search Ads',  v:'Google Search' },
+      { label:'🚀 Performance Max',     v:'Performance Max' },
+      { label:'📱 Meta / Facebook Ads', v:'Meta/Facebook' },
+      { label:'🎵 TikTok Ads',          v:'TikTok' },
+      { label:'📰 SEO / content',       v:'SEO/Content' },
+      { label:'👥 Influencers',         v:'Influencers' },
+      { label:'🛒 Shopee / Lazada Ads', v:'Marketplace ads' },
+      { label:'❌ Nothing structured yet', v:'None yet' },
+    ];
+    addSolveChips(items.map(it=>({label:it.label,onClick:()=>handleGrowChoice('currentChannels',it.v)})));
+  }
+  function renderPainPointChips(){
+    const items=[
+      { label:'📉 Volume too low',         v:'Volume too low' },
+      { label:'💸 Cost per lead too high', v:'Cost too high' },
+      { label:'🪦 Conversion rate dropping', v:'Conversion drops' },
+      { label:'😶 Audience tapped out',    v:'Audience tapped out' },
+      { label:'🌀 Performance is unpredictable', v:'Unpredictable' },
+      { label:'🤷 Not sure where the problem is', v:'Unknown' },
+    ];
+    addSolveChips(items.map(it=>({label:it.label,onClick:()=>handleGrowChoice('painPoint',it.v)})));
+  }
+  function handleGrowChoice(kind, value){
+    const t=getTh(activeId); if(!t) return;
+    const ss=t.solveState;
+    if(kind==='currentChannels'){
+      ss.currentChannels=value;
+      addUser(value); t.messages.push({role:'user',text:value});
+      trackAction('chat:grow-channels', value);
+      ss.stage='painPoint'; updateProgress(); lockInput('Pick a pain point above...');
+      const q="Where does it hurt the most right now? Pick the one that bites hardest:";
+      addBot(`<p>${esc(q)}</p>`); t.messages.push({role:'bot',html:`<p>${esc(q)}</p>`});
+      renderPainPointChips();
+      save();
+    } else if(kind==='painPoint'){
+      ss.painPoint=value;
+      addUser(value); t.messages.push({role:'user',text:value});
+      trackAction('chat:grow-pain', value);
+      ss.stage='persona'; updateProgress(); unlockInput();
+      const q="Now describe your typical buyer TODAY — pick a persona below or describe in your own words:";
+      addBot(`<p>${esc(q)}</p>`); t.messages.push({role:'bot',html:`<p>${esc(q)}</p>`});
+      renderPersonaChips();
+      updateChatTitle(t);
+      save();
+    }
+  }
+
+  // ── Auto-name the chat thread based on accumulated solveState ──
+  function updateChatTitle(t){
+    if(!t) return;
+    const ss=t.solveState||{};
+    let title='';
+    if(ss.intent==='symptom'){
+      title = ss.symptomLeafTitle ? `Diagnosing: ${ss.symptomLeafTitle.slice(0,30)}` : 'Finding the problem';
+    } else if(ss.intent==='tech'){
+      const area = ss.techArea && TECH_AREAS[ss.techArea];
+      title = area ? `Fixing ${area.label.replace(/^\S+\s/,'')}` : 'Technical issue';
+    } else if(ss.intent==='new-product'){
+      const what = ss.product ? ss.product.split(/[,.\n]/)[0].slice(0,28) : (ss.industryName || 'new product');
+      const where = ss.cityName ? ` · ${ss.cityName}` : '';
+      title = `Launching ${what}${where}`;
+    } else if(ss.intent==='grow'){
+      const what = ss.industryName || (ss.product ? ss.product.slice(0,24) : 'campaign');
+      const where = ss.cityName ? ` · ${ss.cityName}` : '';
+      title = `Growing ${what}${where}`;
+    } else if(ss.intent==='open'){
+      // keep first-message-derived title if present
+      if(!t.title){
+        const firstUser = (t.messages||[]).find(m=>m.role==='user');
+        title = firstUser ? firstUser.text.slice(0,32) : 'Open chat';
+      } else return;
+    }
+    if(title && title !== t.title){
+      t.title = title.length>32 ? title.slice(0,32)+'…' : title;
+      renderSB();
+    }
+  }
+
   function renderCityChips(){
     if(!markets) return;
     const items = Object.entries(markets.cities).map(([k,v])=>({
@@ -1734,16 +1822,26 @@ const base = import.meta.env.BASE_URL;
       const q='Which industry best fits your business?';
       addBot(`<p>${esc(q)}</p>`); t.messages.push({role:'bot',html:`<p>${esc(q)}</p>`});
       renderIndustryChips();
+      updateChatTitle(t);
       save();
     } else if(kind==='industry'){
       ss.industryKey=value;
       ss.industryName = markets.industries_meta[value]?.label || value;
       addUser(ss.industryName); t.messages.push({role:'user',text:ss.industryName});
       trackAction('chat:industry', ss.industryName);
-      ss.stage='persona'; updateProgress(); unlockInput();
-      const q='Who is your ideal customer? Pick a persona below or describe in your own words.';
-      addBot(`<p>${esc(q)}</p>`); t.messages.push({role:'bot',html:`<p>${esc(q)}</p>`});
-      renderPersonaChips();
+      // Branch by intent: grow → currentChannels; new-product → persona
+      if(ss.intent==='grow'){
+        ss.stage='currentChannels'; updateProgress(); lockInput('Pick a channel above...');
+        const q="What's currently running for you? Pick the main channel(s) you depend on right now:";
+        addBot(`<p>${esc(q)}</p>`); t.messages.push({role:'bot',html:`<p>${esc(q)}</p>`});
+        renderCurrentChannelsChips();
+      } else {
+        ss.stage='persona'; updateProgress(); unlockInput();
+        const q='Who is your ideal customer? Pick a persona below or describe in your own words.';
+        addBot(`<p>${esc(q)}</p>`); t.messages.push({role:'bot',html:`<p>${esc(q)}</p>`});
+        renderPersonaChips();
+      }
+      updateChatTitle(t);
       save();
     }
   }
@@ -2126,6 +2224,7 @@ const base = import.meta.env.BASE_URL;
     }
     if(ss.stage==='product'){
       ss.product=q; trackAction('chat:product', q.slice(0,60));
+      updateChatTitle(t);
       ss.stage='competitor'; updateProgress(); unlockInput();
       const ask='Who are your top 1-3 competitors? Type their names, or tap Skip.';
       showTyping(); await new Promise(r=>setTimeout(r,250)); hideTyping();
