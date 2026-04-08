@@ -108,9 +108,47 @@ Now write the personalized JSON response. If refined inputs are present, your "w
       body: JSON.stringify({
         systemInstruction: { parts: [{ text: SYSTEM }] },
         contents: [{ role: 'user', parts: [{ text: userMsg }] }],
-        generationConfig: { temperature: 0.8, maxOutputTokens: 800, responseMimeType: 'application/json' },
+        generationConfig: { temperature: 0.7, maxOutputTokens: 2000, responseMimeType: 'application/json' },
       }),
     });
+  }
+
+  // Robust JSON extractor — handles truncated responses by closing open strings/brackets
+  function tryParseJson(raw: string): any | null {
+    if (!raw) return null;
+    // Strip code fences if Gemini wrapped output
+    raw = raw.trim().replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '');
+    try { return JSON.parse(raw); } catch {}
+    // Attempt repair: close trailing string + brackets
+    try {
+      let s = raw;
+      // Count unescaped quotes — if odd, close the string
+      let inStr = false, esc = false;
+      for (let i = 0; i < s.length; i++) {
+        const ch = s[i];
+        if (esc) { esc = false; continue; }
+        if (ch === '\\') { esc = true; continue; }
+        if (ch === '"') inStr = !inStr;
+      }
+      if (inStr) s += '"';
+      // Balance braces and brackets
+      const opens: string[] = [];
+      let inS = false; esc = false;
+      for (const ch of s) {
+        if (esc) { esc = false; continue; }
+        if (ch === '\\') { esc = true; continue; }
+        if (ch === '"') { inS = !inS; continue; }
+        if (inS) continue;
+        if (ch === '{' || ch === '[') opens.push(ch);
+        if (ch === '}') { if (opens[opens.length - 1] === '{') opens.pop(); }
+        if (ch === ']') { if (opens[opens.length - 1] === '[') opens.pop(); }
+      }
+      while (opens.length) {
+        const o = opens.pop();
+        s += o === '{' ? '}' : ']';
+      }
+      return JSON.parse(s);
+    } catch { return null; }
   }
 
   try {
@@ -127,9 +165,14 @@ Now write the personalized JSON response. If refined inputs are present, your "w
 
     const data = await r.json();
     const raw = data?.candidates?.[0]?.content?.parts?.map((p: any) => p.text).join('') || '';
-    let parsed: any;
-    try { parsed = JSON.parse(raw); } catch {
-      await reportError('JSON parse failed', `raw=${raw.slice(0, 600)}`);
+    const parsed = tryParseJson(raw);
+    if (!parsed) {
+      await reportError('JSON parse failed', `raw=${raw.slice(0, 800)}`);
+      return new Response(JSON.stringify({ ok: false, fallback: true }), { status: 500 });
+    }
+    // Sanity-check shape
+    if (!parsed.solutions || !Array.isArray(parsed.solutions)) {
+      await reportError('JSON shape invalid', `raw=${raw.slice(0, 600)}`);
       return new Response(JSON.stringify({ ok: false, fallback: true }), { status: 500 });
     }
 

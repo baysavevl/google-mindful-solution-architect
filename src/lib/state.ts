@@ -42,3 +42,24 @@ export function isBlocked(ip: string) { return blocked.has(ip); }
 const leads = new Set<string>();
 export function markLead(ip: string) { leads.add(ip); }
 export function isLead(ip: string) { return leads.has(ip); }
+
+// ── Visitor counter (per-day + all-time within instance) ──────────────
+let visitorDayKey = todayKey();
+let visitorDayCount = 0;
+let visitorTotalCount = 0;
+const seenVisitorSessions = new Set<string>();
+
+export function nextVisitorNumber(sessionId: string): { today: number; total: number } {
+  const k = todayKey();
+  if (k !== visitorDayKey) {
+    visitorDayKey = k;
+    visitorDayCount = 0;
+    seenVisitorSessions.clear();
+  }
+  if (sessionId && !seenVisitorSessions.has(sessionId)) {
+    seenVisitorSessions.add(sessionId);
+    visitorDayCount += 1;
+    visitorTotalCount += 1;
+  }
+  return { today: visitorDayCount, total: visitorTotalCount };
+}

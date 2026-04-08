@@ -141,7 +141,11 @@ const base = import.meta.env.BASE_URL;
     margin-bottom: 2px;
     animation: fadeIn 0.3s ease;
     word-wrap: break-word;
+    overflow-wrap: anywhere;
+    min-width: 0;
   }
+  .bub-bot p, .bub-bot li, .bub-bot pre { overflow-wrap: anywhere; word-break: normal; }
+  .bub-bot pre { white-space: pre-wrap; max-width: 100%; }
 
   /* Speaker change gap */
   .bub-gap { margin-top: 16px; padding-top: 16px; border-top: 1px solid #f1f3f4; }
@@ -340,6 +344,30 @@ const base = import.meta.env.BASE_URL;
   /* Solve mode chip variants */
   .bub-chip.sv { color: #5f2e8c; }
   .bub-chip.sv:hover { background: #f3e8ff; border-color: #5f2e8c; }
+  .bub-chip.sv.on { background: #5f2e8c; color: #fff; border-color: #5f2e8c; }
+  .bub-chip.sv.on:hover { background: #4a2470; }
+  .bub-chip.sv.other { color: #5f6368; border-style: dashed; }
+  .bub-chip.sv.other:hover { background: #f1f3f4; color: #202124; border-color: #5f6368; border-style: dashed; }
+
+  /* ═══ Multi-select continue button (inline) ═══ */
+  .sv-multi-continue {
+    margin-top: 10px; width: 100%; padding: 0.65rem 1rem;
+    background: linear-gradient(135deg, #1a73e8, #5f2e8c);
+    color: #fff; border: none; border-radius: 12px;
+    font-family: var(--font-sans); font-size: 0.85rem; font-weight: 600;
+    cursor: pointer; transition: all 0.18s;
+  }
+  .sv-multi-continue:hover { transform: translateY(-1px); box-shadow: 0 3px 10px rgba(26,115,232,0.2); }
+  .sv-multi-continue:disabled { background: #dadce0; color: #9aa0a6; cursor: not-allowed; transform: none; box-shadow: none; }
+  .sv-multi-counter { font-size: 0.7rem; color: #5f6368; margin-top: 6px; text-align: center; }
+
+  /* ═══ Term link (auto-linked glossary terms) ═══ */
+  .term-link {
+    color: #1a73e8; text-decoration: none;
+    border-bottom: 1px dotted #1a73e8;
+    cursor: help; font-weight: 500;
+  }
+  .term-link:hover { background: #e8f0fe; border-bottom-style: solid; }
 
   /* ═══ Progress bar (above input) ═══ */
   .ms-progress {
@@ -550,6 +578,54 @@ const base = import.meta.env.BASE_URL;
 
   function esc(t){const d=document.createElement('div');d.textContent=t;return d.innerHTML}
 
+  // ── Glossary term auto-linker ──
+  // Replaces known Google Ads terms in bot HTML with links to /projects/knowledge-library?q=<term>
+  // (or future glossary route). Skip if inside an existing tag or attribute.
+  const TERM_GLOSSARY = [
+    { re:/\b(GA4|Google Analytics 4)\b/g,           label:'GA4' },
+    { re:/\b(GTM|Google Tag Manager)\b/g,           label:'GTM' },
+    { re:/\b(Performance Max|PMax|pMax)\b/g,        label:'Performance Max' },
+    { re:/\b(Quality Score)\b/g,                    label:'Quality Score' },
+    { re:/\b(Smart Bidding)\b/g,                    label:'Smart Bidding' },
+    { re:/\b(Enhanced Conversions)\b/g,             label:'Enhanced Conversions' },
+    { re:/\b(Customer Match)\b/g,                   label:'Customer Match' },
+    { re:/\b(Demand Gen)\b/g,                       label:'Demand Gen' },
+    { re:/\b(Data-Driven Attribution|DDA)\b/g,      label:'DDA' },
+    { re:/\b(Target ROAS|tROAS)\b/g,                label:'tROAS' },
+    { re:/\b(Target CPA|tCPA)\b/g,                  label:'tCPA' },
+    { re:/\b(Responsive Search Ads|RSAs?)\b/g,      label:'RSA' },
+    { re:/\b(Manager Account|MCC)\b/g,              label:'MCC' },
+    { re:/\b(In-Market Audiences?)\b/g,             label:'In-Market Audiences' },
+    { re:/\b(Customer Match)\b/g,                   label:'Customer Match' },
+    { re:/\b(Search Lost IS|impression share)\b/gi, label:'impression share' },
+    { re:/\b(Auction Insights)\b/g,                 label:'Auction Insights' },
+    { re:/\b(Looker Studio)\b/g,                    label:'Looker Studio' },
+    { re:/\b(LegitScript)\b/g,                      label:'LegitScript' },
+    { re:/\b(Customer Match)\b/g,                   label:'Customer Match' },
+  ];
+  function linkifyTerms(html){
+    if(!html) return html;
+    const baseUrl = import.meta.env.BASE_URL;
+    // Split on tags so we only operate on text fragments
+    const parts = html.split(/(<[^>]+>)/);
+    for(let i=0;i<parts.length;i++){
+      if(parts[i].startsWith('<')) continue; // skip tags
+      let text = parts[i];
+      const linked = new Set(); // only link first occurrence per term per fragment
+      for(const t of TERM_GLOSSARY){
+        if(linked.has(t.label)) continue;
+        text = text.replace(t.re, (match)=>{
+          if(linked.has(t.label)) return match;
+          linked.add(t.label);
+          const url = `${baseUrl}projects/knowledge-library?q=${encodeURIComponent(t.label)}`;
+          return `<a class="term-link" href="${url}" target="_blank" rel="noopener" title="Learn more about ${t.label}">${match}</a>`;
+        });
+      }
+      parts[i] = text;
+    }
+    return parts.join('');
+  }
+
   function showNotice(msg){
     const old=document.querySelector('.ms-notice');if(old)old.remove();
     const n=document.createElement('div');n.className='ms-notice';n.textContent=msg;
@@ -584,12 +660,10 @@ const base = import.meta.env.BASE_URL;
     lastWho='bot';
 
     let extra='';
-    // Links as bordered boxes, open new tab
     if(opts.links?.length) extra+='<div class="bub-links">'+opts.links.map(l=>`<a href="${l.url}" class="bub-link" target="_blank" rel="noopener">${esc(l.text)}</a>`).join('')+'</div>';
-    // Related as bordered boxes
     if(opts.related?.length) extra+='<div class="bub-related">'+opts.related.map(r=>`<button class="bub-rel-btn" data-q="${esc(r.question)}">${esc(r.question)}</button>`).join('')+'</div>';
 
-    b.innerHTML=html+extra;
+    b.innerHTML=linkifyTerms(html)+extra;
     el().appendChild(b); el().scrollTop=el().scrollHeight;
     b.querySelectorAll('.bub-rel-btn').forEach(x=>x.addEventListener('click',()=>handleQ(x.dataset.q)));
   }
@@ -709,7 +783,7 @@ const base = import.meta.env.BASE_URL;
     let extra='';
     if(opts.links?.length) extra+='<div class="bub-links">'+opts.links.map(l=>`<a href="${l.url}" class="bub-link" target="_blank" rel="noopener">${esc(l.text)}</a>`).join('')+'</div>';
     if(opts.related?.length) extra+='<div class="bub-related">'+opts.related.map(r=>`<button class="bub-rel-btn" data-q="${esc(r.question)}">${esc(r.question)}</button>`).join('')+'</div>';
-    b.innerHTML=md(raw)+extra;
+    b.innerHTML=linkifyTerms(md(raw))+extra;
     el().scrollTop=el().scrollHeight;
     b.querySelectorAll('.bub-rel-btn').forEach(x=>x.addEventListener('click',()=>handleQ(x.dataset.q)));
   }
@@ -825,7 +899,221 @@ const base = import.meta.env.BASE_URL;
         { label:'💸 I\'m spending money but not getting customers', next:'no_conversions' },
         { label:'👻 My ads aren\'t reaching enough people', next:'low_reach' },
         { label:'🌫 I\'m flying blind — no idea what\'s working', next:'no_visibility' },
+        { label:'🆕 Just starting out — where do I even begin?', next:'beginner' },
+        { label:'🤔 Not sure if Google Ads is right for my business', next:'fit_check' },
+        { label:'🔥 Something broke recently and I don\'t know what changed', next:'recent_change' },
+        { label:'🏃 I\'m too busy to manage this myself', next:'leaf_time' },
       ],
+    },
+
+    beginner: {
+      type:'node',
+      paraphrase:"You're new to Google Ads — totally fine. Most people who succeed weren't experts on day one, they just avoided the 3 biggest beginner traps.",
+      analogy:{ h:"It's like learning to drive", t:"You don't start on a highway. You start in a parking lot — small budget, simple campaign, learn the controls. Then you gradually move to bigger roads. Most beginners try to drive a Ferrari at full speed on day one and crash." },
+      question:"What's actually stopping you from starting? Be honest:",
+      chips:[
+        { label:'😨 I\'m afraid of wasting money', next:'leaf_starter_fear' },
+        { label:'🧠 The interface is overwhelming', next:'leaf_overwhelm' },
+        { label:'❓ I don\'t know which campaign type to pick', next:'leaf_campaign_choice' },
+        { label:'💭 I have no idea what keywords to bid on', next:'leaf_keyword_research' },
+      ],
+    },
+    fit_check: {
+      type:'node',
+      paraphrase:"You're not sure Google Ads is the right channel for your business — that's a smart question to ask BEFORE spending money.",
+      analogy:{ h:"Like picking the right fishing spot", t:"Some fish only swim in certain waters. Selling B2B enterprise software? Google Ads is your ocean. Selling viral fashion to Gen Z? TikTok might be a better river. Knowing where the fish actually live saves months of wasted bait." },
+      question:"What does your business look like? Pick the closest match:",
+      chips:[
+        { label:'🛒 I sell products online (e-commerce)', next:'leaf_fit_yes_ecom' },
+        { label:'📞 I get leads then close on calls', next:'leaf_fit_yes_lead' },
+        { label:'🏪 I have a physical store/restaurant', next:'leaf_fit_yes_local' },
+        { label:'🧑\u200d🤝\u200d🧑 I sell to other businesses (B2B)', next:'leaf_fit_b2b' },
+        { label:'😎 I sell on TikTok/Insta and impulse-driven', next:'leaf_fit_maybe_social' },
+      ],
+    },
+    recent_change: {
+      type:'node',
+      paraphrase:"Something used to work and now it doesn't. There's almost always a specific cause — we just need to find it in the timeline.",
+      analogy:{ h:"It's like detective work", t:"When a healthy patient suddenly gets sick, doctors ask 'what changed in the last 2 weeks?' New medication? New food? New stress? Same with ads — 95% of sudden drops trace back to a change in the last 30 days." },
+      question:"Think back 2-4 weeks. What changed?",
+      chips:[
+        { label:'🌐 Website redesign or migration', next:'leaf_site_change' },
+        { label:'🔄 Bid strategy or campaign settings change', next:'leaf_setting_change' },
+        { label:'💳 Payment method failed or budget changed', next:'leaf_billing_change' },
+        { label:'🚫 Got hit with a policy disapproval', next:'leaf_disapproval' },
+        { label:'❓ Nothing changed that I know of', next:'leaf_external_change' },
+      ],
+    },
+
+    leaf_starter_fear: {
+      type:'leaf',
+      title:"The fear of wasting money is preventing you from starting",
+      eli5:"Here's the truth: not testing IS losing money. Every day you don't run ads, your competitor IS running them, learning from your shared customers, and pulling ahead. The smallest possible test ($5/day) for 14 days teaches you more than 6 months of reading.",
+      fix:[
+        "Set a hard maximum: $50 total. Cap it.",
+        "Run ONE Search campaign with 5 keywords on Phrase match.",
+        "Run for 14 days. No changes mid-flight.",
+        "End of day 14: review results. If you got conversions cheaper than your customer is worth, scale. If not, refine and try again.",
+      ],
+      case:{ id:'goga-vietnam', why:"GOGA started with tiny test budgets and only scaled what worked — that discipline let them grow without ever 'gambling' big amounts." },
+    },
+    leaf_overwhelm: {
+      type:'leaf',
+      title:"The Google Ads interface is overwhelming",
+      eli5:"Google Ads has 200+ features, 95% of which you don't need on day one. Beginners try to learn everything and freeze. Pros learn 5 things and act. The 5 things: campaign type, keywords, ad copy, daily budget, conversion tracking.",
+      fix:[
+        "Ignore everything except: 'Create campaign' → 'Search' → 'Get more leads/sales'.",
+        "Pick 5 keywords. Write 1 ad with 3 headlines.",
+        "Set a daily budget you can lose 14 times without panic.",
+        "Set up ONE conversion goal — purchase, form fill, or phone call.",
+        "Hit Save. Come back in 7 days.",
+      ],
+      case:{ id:'goga-vietnam', why:"GOGA's first profitable account had ONE campaign, ONE ad group, ONE bid strategy. Simple beats sophisticated for beginners every time." },
+    },
+    leaf_campaign_choice: {
+      type:'leaf',
+      title:"Don't know which campaign type to pick",
+      eli5:"There are 9 campaign types and Google's docs make them all sound equally great. For 90% of businesses starting out, only 2 matter: Search (catch people typing your category) and Performance Max (let Google find buyers across everything). Pick Search first if you have <$1K/month, PMax if you have >$3K/month. Skip the rest.",
+      fix:[
+        "Budget < $1K/mo → start with Search Ads only.",
+        "Budget $1K-$3K/mo → Search + Display retargeting.",
+        "Budget > $3K/mo → Search + Performance Max.",
+        "Ignore Demand Gen, YouTube, App, and Discovery campaigns until you have a winning baseline.",
+      ],
+      case:{ id:'sayurbox-indonesia', why:"Sayurbox started purely with Search Ads in their early days, then layered Performance Max only after they had baseline conversion data to feed it." },
+    },
+    leaf_keyword_research: {
+      type:'leaf',
+      title:"No idea what keywords to bid on",
+      eli5:"You don't need to invent keywords — your customers already type them. The trick is to STEAL them. Look at: your own search bar (what people type to find you on your site), your reviews (the words customers use), Google's autocomplete when you start typing your category. Those are your keywords.",
+      fix:[
+        "Open Google Search → type your category → write down all the autocomplete suggestions.",
+        "Open Google Trends → type your product → see related queries.",
+        "Read your own customer reviews → highlight repeated phrases.",
+        "Use Google Keyword Planner (free) to estimate volume.",
+        "Start with 10-20 phrase-match keywords, NOT broad match.",
+      ],
+      case:{ id:'kilang-besi-malaysia', why:"Kilang Besi Malaysia found their best keywords by reading their own sales-call transcripts — the language customers used was different from industry jargon." },
+    },
+    leaf_fit_yes_ecom: {
+      type:'leaf',
+      title:"E-commerce → Google Ads is a strong fit",
+      eli5:"If you sell physical products online, Google Ads (specifically Shopping + Performance Max) is one of the highest ROAS channels available. You only pay for clicks from people actively searching to buy, not browsing. It's like fishing in a pond labeled 'fish that want to be caught'.",
+      fix:[
+        "Set up a Google Merchant Center feed with your product catalog.",
+        "Start with Standard Shopping campaigns to learn what sells.",
+        "Layer Performance Max once you have 30+ conversions in 30 days.",
+        "Track ROAS weekly — anything above 4x is healthy for most categories.",
+      ],
+      case:{ id:'shopee-singapore', why:"Shopee built their entire growth engine on shopping + retargeting funnels — Google Ads is the backbone of e-commerce in SE Asia." },
+    },
+    leaf_fit_yes_lead: {
+      type:'leaf',
+      title:"Lead-based business → Google Ads works very well",
+      eli5:"If your business runs on phone calls or form submissions that you close manually, Google Search Ads is built for you. People typing 'lawyer near me' or 'plumber [city]' have intent to convert TODAY — far higher than social media browsers.",
+      fix:[
+        "Start with Search Ads — exact intent only.",
+        "Use call extensions and call-only ads if phone conversions matter.",
+        "Set up call tracking via Google forwarding numbers.",
+        "Aim for cost-per-lead under 30% of your average customer value.",
+      ],
+      case:{ id:'goga-vietnam', why:"GOGA's lead-gen Google Ads stack is the entire backbone of their fitness coaching business — sub-5-min response time + Search Ads = profitable." },
+    },
+    leaf_fit_yes_local: {
+      type:'leaf',
+      title:"Physical store → Google Ads + Google Business Profile",
+      eli5:"For a physical location, your secret weapon isn't classic ads — it's Google Business Profile + Local Search Ads. When someone searches '[your category] near me', you want to be in the map pack. Free + paid local ads work together.",
+      fix:[
+        "Claim and complete your Google Business Profile (free, takes 1 hour).",
+        "Add real photos, hours, menu/services.",
+        "Start Local Search campaigns — bid on '[category] near me' and '[category] in [neighborhood]'.",
+        "Encourage every customer to leave a review — this drives ranking AND ad performance.",
+      ],
+      case:{ id:'tri-petch-isuzu-thailand', why:"Tri Petch Isuzu's dealership network thrives on Local Search + Google Business Profile — most leads start with 'Isuzu dealer near me'." },
+    },
+    leaf_fit_b2b: {
+      type:'leaf',
+      title:"B2B → Google Ads works but slower payback",
+      eli5:"B2B sales cycles are 3-12 months, so judging Google Ads by week-1 results will mislead you. The trick is to track 'pipeline created' not 'revenue closed' — and use longer attribution windows (90 days minimum).",
+      fix:[
+        "Use Search Ads with long-tail commercial intent keywords ('vendor', 'pricing', 'reviews', 'comparison').",
+        "Add LinkedIn-style audience targeting via Customer Match (upload your ICP companies).",
+        "Track 'demo booked' or 'proposal sent' as conversions, not just form fills.",
+        "Set 90-day conversion windows; don't kill campaigns before they cycle.",
+      ],
+      case:{ id:'tri-petch-isuzu-thailand', why:"Tri Petch's commercial truck B2B funnel uses long-window attribution — they only judge campaigns after a full sales-cycle quarter." },
+    },
+    leaf_fit_maybe_social: {
+      type:'leaf',
+      title:"Impulse / lifestyle products → Google Ads is NOT your first move",
+      eli5:"If your product is bought on impulse from scrolling — fashion, beauty trends, viral gadgets — Google Ads isn't where buyers discover you. They discover on TikTok, Instagram, Xiaohongshu. Use Google Ads ONLY for retargeting (catching them when they search for your brand later).",
+      fix:[
+        "Build awareness on TikTok/Instagram first.",
+        "Use Google Ads exclusively for branded search retargeting (people searching your brand name).",
+        "Add YouTube Shorts ads to extend the social discovery loop.",
+        "Skip Search Ads for category keywords — too cold for impulse buyers.",
+      ],
+      case:{ id:'ru9-vietnam', why:"Ru9 mattress brand built on social-first discovery — Google Ads is their retargeting layer, not their acquisition front-line." },
+    },
+    leaf_site_change: {
+      type:'leaf',
+      title:"Recent website change broke tracking",
+      eli5:"Website redesigns are the #1 cause of 'tracking went dark'. New URLs, new templates, missing tags, changed checkout paths — any of these silently kill conversion tracking until you fix it. Your ads keep running, but the conversions stop reporting.",
+      fix:[
+        "Check Google Tag Manager: are tags still firing on the new pages?",
+        "Verify GA4 is collecting data from the new URLs.",
+        "Re-test conversion path end-to-end (click ad → land → convert → check Ads UI).",
+        "Confirm thank-you page URL hasn't changed (most common cause).",
+      ],
+      case:{ id:'amanotes-vietnam', why:"Amanotes' growth team has a strict rule: every site deploy includes a tracking-validation checklist. Ignored once, fixed never." },
+    },
+    leaf_setting_change: {
+      type:'leaf',
+      title:"You changed a campaign setting that nuked performance",
+      eli5:"Switching bid strategies, changing target locations, or 'optimizing' settings mid-flight can reset Smart Bidding's learning. The algorithm has to relearn from scratch — typically 2-3 weeks of bad results before it stabilizes.",
+      fix:[
+        "Open Change History in Google Ads → see exactly what was changed and when.",
+        "If the change was within the last 14 days: revert it and let bidding recover.",
+        "Going forward: change ONE thing at a time, wait 14 days, measure.",
+        "Never change bid strategy + budget + targeting in the same week.",
+      ],
+      case:{ id:'cebu-pacific-philippines', why:"Cebu Pacific's media team froze settings during Tet/Lunar New Year because they learned the hard way: 5 changes in 1 week = 6 weeks of recovery." },
+    },
+    leaf_billing_change: {
+      type:'leaf',
+      title:"Payment failed or budget got cut",
+      eli5:"When a payment method fails, Google pauses ALL campaigns silently. You can be 'live' on paper but invisible in auctions. Most users discover this 3-5 days later when they wonder why nothing's spending.",
+      fix:[
+        "Open Billing → Summary → check for any failed payment alerts.",
+        "Update card info immediately if expired.",
+        "Manually trigger a payment to unblock pending charges.",
+        "Set up email alerts on payment failures so you catch them in 24h not 5 days.",
+      ],
+      case:{ id:'sarung-bhs-indonesia', why:"Sarung BHS lost a full month of sales when a card expired silently — now they have backup payment + Slack alerts on billing events." },
+    },
+    leaf_external_change: {
+      type:'leaf',
+      title:"Nothing visible changed — but the auction did",
+      eli5:"If YOU didn't change anything, your COMPETITORS probably did. New entrants, bigger budgets, or seasonal shifts can reshape the auction overnight. Your account didn't break — the playing field did.",
+      fix:[
+        "Check Auction Insights — see if a new competitor entered the top 5.",
+        "Compare YoY for the same week (not WoW) to rule out seasonality.",
+        "Review Recommendations tab for any algorithm-flagged opportunities.",
+        "If a new competitor appeared: outbid them on YOUR brand keywords first, then pick your battles on category keywords.",
+      ],
+      case:{ id:'klook-apac', why:"Klook tracks Auction Insights weekly because new travel apps regularly appear and steal share — early detection means same-week response, not next-quarter recovery." },
+    },
+    leaf_time: {
+      type:'leaf',
+      title:"You're too busy to manage this yourself",
+      eli5:"Honest truth: managing Google Ads well is a 5-10 hour/week job if you do it yourself. If you can't commit that, you have 3 options: hire in-house, hire an agency, or hire a Solution Architect to set you up with automation that runs without you.",
+      fix:[
+        "Option A: Hire a Solution Architect for one-time setup (cheapest, you maintain).",
+        "Option B: Hire an agency monthly retainer (expensive, hands-off).",
+        "Option C: Build with a freelancer (cheap, risky if they leave).",
+        "Whichever path: insist on transparent reporting and account ownership in YOUR name.",
+      ],
+      case:{ id:'goga-vietnam', why:"GOGA's founders explicitly hired a Solution Architect for setup, then built internal capacity — best of both worlds." },
     },
 
     no_conversions: {
@@ -1223,7 +1511,7 @@ const base = import.meta.env.BASE_URL;
           trackAction('chat:symptom-confirm','yes');
           addUser('Yes, that\'s exactly it'); t.messages.push({role:'user',text:'Yes'});
           setTimeout(()=>{
-            addCtaButton('🤝 Get expert help from a Google Ads Solution Architect','secondary',()=>{
+            addCtaButton('🤝 Get deeper expert help from a Google Ads Solution Architect','secondary',()=>{
               trackAction('chat:cta-expert-symptom');
               ss.stage='lead';
               const intro="Perfect — leave your details and our Google Ads Solution Architect will walk you through fixing this in a free 30-min call.";
@@ -1443,7 +1731,7 @@ const base = import.meta.env.BASE_URL;
 
     // Lead form CTA
     setTimeout(()=>{
-      addCtaButton('🤝 Get expert help from a Google Ads Solution Architect', 'secondary', ()=>{
+      addCtaButton('🤝 Get deeper expert help from a Google Ads Solution Architect', 'secondary', ()=>{
         trackAction('chat:cta-expert-tech');
         ss.stage='lead';
         const intro="Perfect — leave your details and our Google Ads Solution Architect will reach out within 24 hours to dive into the technical setup.";
@@ -1725,7 +2013,16 @@ const base = import.meta.env.BASE_URL;
       { label:'🛒 Shopee / Lazada Ads', v:'Marketplace ads' },
       { label:'❌ Nothing structured yet', v:'None yet' },
     ];
-    addSolveChips(items.map(it=>({label:it.label,onClick:()=>handleGrowChoice('currentChannels',it.v)})));
+    const chips = items.map(it=>({label:it.label,onClick:()=>handleGrowChoice('currentChannels',it.v)}));
+    chips.push({ label:'✏️ Other (type your own)', other:true, onClick:()=>{
+      const t=getTh(activeId); if(!t)return;
+      t.solveState.awaitingFreeText='currentChannels';
+      unlockInput();
+      const inp=document.getElementById('ms-input');
+      inp.placeholder='Describe what you\'re currently running...';
+      inp.focus();
+    }});
+    addSolveChipsExt(chips);
   }
   function renderPainPointChips(){
     const items=[
@@ -1736,7 +2033,16 @@ const base = import.meta.env.BASE_URL;
       { label:'🌀 Performance is unpredictable', v:'Unpredictable' },
       { label:'🤷 Not sure where the problem is', v:'Unknown' },
     ];
-    addSolveChips(items.map(it=>({label:it.label,onClick:()=>handleGrowChoice('painPoint',it.v)})));
+    const chips = items.map(it=>({label:it.label,onClick:()=>handleGrowChoice('painPoint',it.v)}));
+    chips.push({ label:'✏️ Other (type your own pain)', other:true, onClick:()=>{
+      const t=getTh(activeId); if(!t)return;
+      t.solveState.awaitingFreeText='painPoint';
+      unlockInput();
+      const inp=document.getElementById('ms-input');
+      inp.placeholder='Describe your biggest pain point...';
+      inp.focus();
+    }});
+    addSolveChipsExt(chips);
   }
   function handleGrowChoice(kind, value){
     const t=getTh(activeId); if(!t) return;
@@ -1794,20 +2100,109 @@ const base = import.meta.env.BASE_URL;
     }
   }
 
+  // ── Multi-select city (1-3) with Other text option ──
   function renderCityChips(){
     if(!markets) return;
-    const items = Object.entries(markets.cities).map(([k,v])=>({
-      label:'📍 '+v.name, onClick:()=>handleSolveChoice('city',k)
-    }));
-    items.push({ label:'🌏 Other / not listed', onClick:()=>handleSolveChoice('city','__other__') });
-    addSolveChips(items);
+    const wrap=document.createElement('div');
+    wrap.className='bub-chips';
+    const selected=new Set();
+    const cityKeys=Object.keys(markets.cities);
+
+    function rebuild(){
+      wrap.innerHTML='';
+      cityKeys.forEach(k=>{
+        const c=document.createElement('button');
+        c.className='bub-chip sv'+(selected.has(k)?' on':'');
+        c.textContent='📍 '+markets.cities[k].name;
+        c.addEventListener('click',()=>{
+          if(selected.has(k)) selected.delete(k);
+          else if(selected.size<3) selected.add(k);
+          else { showNotice('Max 3 cities — deselect one first'); return; }
+          rebuild();
+        });
+        wrap.appendChild(c);
+      });
+      // Other (text input)
+      const other=document.createElement('button');
+      other.className='bub-chip sv other';
+      other.textContent='✏️ Other (type your own)';
+      other.addEventListener('click',()=>{
+        wrap.remove();
+        const t=getTh(activeId); if(!t)return;
+        t.solveState.awaitingFreeText='city';
+        unlockInput();
+        const inp=document.getElementById('ms-input');
+        inp.placeholder='Type city or province name...';
+        inp.focus();
+      });
+      wrap.appendChild(other);
+
+      // Counter + continue button
+      const counter=document.createElement('div');
+      counter.className='sv-multi-counter';
+      counter.textContent = selected.size === 0 ? 'Pick 1-3 cities to continue' : `${selected.size} selected${selected.size>=3?' (max)':''}`;
+      wrap.appendChild(counter);
+
+      const cont=document.createElement('button');
+      cont.className='sv-multi-continue';
+      cont.textContent = `✓ Continue${selected.size?' with '+selected.size+' '+(selected.size===1?'city':'cities'):''}`;
+      cont.disabled = selected.size===0;
+      cont.addEventListener('click',()=>{
+        wrap.remove();
+        finishCitySelection(Array.from(selected));
+      });
+      wrap.appendChild(cont);
+    }
+    rebuild();
+    el().appendChild(wrap); el().scrollTop=el().scrollHeight;
+  }
+
+  function finishCitySelection(keys){
+    const t=getTh(activeId); if(!t) return;
+    const ss=t.solveState;
+    ss.cityKeys = keys;
+    ss.cityKey  = keys[0]; // primary city for math
+    ss.cityName = keys.map(k=>markets.cities[k]?.name||k).join(', ');
+    addUser(ss.cityName); t.messages.push({role:'user',text:ss.cityName});
+    trackAction('chat:city', ss.cityName);
+    ss.stage='industry'; updateProgress(); lockInput('Pick an industry above...');
+    const q='Which industry best fits your business?';
+    addBot(`<p>${esc(q)}</p>`); t.messages.push({role:'bot',html:`<p>${esc(q)}</p>`});
+    renderIndustryChips();
+    updateChatTitle(t);
+    save();
   }
   function renderIndustryChips(){
     if(!markets) return;
     const items = Object.entries(markets.industries_meta).map(([k,v])=>({
       label:`${v.icon} ${v.label}`, onClick:()=>handleSolveChoice('industry',k)
     }));
-    addSolveChips(items);
+    items.push({ label:'✏️ Other (type your own)', other:true, onClick:()=>{
+      const t=getTh(activeId); if(!t)return;
+      t.solveState.awaitingFreeText='industry';
+      // Remove the chips wrap
+      const wraps=el().querySelectorAll('.bub-chips');
+      if(wraps.length) wraps[wraps.length-1].remove();
+      unlockInput();
+      const inp=document.getElementById('ms-input');
+      inp.placeholder='Type your industry...';
+      inp.focus();
+    }});
+    addSolveChipsExt(items);
+  }
+  // Extended solve chips that respect "other" flag for dashed style
+  function addSolveChipsExt(items, idAttr){
+    const wrap=document.createElement('div');
+    wrap.className='bub-chips';
+    if(idAttr) wrap.id=idAttr;
+    items.forEach(it=>{
+      const c=document.createElement('button');
+      c.className='bub-chip sv'+(it.other?' other':'');
+      c.textContent=it.label;
+      c.addEventListener('click',()=>{ wrap.remove(); it.onClick(); });
+      wrap.appendChild(c);
+    });
+    el().appendChild(wrap); el().scrollTop=el().scrollHeight;
   }
 
   function handleSolveChoice(kind, value){
@@ -1862,7 +2257,14 @@ const base = import.meta.env.BASE_URL;
       { label:'🌱 Eco-conscious millennial',   value:'Millennials aged 28-40 who prioritize sustainability, ethical brands, and willing to pay premium for eco-friendly products' },
       { label:'🛒 Bargain hunter',             value:'Deal-seekers across age groups, motivated by discounts, flash sales, and bundles, compare prices extensively before buying' },
     ];
-    addSolveChips(personas.map(p=>({label:p.label,onClick:()=>handleSolveQ(p.value)})));
+    const items=personas.map(p=>({label:p.label,onClick:()=>handleSolveQ(p.value)}));
+    items.push({ label:'✏️ Other (describe in your own words)', other:true, onClick:()=>{
+      unlockInput();
+      const inp=document.getElementById('ms-input');
+      inp.placeholder='Describe your ideal customer...';
+      inp.focus();
+    }});
+    addSolveChipsExt(items);
   }
 
   // ═══ Solutions catalog & picker (rule-based, no LLM) ═══
@@ -2052,7 +2454,16 @@ const base = import.meta.env.BASE_URL;
       { label:'💰 $50K+/mo',      v:'$50K+' },
       { label:'🤷 Not sure yet',  v:'Not sure' },
     ];
-    addSolveChips(items.map(it=>({label:it.label,onClick:()=>handleRefineChoice('budget',it.v)})));
+    const chips = items.map(it=>({label:it.label,onClick:()=>handleRefineChoice('budget',it.v)}));
+    chips.push({ label:'✏️ Other (type a custom range)', other:true, onClick:()=>{
+      const t=getTh(activeId); if(!t)return;
+      t.solveState.awaitingFreeText='budget';
+      unlockInput();
+      const inp=document.getElementById('ms-input');
+      inp.placeholder='e.g., $1500/mo or 50M VND/month...';
+      inp.focus();
+    }});
+    addSolveChipsExt(chips);
   }
   function renderGoalChips(){
     const items=[
@@ -2063,7 +2474,16 @@ const base = import.meta.env.BASE_URL;
       { label:'📞 Phone calls',         v:'calls' },
       { label:'👁 Brand awareness',     v:'awareness' },
     ];
-    addSolveChips(items.map(it=>({label:it.label,onClick:()=>handleRefineChoice('goal',it.v)})));
+    const chips = items.map(it=>({label:it.label,onClick:()=>handleRefineChoice('goal',it.v)}));
+    chips.push({ label:'✏️ Other (describe your goal)', other:true, onClick:()=>{
+      const t=getTh(activeId); if(!t)return;
+      t.solveState.awaitingFreeText='goal';
+      unlockInput();
+      const inp=document.getElementById('ms-input');
+      inp.placeholder='Describe your conversion goal...';
+      inp.focus();
+    }});
+    addSolveChipsExt(chips);
   }
   function handleRefineChoice(kind, value){
     const t=getTh(activeId); if(!t) return;
@@ -2138,7 +2558,7 @@ const base = import.meta.env.BASE_URL;
       }
 
       setTimeout(()=>{
-        addCtaButton('🤝 Get expert help from a Google Ads Solution Architect', 'secondary', ()=>{
+        addCtaButton('🤝 Get deeper expert help from a Google Ads Solution Architect', 'secondary', ()=>{
           trackAction('chat:cta-expert');
           ss.stage='lead'; updateProgress();
           const intro3="Perfect — leave your details and our Google Ads Solution Architect will reach out within 24 hours to dive into the technical setup and solve your specific challenges.";
@@ -2210,6 +2630,50 @@ const base = import.meta.env.BASE_URL;
 
     const ss = t.solveState = t.solveState || { stage:'init', history:[] };
 
+    // ── Free-text "Other" dispatcher ──
+    if(ss.awaitingFreeText){
+      const field = ss.awaitingFreeText;
+      ss.awaitingFreeText = null;
+      addUser(q); t.messages.push({role:'user',text:q});
+      if(field === 'city'){
+        ss.cityKeys=['__other__']; ss.cityKey='__other__'; ss.cityName=q.slice(0,80);
+        trackAction('chat:city-other', ss.cityName);
+        ss.stage='industry'; updateProgress(); lockInput('Pick an industry above...');
+        const ask='Which industry best fits your business?';
+        addBot(`<p>${esc(ask)}</p>`); t.messages.push({role:'bot',html:`<p>${esc(ask)}</p>`});
+        renderIndustryChips();
+        updateChatTitle(t); save(); return;
+      }
+      if(field === 'industry'){
+        ss.industryKey='__other__'; ss.industryName=q.slice(0,80);
+        trackAction('chat:industry-other', ss.industryName);
+        if(ss.intent==='grow'){
+          ss.stage='currentChannels'; updateProgress(); lockInput('Pick a channel above...');
+          const ask="What's currently running for you? Pick the main channel(s) you depend on right now:";
+          addBot(`<p>${esc(ask)}</p>`); t.messages.push({role:'bot',html:`<p>${esc(ask)}</p>`});
+          renderCurrentChannelsChips();
+        } else {
+          ss.stage='persona'; updateProgress(); unlockInput();
+          const ask='Who is your ideal customer? Pick a persona below or describe in your own words.';
+          addBot(`<p>${esc(ask)}</p>`); t.messages.push({role:'bot',html:`<p>${esc(ask)}</p>`});
+          renderPersonaChips();
+        }
+        updateChatTitle(t); save(); return;
+      }
+      if(field === 'currentChannels'){
+        return handleGrowChoice('currentChannels', q.slice(0,80));
+      }
+      if(field === 'painPoint'){
+        return handleGrowChoice('painPoint', q.slice(0,80));
+      }
+      if(field === 'budget'){
+        return handleRefineChoice('budget', q.slice(0,80));
+      }
+      if(field === 'goal'){
+        return handleRefineChoice('goal', q.slice(0,80));
+      }
+    }
+
     // Scripted progression
     if(ss.stage==='init'){
       ss.intent='open'; ss.stage='gemini';
@@ -2217,7 +2681,7 @@ const base = import.meta.env.BASE_URL;
     if(ss.stage==='persona'){
       ss.persona=q; trackAction('chat:persona', q.slice(0,60));
       ss.stage='product'; updateProgress(); unlockInput();
-      const ask="Tell me about your business — in one or two sentences, what is it and who is it for?";
+      const ask="Tell me about your business — in one or two sentences, what is it and the problem it solves?";
       showTyping(); await new Promise(r=>setTimeout(r,250)); hideTyping();
       addBot(`<p>${esc(ask)}</p>`); t.messages.push({role:'bot',html:`<p>${esc(ask)}</p>`});
       save(); return;

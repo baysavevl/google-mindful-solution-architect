@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { isBlocked } from '../../lib/state';
+import { isBlocked, nextVisitorNumber } from '../../lib/state';
 
 export const prerender = false;
 
@@ -98,6 +98,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
   if (event === 'start') {
     const info = await lookupIP(ip);
     const sessionId = body.sessionId || ('s_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7));
+    const visitorNum = nextVisitorNumber(sessionId);
 
     const isMobile = /Mobi|Android|iPhone|iPad/i.test(ua);
     const device = isMobile ? '📱 Mobile' : '🖥️ Desktop';
@@ -112,7 +113,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     const visitTag = visitNum > 1 ? `🔄 <b>Returning visitor</b> (visit #${visitNum})` : '✨ <b>First-time visitor</b>';
 
     const msg = [
-      `🟢 <b>New visit started</b>`,
+      `🟢 <b>New visit started</b>  •  <b>#${visitorNum.today}</b> today  •  #${visitorNum.total} all-time`,
       visitTag,
       `🕐 ${esc(new Date().toLocaleString('en-US', { timeZone: info.timezone || 'Asia/Ho_Chi_Minh' }))}`,
       `🌍 ${esc(info.city || '?')}, ${esc(info.regionName || '')}, ${esc(info.country || '')}`,
