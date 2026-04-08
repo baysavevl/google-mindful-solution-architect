@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { isBlocked, nextVisitorNumber } from '../../lib/state';
+import { isBlocked, nextVisitorNumber, recordSession, endSession, recordAction } from '../../lib/state';
 
 export const prerender = false;
 
@@ -100,6 +100,25 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     const sessionId = body.sessionId || ('s_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7));
     const visitorNum = nextVisitorNumber(sessionId);
 
+    const isMobileDev = /Mobi|Android|iPhone|iPad/i.test(ua);
+    const osName = /Windows/.test(ua) ? 'Windows' : /Mac OS/.test(ua) ? 'macOS' : /Android/.test(ua) ? 'Android' : /iPhone|iPad|iOS/.test(ua) ? 'iOS' : /Linux/.test(ua) ? 'Linux' : 'Unknown';
+    const browserName = /Edg\//.test(ua) ? 'Edge' : /Chrome\//.test(ua) ? 'Chrome' : /Firefox\//.test(ua) ? 'Firefox' : /Safari\//.test(ua) ? 'Safari' : 'Other';
+
+    recordSession({
+      sessionId, ip,
+      visitorNum: visitorNum.today,
+      startTs: Date.now(),
+      city: info.city, region: info.regionName, country: info.country,
+      isp: info.isp || info.org,
+      device: isMobileDev ? 'Mobile' : 'Desktop',
+      os: osName, browser: browserName,
+      language: lang,
+      referrer: ref, landing: body.landing,
+      visitCount: Number(body.visitCount) || 1,
+      utm: body.utm || {},
+      actions: [],
+    });
+
     const isMobile = /Mobi|Android|iPhone|iPad/i.test(ua);
     const device = isMobile ? '📱 Mobile' : '🖥️ Desktop';
     const os = /Windows/.test(ua) ? 'Windows' : /Mac OS/.test(ua) ? 'macOS' : /Android/.test(ua) ? 'Android' : /iPhone|iPad|iOS/.test(ua) ? 'iOS' : /Linux/.test(ua) ? 'Linux' : 'Unknown';
@@ -139,6 +158,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     const label = String(body.label || 'action').slice(0, 80);
     const extra = String(body.extra || '').slice(0, 200);
     const sid = String(body.sessionId || '').slice(0, 20);
+    recordAction(sid, label, extra);
     const msg = `🎬 <code>${esc(sid || '?')}</code>  <b>${esc(label)}</b>${extra ? `\n   ↳ ${esc(extra)}` : ''}`;
     await tg(msg, { silent: true });
     return new Response(JSON.stringify({ ok: true }), { headers: { 'content-type': 'application/json' } });
@@ -152,6 +172,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     const firstClick = body.firstClick || null;
     const lastClick = body.lastClick || null;
     const eng = engagementScore(dur, maxScroll, clicks);
+    endSession(String(body.sessionId || ''), { durationMs: dur, pages, maxScroll, clickCount: clicks });
 
     const msg = [
       `🔴 <b>Session ended</b>`,
