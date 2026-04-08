@@ -1523,6 +1523,8 @@ const base = import.meta.env.BASE_URL;
     if(!t || (t.mode||'discover')!=='solve' || !t.solveState || t.solveState.intent==='open'){
       wrap.hidden=true; return;
     }
+    // Hide on init (no intent picked yet) — progress only makes sense after first choice
+    if((t.solveState.stage||'init')==='init'){ wrap.hidden=true; return; }
     wrap.hidden=false;
     const ss=t.solveState;
     const steps=getSolveSteps(ss);
