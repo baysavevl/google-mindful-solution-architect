@@ -424,6 +424,40 @@ const base = import.meta.env.BASE_URL;
   }
   .sv-cta-btn.secondary:hover { background: #f0f7ff; }
 
+  /* ═══ Analogy callout ═══ */
+  .sv-analogy {
+    align-self: flex-start; max-width: 92%;
+    border-left: 3px solid #f9ab00; background: #fef7e0;
+    border-radius: 0 10px 10px 0;
+    padding: 0.7rem 0.9rem; margin: 8px 0 2px;
+    font-size: 0.84rem; color: #3c4043; line-height: 1.55;
+    animation: fadeIn 0.3s ease;
+  }
+  .sv-analogy-h { font-weight: 600; color: #b06000; font-size: 0.78rem; margin-bottom: 0.3rem; display: flex; align-items: center; gap: 0.35rem; }
+  .sv-analogy em { font-style: normal; color: #b06000; font-weight: 500; }
+
+  /* ═══ Mirror-back paraphrase ═══ */
+  .sv-mirror {
+    align-self: flex-start; max-width: 92%;
+    background: #f0f7ff; border: 1px solid #d2e3fc;
+    border-radius: 12px; padding: 0.65rem 0.9rem;
+    margin: 8px 0 2px; font-size: 0.85rem; color: #1a73e8;
+    animation: fadeIn 0.3s ease; font-style: italic;
+  }
+  .sv-mirror::before { content: '🪞 '; font-style: normal; }
+
+  /* ═══ Case study link in card ═══ */
+  .sv-case {
+    margin-top: 0.75rem; padding: 0.65rem 0.85rem;
+    background: #e8f0fe; border-radius: 10px;
+    font-size: 0.78rem; color: #1a73e8; line-height: 1.5;
+  }
+  .sv-case a {
+    color: #1a73e8; font-weight: 600; text-decoration: none;
+    border-bottom: 1px solid #1a73e8;
+  }
+  .sv-case a:hover { color: #1557b0; }
+
   /* ═══ Combined results card ═══ */
   .sv-results .sv-card-grid { grid-template-columns: 1fr 1fr 1fr; }
   .sv-results-section {
@@ -756,12 +790,464 @@ const base = import.meta.env.BASE_URL;
   // ── Solve mode: initial intent chips ──
   function renderSolveInitChips(){
     addSolveChips([
+      { label:'😩 I have a problem but don\'t know what it is', onClick:()=>solveStart('symptom') },
       { label:'📱 Market my new app/service', onClick:()=>solveStart('new-product') },
       { label:'📈 Grow my existing business', onClick:()=>solveStart('grow') },
       { label:'🔧 Optimize my campaigns',     onClick:()=>solveStart('optimize') },
       { label:'🛠 Fix a technical issue',     onClick:()=>solveStart('tech') },
       { label:'💬 Other — describe in your own words', onClick:()=>solveStart('open') },
     ],'init-chips');
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  // SYMPTOM → ROOT CAUSE FLOW
+  // Frameworks: 5 Whys (peel layers), Feynman/ELI5 (analogies),
+  // Active Listening (mirror back). Rule-based, zero AI calls.
+  // ═══════════════════════════════════════════════════════════════
+  function addMirror(text){
+    const b=document.createElement('div');
+    b.className='sv-mirror'; b.textContent=text;
+    el().appendChild(b); el().scrollTop=el().scrollHeight;
+  }
+  function addAnalogy(headline, text){
+    const b=document.createElement('div');
+    b.className='sv-analogy';
+    b.innerHTML=`<div class="sv-analogy-h">💡 ${esc(headline)}</div>${esc(text)}`;
+    el().appendChild(b); el().scrollTop=el().scrollHeight;
+  }
+
+  // Tree of symptom nodes — each node has paraphrase, analogy, question + branches OR is a leaf with diagnosis
+  const SYMPTOM_TREE = {
+    __root__: {
+      type:'root',
+      intro:"Let's figure this out together. The trick is: most people describe what they FEEL (the symptom), not the root cause. We'll peel back the layers — like a doctor asking 'where does it hurt?' before prescribing.",
+      question:"Which of these sounds closest to what you're experiencing right now?",
+      chips:[
+        { label:'💸 I\'m spending money but not getting customers', next:'no_conversions' },
+        { label:'👻 My ads aren\'t reaching enough people', next:'low_reach' },
+        { label:'🌫 I\'m flying blind — no idea what\'s working', next:'no_visibility' },
+      ],
+    },
+
+    no_conversions: {
+      type:'node',
+      paraphrase:"You're paying for ads, the ads run, but the money you spend isn't turning into customers.",
+      analogy:{ h:"Think of it like fishing", t:"You've got bait (your ads), you cast a net (your budget), you can see fish swimming around (visitors clicking). But the net has a hole somewhere — fish slip through. Our job: find which hole." },
+      question:"When someone CLICKS your ad, what happens next? Pick the one closest to your experience:",
+      chips:[
+        { label:'🚪 They land on my site and leave fast', next:'lp_bounce' },
+        { label:'🛒 They add to cart but don\'t pay', next:'checkout_drop' },
+        { label:'📞 They contact me but never reply back', next:'lead_quality' },
+        { label:'🤷 Honestly, I don\'t know what they do', next:'no_tracking' },
+      ],
+    },
+
+    lp_bounce: {
+      type:'node',
+      paraphrase:"People arrive at your site, take one look, and leave. The ad worked — the page didn't.",
+      analogy:{ h:"It's like a restaurant with a great billboard", t:"The billboard outside looks amazing — beautiful food, perfect price. You walk in. The menu is different, the place is dirty, or no one greets you. You walk out. That gap between promise and reality is what's killing your conversion." },
+      question:"What's most likely happening? Be honest — no judgment:",
+      chips:[
+        { label:'🐌 Page is slow on mobile', next:'leaf_speed' },
+        { label:'🎭 Page doesn\'t match what the ad promised', next:'leaf_msgmatch' },
+        { label:'❓ There\'s no clear next step / button', next:'leaf_cta' },
+        { label:'😕 Looks unprofessional or untrusty', next:'leaf_trust' },
+      ],
+    },
+    checkout_drop: {
+      type:'node',
+      paraphrase:"People want to buy — they put items in the cart — but something stops them at the final step.",
+      analogy:{ h:"Like queuing at a store and walking out at the till", t:"You picked everything you wanted. Then the cashier asks for 5 forms of ID, the price suddenly changes, or the line is too slow. You ditch the basket and leave. Same thing online." },
+      question:"Which feels like your situation?",
+      chips:[
+        { label:'💳 Payment options too limited', next:'leaf_payment' },
+        { label:'📝 Checkout asks too many questions', next:'leaf_friction' },
+        { label:'🚚 Shipping cost is a surprise at the end', next:'leaf_shipping' },
+        { label:'🔐 People don\'t trust the site enough to enter card', next:'leaf_trust' },
+      ],
+    },
+    lead_quality: {
+      type:'node',
+      paraphrase:"You're getting leads, but they're not the right kind — or they go cold immediately.",
+      analogy:{ h:"Like fishing for tuna and catching mostly jellyfish", t:"You're catching SOMETHING, so the ad and form work. But the wrong audience is biting, OR the ones who bite weren't really committed in the first place." },
+      question:"Which is closer to what you see?",
+      chips:[
+        { label:'🌍 Wrong country / city / language', next:'leaf_geotarget' },
+        { label:'💰 They can\'t afford what I sell', next:'leaf_audience' },
+        { label:'👻 They never reply when I follow up', next:'leaf_followup' },
+        { label:'🎯 The form attracts curious people, not buyers', next:'leaf_form_qual' },
+      ],
+    },
+    no_tracking: {
+      type:'leaf',
+      title:"You can't fix what you can't see",
+      eli5:"Imagine driving with your eyes closed and asking 'why am I crashing?'. Without tracking, you have no idea which keywords, ads, or audiences actually drive sales — you're just guessing.",
+      fix:[
+        "Set up Google Tag Manager (free, takes ~30 min).",
+        "Install GA4 + link to Google Ads.",
+        "Define your conversion event: purchase, lead form, phone call.",
+        "Wait 7 days, then look at your data with fresh eyes.",
+      ],
+      case:{ id:'amanotes-vietnam', why:"Amanotes scaled to 1B+ downloads precisely because they obsessively measured every signal — tracking was their compass." },
+    },
+
+    low_reach: {
+      type:'node',
+      paraphrase:"Your ads exist but barely anyone sees them — low impressions, low traffic.",
+      analogy:{ h:"Like whispering in a noisy stadium", t:"You're in the right place (Google), but the volume is too low or the seat is bad. Either Google won't show your ad as much, or the audience you picked is too small." },
+      question:"What's the most likely cause?",
+      chips:[
+        { label:'💰 My budget runs out by noon every day', next:'leaf_budget_cap' },
+        { label:'🔻 Quality Score is below 6 on most keywords', next:'leaf_qs' },
+        { label:'🚫 Some of my ads are disapproved', next:'leaf_disapproval' },
+        { label:'🎯 My targeting is too narrow / strict', next:'leaf_narrow' },
+      ],
+    },
+
+    no_visibility: {
+      type:'node',
+      paraphrase:"You're running ads, spending money, but you can't tell what's actually working — there's no clear feedback loop.",
+      analogy:{ h:"Like cooking with no taste buds", t:"You're following the recipe (ad copy, budget, keywords), the food is going out (clicks, impressions), but you don't know if it tastes good (converts) or terrible (wasted spend). You're just hoping." },
+      question:"Where's the biggest gap?",
+      chips:[
+        { label:'❌ No conversions tracked at all', next:'no_tracking' },
+        { label:'📊 Too much data, can\'t make sense of it', next:'leaf_reporting' },
+        { label:'❓ I don\'t know what "good" looks like for my industry', next:'leaf_benchmarks' },
+        { label:'🔁 Numbers move randomly week to week', next:'leaf_noise' },
+      ],
+    },
+
+    // ─── LEAVES (root cause diagnoses) ───
+    leaf_speed: {
+      type:'leaf',
+      title:"Slow mobile landing page — the silent killer",
+      eli5:"If a friend takes 30 seconds to answer your simple question, you walk away. Same with websites: over 50% of mobile visitors bounce if a page takes more than 3 seconds to load. Google even penalizes slow pages with a worse Quality Score, making your CPC higher — you pay MORE for fewer visitors, who then leave.",
+      fix:[
+        "Run your URL through PageSpeed Insights (free) — focus on Largest Contentful Paint under 2.5s.",
+        "Compress images and convert to WebP format.",
+        "Lazy-load below-the-fold content.",
+        "Remove unused JavaScript (especially heavy chat widgets and trackers).",
+        "Enable browser caching and a CDN.",
+      ],
+      case:{ id:'amanotes-vietnam', why:"Amanotes scaled to 1B+ downloads partly because they ruthlessly optimized mobile load times — every 100ms cost them installs." },
+    },
+    leaf_msgmatch: {
+      type:'leaf',
+      title:"Message mismatch between ad and landing page",
+      eli5:"Your ad promises 'Free Shipping on Sneakers'. The user clicks, lands on a homepage selling 25 product categories with no sneaker in sight. Their brain says 'this is the wrong place' and they leave in 2 seconds. The fix isn't more clicks — it's matching the destination to the promise.",
+      fix:[
+        "For each ad, build a dedicated landing page with the EXACT headline from the ad.",
+        "Mirror the offer above the fold (same wording, same image).",
+        "Strip away unrelated nav links — one page, one goal.",
+        "Use dynamic keyword insertion sparingly — match queries even better.",
+      ],
+      case:{ id:'klook-apac', why:"Klook runs hundreds of dedicated landing pages — one per destination + activity combo — because the message-match alone lifts conversion 2-3x." },
+    },
+    leaf_cta: {
+      type:'leaf',
+      title:"No clear call-to-action",
+      eli5:"Visitors scroll your page wondering 'OK… so what now?' If they have to think, they leave. The best landing pages have ONE button, repeated 2-3 times, with words a 10-year-old understands: 'Get my quote', 'Book a free call', 'Try it free'.",
+      fix:[
+        "Pick ONE primary action and remove every other link from the page.",
+        "Use action verbs in first person: 'Get MY quote' not 'Submit'.",
+        "Place the CTA above the fold AND at the end of the page.",
+        "Make it visually impossible to miss — bright color, big size.",
+      ],
+      case:{ id:'goga-vietnam', why:"GOGA's lead-gen funnel is built around one clear CTA repeated through the page — and it's why they convert at industry-leading rates." },
+    },
+    leaf_trust: {
+      type:'leaf',
+      title:"Trust signals are missing",
+      eli5:"Imagine a stranger on the street offering to fix your phone for $5. Would you hand it over? Your visitors face the same question. Without trust signals — reviews, badges, real photos, contact info — they'll never enter their card details, no matter how good the offer is.",
+      fix:[
+        "Add 3-5 customer reviews or testimonials with real names + photos.",
+        "Display security badges (SSL, payment provider logos).",
+        "Show your physical address and phone number prominently.",
+        "Add a 'Money-back guarantee' or 'Free returns' badge.",
+        "Use real photography of real people, not stock images.",
+      ],
+      case:{ id:'ru9-vietnam', why:"Ru9 (Vietnamese mattress brand) built trust through 100-night trials and customer photos — their conversion rate doubled after adding reviews to the landing page." },
+    },
+    leaf_payment: {
+      type:'leaf',
+      title:"Limited payment options drive abandonment",
+      eli5:"In Vietnam, only ~40% of online shoppers have a credit card — but 90% have a Momo or ZaloPay account. If your checkout only accepts cards, you're literally turning away half your customers at the finish line.",
+      fix:[
+        "Add Momo, ZaloPay, VNPay, and bank QR transfer as options.",
+        "Offer Cash-on-Delivery (COD) — still huge in SE Asia.",
+        "Show payment logos near the 'Buy' button as trust signals.",
+        "Test installment options for orders >$50.",
+      ],
+      case:{ id:'sayurbox-indonesia', why:"Sayurbox grew their grocery delivery business by adding every local payment method Indonesians use — friction = lost sales." },
+    },
+    leaf_friction: {
+      type:'leaf',
+      title:"Checkout has too many steps / fields",
+      eli5:"Every extra form field cuts conversion ~5%. Asking for company name, fax number, or 'how did you hear about us?' before they pay is the biggest self-inflicted wound in e-commerce.",
+      fix:[
+        "Cut the checkout to: email, name, address, payment. Nothing else.",
+        "Enable guest checkout — don't force account creation.",
+        "Use auto-fill for address (Google Places API).",
+        "Show progress bar so users know how close they are to done.",
+      ],
+      case:{ id:'shopee-singapore', why:"Shopee dominates SE Asia partly because their checkout is brutally short — 3 taps from cart to confirmed order." },
+    },
+    leaf_shipping: {
+      type:'leaf',
+      title:"Shipping shock at checkout",
+      eli5:"Customer adds $40 of stuff to cart, hits checkout, sees '+$15 shipping'. That's a 37% surprise tax. Most leave. Either build shipping into the product price or show it BEFORE the cart.",
+      fix:[
+        "Show shipping cost on the product page.",
+        "Offer 'Free shipping over $X' to encourage larger orders.",
+        "If shipping is high, build it into product pricing and call it 'Free shipping'.",
+      ],
+      case:{ id:'sayurbox-indonesia', why:"Sayurbox's clear delivery-fee display from the first page eliminated the cart-abandonment problem hurting their competitors." },
+    },
+    leaf_geotarget: {
+      type:'leaf',
+      title:"Wrong geo targeting",
+      eli5:"Default Google Ads location targeting is 'Presence OR interest', meaning your ad shows to anyone who searched for your country — even if they live elsewhere. You pay for clicks from people who can never buy from you.",
+      fix:[
+        "Switch location targeting from 'Presence or interest' to 'Presence' only.",
+        "Add country/city exclusions for places you don't serve.",
+        "Use bid adjustments (-100%) on excluded regions.",
+        "Run a geo report monthly to spot leakage.",
+      ],
+      case:{ id:'12go-thailand', why:"12Go scaled across 11 countries with sharp per-market targeting — a Thai ad that shows in Vietnam wastes budget AND distorts analytics." },
+    },
+    leaf_audience: {
+      type:'leaf',
+      title:"Audience can't afford your offer",
+      eli5:"You can target ANYONE on Google — but if a $500 product runs broad-match keywords, you'll attract bargain hunters who want $50. The fix isn't more reach; it's narrower, qualified intent.",
+      fix:[
+        "Use exact-match keywords with buyer intent ('buy', 'price', 'best').",
+        "Add negative keywords: 'free', 'cheap', 'tutorial', 'DIY'.",
+        "Layer In-Market Audiences for high-value categories.",
+        "Use Customer Match — upload your existing customer list as a seed audience.",
+      ],
+      case:{ id:'tri-petch-isuzu-thailand', why:"Tri Petch Isuzu used premium-buyer audience layers to filter out tire-kickers — same budget, way better lead quality." },
+    },
+    leaf_followup: {
+      type:'leaf',
+      title:"Follow-up is too slow or generic",
+      eli5:"A lead is hot for ~5 minutes. Most businesses respond in 24-48 hours. By then the lead has called 3 competitors and forgotten you. Speed of response is the #1 lead-conversion factor — not message quality.",
+      fix:[
+        "Set up automated SMS/WhatsApp confirmation within 60 seconds.",
+        "Aim for personal call-back within 5 minutes during business hours.",
+        "Use a simple CRM (HubSpot free, Pipedrive starter) to track every lead.",
+        "Score leads — call hot ones first.",
+      ],
+      case:{ id:'goga-vietnam', why:"GOGA's secret weapon is sub-5-minute response time on every Google Ads lead — they out-hustle slower competitors." },
+    },
+    leaf_form_qual: {
+      type:'leaf',
+      title:"Form attracts curiosity, not commitment",
+      eli5:"If your form says 'Get free info', you'll get tire-kickers. If it says 'Book your free 15-min strategy call', you'll get committed buyers. The wording filters who clicks 'Submit'.",
+      fix:[
+        "Reword the headline to imply commitment: 'Book' / 'Reserve' / 'Apply'.",
+        "Add 1 qualifying question (budget, timeline, company size).",
+        "Remove the word 'free' if the offer is clearly valuable.",
+        "Add social proof above the form (e.g., '127 businesses booked this month').",
+      ],
+      case:{ id:'kilang-besi-malaysia', why:"Kilang Besi shifted from 'Request info' to 'Get my custom steel quote' and saw lead quality rise 3x — same volume, better conversions." },
+    },
+    leaf_budget_cap: {
+      type:'leaf',
+      title:"Budget runs out by noon",
+      eli5:"Budget-capped campaigns leave money on the table. Google can't show your ad after lunch — but that's exactly when your competitors take over. You're funding their best hours.",
+      fix:[
+        "Either RAISE the daily budget on profitable campaigns,",
+        "OR move to a Portfolio bid strategy with shared budget pooling,",
+        "OR use ad scheduling to focus budget on the hours that convert best.",
+        "Check 'Lost IS (budget)' metric — anything above 20% means you're capped.",
+      ],
+      case:{ id:'cebu-pacific-philippines', why:"Cebu Pacific moved from per-campaign budgets to portfolio bidding and recovered ~30% of lost impression share — same total spend, more bookings." },
+    },
+    leaf_qs: {
+      type:'leaf',
+      title:"Quality Score below 6",
+      eli5:"Quality Score is Google's report card on how relevant your ad is. Score 6+ = cheaper clicks. Score 5 or below = you pay 2-3x more per click than your competitor for the same position. It's the most expensive number to ignore.",
+      fix:[
+        "Group keywords tightly by theme — one ad per intent.",
+        "Rewrite ad copy to literally include the keyword in the headline.",
+        "Improve landing page relevance — same words, same offer.",
+        "Add 4-5 RSA headlines per ad to give Google room to test.",
+      ],
+      case:{ id:'the-one-digi-vietnam', why:"The One Digi's auditing process always starts with QS — they typically lift accounts from 4-5 → 7-8 in 4 weeks, halving CPC." },
+    },
+    leaf_disapproval: {
+      type:'leaf',
+      title:"Ad disapprovals blocking spend",
+      eli5:"Disapproved ads = $0 spent on those slots. Each disapproval has a specific policy reason in the account — most users never read it. Click the disapproved ad → see the exact rule → fix and resubmit.",
+      fix:[
+        "Open each disapproved ad and read the policy reason.",
+        "Common fixes: remove superlatives ('best', '#1'), match LP to claim, get vertical certification (pharma/finance/gambling).",
+        "Submit appeal after fix — usually re-approved in 24h.",
+        "Set up email alerts for new disapprovals.",
+      ],
+      case:{ id:'pt-karya-pangan-indonesia', why:"PT Karya Pangan navigated strict food/health ad policies in Indonesia by getting LegitScript-equivalent local certifications — others gave up, they scaled." },
+    },
+    leaf_narrow: {
+      type:'leaf',
+      title:"Targeting too narrow",
+      eli5:"You picked exactly the audience you THINK is your buyer. But Google Ads needs a bit of room to learn — too tight = no data = no learning = no scale. The sweet spot is 50-100 conversions per month per campaign.",
+      fix:[
+        "Loosen 1 axis at a time — start with location radius or age range.",
+        "Move from Exact to Phrase match keywords.",
+        "Use Smart Bidding (tCPA or tROAS) to let Google find your buyers across a wider net.",
+        "Add 3-5 In-Market audiences as observation.",
+      ],
+      case:{ id:'sarung-bhs-indonesia', why:"Sarung BHS expanded from a niche traditional market to a national one by relaxing targeting and trusting Google's Smart Bidding to find new buyer segments." },
+    },
+    leaf_reporting: {
+      type:'leaf',
+      title:"Report overload",
+      eli5:"You don't need 47 dashboards. You need 3 numbers, every Monday: spend, conversions, cost-per-conversion. Everything else is noise that hides the signal.",
+      fix:[
+        "Build a single Looker Studio (free) report with: spend, conversions, CPA, by campaign.",
+        "Set a Monday morning email — review for 10 minutes max.",
+        "Kill any campaign with CPA >2x your target for 2 weeks running.",
+        "Stop checking the account daily — it creates noise, not insight.",
+      ],
+      case:{ id:'traveloka-indonesia', why:"Traveloka's growth team famously runs on 5 KPIs total across the entire performance marketing function — focus over breadth." },
+    },
+    leaf_benchmarks: {
+      type:'leaf',
+      title:"No industry benchmarks",
+      eli5:"You don't know if 3% CTR is great or terrible until you compare to peers. Without benchmarks, you'll either celebrate mediocre numbers or panic over normal ones.",
+      fix:[
+        "Pull industry benchmarks from WordStream's free annual report (Vietnam-adjacent: SE Asia) for your vertical.",
+        "Track YOUR baseline week 1, then improvement % over 12 weeks.",
+        "Compare to your own past performance, not just peers.",
+      ],
+      case:{ id:'airasia-malaysia', why:"AirAsia's growth team set internal benchmarks per route + season — they only know if a campaign is 'good' relative to a baseline they've measured themselves." },
+    },
+    leaf_noise: {
+      type:'leaf',
+      title:"Random week-to-week noise",
+      eli5:"With small sample sizes (under ~30 conversions/week), normal random variation looks like 'something broke'. Marketers chase ghosts and over-optimize. The fix is to look at 4-week rolling averages, not weekly snapshots.",
+      fix:[
+        "Switch your reporting to 28-day rolling windows.",
+        "Only act on changes >20% AND lasting >2 weeks.",
+        "Ignore daily fluctuations entirely.",
+        "Run an A/B test before changing settings — let math, not vibes, decide.",
+      ],
+      case:{ id:'klook-apac', why:"Klook's data team's golden rule: 'no decision based on less than 14 days of data' — eliminates the noise-chasing trap." },
+    },
+  };
+
+  function startSymptomFlow(){
+    const t=getTh(activeId); if(!t) return;
+    t.solveState.symptomNode = '__root__';
+    renderSymptomNode('__root__');
+    save();
+  }
+
+  function renderSymptomNode(nodeKey){
+    const t=getTh(activeId); if(!t) return;
+    const ss=t.solveState;
+    ss.symptomNode = nodeKey;
+    const node = SYMPTOM_TREE[nodeKey];
+    if(!node){ console.warn('symptom node not found',nodeKey); return; }
+
+    if(node.type === 'leaf'){
+      renderSymptomLeaf(node);
+      return;
+    }
+
+    // Root or branch node
+    if(node.intro){
+      addBot(`<p>${esc(node.intro)}</p>`);
+      t.messages.push({role:'bot',html:`<p>${esc(node.intro)}</p>`});
+    }
+    if(node.paraphrase){
+      addMirror(node.paraphrase);
+    }
+    if(node.analogy){
+      addAnalogy(node.analogy.h, node.analogy.t);
+    }
+    if(node.question){
+      addBot(`<p>${esc(node.question)}</p>`);
+      t.messages.push({role:'bot',html:`<p>${esc(node.question)}</p>`});
+    }
+    addSolveChips(node.chips.map(c=>({
+      label: c.label,
+      onClick: ()=>{
+        addUser(c.label.replace(/^\S+\s/,''));
+        t.messages.push({role:'user',text:c.label});
+        trackAction('chat:symptom-pick', `${nodeKey}->${c.next}`);
+        setTimeout(()=>renderSymptomNode(c.next), 300);
+      },
+    })));
+    lockInput('Pick an option above...');
+    save();
+  }
+
+  function renderSymptomLeaf(node){
+    const t=getTh(activeId); if(!t) return;
+    const ss=t.solveState;
+    trackAction('chat:symptom-leaf', node.title.slice(0,40));
+
+    const card=document.createElement('div');
+    card.className='sv-card sv-results';
+    const baseUrl = import.meta.env.BASE_URL;
+    const caseUrl = node.case ? `${baseUrl}success-story/${node.case.id}` : null;
+    card.innerHTML=`
+      <div class="sv-card-h">🎯 We found your root cause</div>
+      <div class="sv-results-section">
+        <div class="sv-results-section-h">The real problem</div>
+        <div style="font-weight:600;color:#202124;font-size:0.95rem;margin-bottom:.4rem">${esc(node.title)}</div>
+        <div style="font-size:.82rem;color:#3c4043;line-height:1.6">${esc(node.eli5)}</div>
+      </div>
+      <div class="sv-results-section">
+        <div class="sv-results-section-h">What to do next</div>
+        <ol style="margin:.3rem 0 0 1.1rem;padding:0;font-size:.82rem;line-height:1.6;color:#202124">
+          ${node.fix.map(s=>`<li style="margin-bottom:.3rem">${esc(s)}</li>`).join('')}
+        </ol>
+      </div>
+      ${node.case ? `
+      <div class="sv-case">
+        📚 <b>How someone like you solved it:</b> ${esc(node.case.why)}
+        ${caseUrl ? `<br><a href="${caseUrl}" target="_blank" rel="noopener">Read the full case study →</a>` : ''}
+      </div>` : ''}
+    `;
+    el().appendChild(card); el().scrollTop=el().scrollHeight;
+    t.messages.push({role:'bot',html:card.outerHTML});
+
+    // Mirror checkpoint — confirm we got it right
+    setTimeout(()=>{
+      addMirror("Before we go further — does this match what you're actually experiencing? If not, we can back up and explore another path.");
+      addSolveChips([
+        { label:'✅ Yes, that\'s exactly it', onClick:()=>{
+          trackAction('chat:symptom-confirm','yes');
+          addUser('Yes, that\'s exactly it'); t.messages.push({role:'user',text:'Yes'});
+          setTimeout(()=>{
+            addCtaButton('🤝 Get expert help from a Google Ads Solution Architect','secondary',()=>{
+              trackAction('chat:cta-expert-symptom');
+              ss.stage='lead';
+              const intro="Perfect — leave your details and our Google Ads Solution Architect will walk you through fixing this in a free 30-min call.";
+              addBot(`<p>${esc(intro)}</p>`); t.messages.push({role:'bot',html:`<p>${esc(intro)}</p>`});
+              if(!ss.leadShown){ ss.leadShown=true; addLeadForm(t); }
+              ss.stage='gemini';
+              setTimeout(()=>{
+                const followup="Or ask me follow-up questions about this fix — I'm here.";
+                addBot(`<p>${esc(followup)}</p>`); t.messages.push({role:'bot',html:`<p>${esc(followup)}</p>`});
+                unlockInput(); save();
+              }, 600);
+              save();
+            });
+            save();
+          }, 400);
+        }},
+        { label:'🔄 Not quite — let me try a different path', onClick:()=>{
+          trackAction('chat:symptom-confirm','restart');
+          addUser('Let me try a different path'); t.messages.push({role:'user',text:'Restart'});
+          setTimeout(()=>renderSymptomNode('__root__'), 300);
+        }},
+      ]);
+      save();
+    }, 600);
+    save();
   }
 
   // ═══════════════════════════════════════════════════════════════
@@ -983,11 +1469,14 @@ const base = import.meta.env.BASE_URL;
     budget:'Budget range', goal:'Conversion goal', value:'Customer value',
     results:'Market & budget', solutions:'Your playbook', lead:'Talk to expert',
     tech:'Technical diagnosis',
+    symptom:'Find the real problem',
   };
   const SOLVE_STEPS_TECH = ['init','tech','lead'];
+  const SOLVE_STEPS_SYMPTOM = ['init','symptom','lead'];
   function getSolveSteps(ss){
     if(!ss) return SOLVE_STEPS_DEFAULT;
     if(ss.intent==='tech') return SOLVE_STEPS_TECH;
+    if(ss.intent==='symptom') return SOLVE_STEPS_SYMPTOM;
     return ss.refining ? SOLVE_STEPS_REFINED : SOLVE_STEPS_DEFAULT;
   }
 
@@ -1197,6 +1686,12 @@ const base = import.meta.env.BASE_URL;
       const ask="Which technical area is giving you trouble? Pick one and I'll ask 5-6 yes/no questions to scope it down.";
       addBot(`<p>${esc(ask)}</p>`); t.messages.push({role:'bot',html:`<p>${esc(ask)}</p>`});
       renderTechAreaChips();
+      save(); return;
+    }
+
+    if(intent==='symptom'){
+      t.solveState.stage='symptom'; updateProgress(); lockInput('Pick an option above...');
+      startSymptomFlow();
       save(); return;
     }
 
