@@ -27,37 +27,6 @@ const featuredProjects = projects.filter(p => p.data.featured);
     </p>
   </section>
 
-  <!-- What's New banner -->
-  <section class="whats-new-section">
-    <div class="whats-new-header">
-      <span class="new-badge">New</span>
-      <span class="whats-new-title">What's new on this site</span>
-    </div>
-    <div class="whats-new-grid">
-      <a href={`${base}explain`} class="new-card">
-        <span class="new-card-icon">💬</span>
-        <div>
-          <div class="new-card-label">Plain English Explainer</div>
-          <div class="new-card-desc">15 Google Ads concepts explained for engineers, marketers, and business owners — all at once</div>
-        </div>
-      </a>
-      <a href={`${base}diagnose`} class="new-card">
-        <span class="new-card-icon">🔍</span>
-        <div>
-          <div class="new-card-label">Campaign Diagnostic Tool</div>
-          <div class="new-card-desc">Answer 5 questions, get a tailored strategy with root-cause analysis and ROI estimate</div>
-        </div>
-      </a>
-      <a href={`${base}toolkit`} class="new-card">
-        <span class="new-card-icon">🧰</span>
-        <div>
-          <div class="new-card-label">Sales Enablement Toolkit</div>
-          <div class="new-card-desc">Battle cards, objection handlers, and pre-meeting checklists for every stakeholder type</div>
-        </div>
-      </a>
-    </div>
-  </section>
-
   <!-- Chatbot highlight -->
   <section class="chat-section">
     <div class="chat-intro">
@@ -85,12 +54,13 @@ const featuredProjects = projects.filter(p => p.data.featured);
           </div>
         </div>
         <div class="chat-starters">
-          <p class="starters-label">Try asking:</p>
+          <p class="starters-label">Try asking — click to send directly:</p>
           <div class="starter-chips" id="starterChips">
-            <button class="starter-chip" data-q="My Google Ads CPA is too high — what should I check first?">My CPA is too high — where do I start?</button>
-            <button class="starter-chip" data-q="How does Performance Max work and when should I use it?">How does Performance Max work?</button>
-            <button class="starter-chip" data-q="I'm launching a new e-commerce brand in Vietnam — what's the right Google Ads strategy?">Launching in Vietnam — what's the strategy?</button>
-            <button class="starter-chip" data-q="What's the difference between Smart Bidding strategies?">Smart Bidding strategies explained</button>
+            <button class="starter-chip" data-q="How do I set up my first campaign?">First campaign setup</button>
+            <button class="starter-chip" data-q="What bidding strategy should I use?">Which bidding strategy?</button>
+            <button class="starter-chip" data-q="How do I set up conversion tracking?">Conversion tracking setup</button>
+            <button class="starter-chip" data-q="Which campaign type should I choose?">Which campaign type?</button>
+            <button class="starter-chip" data-q="Tell me about success stories">SEA success stories</button>
           </div>
         </div>
       </div>
@@ -103,8 +73,7 @@ const featuredProjects = projects.filter(p => p.data.featured);
   <!-- New Tools Section -->
   <section class="tools-section">
     <div class="section-header">
-      <h2 class="section-heading">Interactive Tools</h2>
-      <span class="section-badge">New</span>
+      <h2 class="section-heading">Interactive Tools <span class="pulse-new">New</span></h2>
     </div>
     <div class="tools-grid">
       <a href={`${base}explain`} class="tool-card tool-blue">
@@ -224,38 +193,25 @@ const featuredProjects = projects.filter(p => p.data.featured);
     max-width: 520px; line-height: 1.6;
   }
 
-  /* What's New */
-  .whats-new-section {
-    margin-top: 2rem;
-    background: linear-gradient(135deg, #e8f0fe 0%, #e6f4ea 100%);
-    border: 1px solid #aecbfa;
-    border-radius: 16px;
-    padding: 1.25rem 1.5rem;
+  /* Pulse "New" badge on tools section */
+  .pulse-new {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em;
+    text-transform: uppercase; color: #1a73e8;
+    background: #e8f0fe; padding: 2px 8px 2px 6px;
+    border-radius: 100px; margin-left: 8px; vertical-align: middle;
+    position: relative;
   }
-  .whats-new-header {
-    display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.85rem;
+  .pulse-new::before {
+    content: '';
+    display: inline-block; width: 6px; height: 6px;
+    border-radius: 50%; background: #1a73e8;
+    animation: pulse-dot 1.8s ease-in-out infinite;
   }
-  .new-badge {
-    background: #1a73e8; color: white; font-size: 0.7rem; font-weight: 700;
-    padding: 0.15rem 0.5rem; border-radius: 100px; letter-spacing: 0.04em;
-    text-transform: uppercase;
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.7); }
   }
-  .whats-new-title {
-    font-size: 0.85rem; font-weight: 600; color: var(--color-text);
-  }
-  .whats-new-grid {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.75rem;
-  }
-  .new-card {
-    display: flex; gap: 0.75rem; align-items: flex-start;
-    background: white; border: 1px solid rgba(66,133,244,0.2);
-    border-radius: 10px; padding: 0.85rem 1rem;
-    text-decoration: none; transition: box-shadow 0.15s, border-color 0.15s;
-  }
-  .new-card:hover { box-shadow: 0 2px 10px rgba(0,0,0,0.06); border-color: #4285f4; }
-  .new-card-icon { font-size: 1.25rem; flex-shrink: 0; }
-  .new-card-label { font-size: 0.85rem; font-weight: 600; color: var(--color-text); margin-bottom: 0.2rem; }
-  .new-card-desc { font-size: 0.78rem; color: var(--color-text-muted); line-height: 1.45; }
 
   /* Chat section */
   .chat-section {
@@ -306,11 +262,6 @@ const featuredProjects = projects.filter(p => p.data.featured);
   .tools-section { margin-top: 3.5rem; }
   .section-header {
     display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem;
-  }
-  .section-badge {
-    background: #ea4335; color: white; font-size: 0.68rem; font-weight: 700;
-    padding: 0.15rem 0.5rem; border-radius: 100px; letter-spacing: 0.04em;
-    text-transform: uppercase;
   }
   .tools-grid {
     display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem;
@@ -394,23 +345,23 @@ const featuredProjects = projects.filter(p => p.data.featured);
 </style>
 
 <script>
-  // Starter chips: inject text into the chatbot's input
+  // Starter chips: scroll to chatbot, set question, auto-submit
   document.querySelectorAll('.starter-chip').forEach(chip => {
     chip.addEventListener('click', () => {
       const q = chip.getAttribute('data-q');
       if (!q) return;
-      // Try to find the chatbot input and populate it
-      const input = document.querySelector('#ms-input') as HTMLInputElement | null;
-      if (input) {
-        input.value = q;
-        input.dispatchEvent(new Event('input', { bubbles: true }));
-        input.focus();
-        // Scroll to chat
-        document.querySelector('.chat-widget')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      } else {
-        // Fallback: scroll to chatbot
-        document.querySelector('.chat-widget')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
+      const widget = document.querySelector('.chat-widget');
+      widget?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      // Wait for scroll then submit
+      setTimeout(() => {
+        const input = document.querySelector('#ms-input') as HTMLInputElement | null;
+        const send = document.querySelector('#ms-send') as HTMLButtonElement | null;
+        if (input && send) {
+          input.value = q;
+          input.dispatchEvent(new Event('input', { bubbles: true }));
+          send.click();
+        }
+      }, 400);
     });
   });
 </script>

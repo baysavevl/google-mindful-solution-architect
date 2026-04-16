@@ -3,54 +3,58 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 const base = import.meta.env.BASE_URL;
 ---
 
-<BaseLayout title="Plain English Explainer" description="Pick any Google Ads concept and see it explained for engineers, marketers, and business owners — all at once." wide={true}>
+<BaseLayout title="Plain Explainer" description="Pick any Google Ads concept and see it explained for engineers, marketers, and business owners — all at once." wide={true}>
 
   <!-- Hero -->
-  <section class="hero text-center py-12">
-    <div class="google-bar mx-auto mb-6" style="max-width:80px"><span></span><span></span><span></span><span></span></div>
-    <h1 class="text-4xl font-bold tracking-tight text-[var(--color-text)] mb-4">
-      Plain English <span class="gradient-text">Explainer</span>
-    </h1>
-    <p class="text-lg text-[var(--color-text-muted)] max-w-2xl mx-auto leading-relaxed">
-      Pick any Google Ads concept. See it explained for engineers, marketers, and business owners — all at once.
-    </p>
+  <section class="hero">
+    <div class="google-bar"><span></span><span></span><span></span><span></span></div>
+    <h1>Plain <span class="grad">Explainer</span></h1>
+    <p class="hero-sub">Pick any Google Ads concept. See it explained for engineers, marketers, and business owners — all at once.</p>
   </section>
 
-  <!-- Concept Selector Chips -->
-  <div class="chip-row-wrapper mb-10">
-    <div class="chip-row" id="chip-row">
-      <!-- chips rendered by JS -->
-    </div>
+  <!-- Boxed concept selector -->
+  <div class="selector-box">
+    <div class="selector-label">Choose a concept to explore</div>
+    <div class="chip-row" id="chip-row"><!-- chips via JS --></div>
   </div>
 
-  <!-- 3-Column Cards -->
-  <div class="cards-grid mb-12" id="cards-grid">
+  <!-- 3-column explanation cards -->
+  <div class="cards-grid" id="cards-grid">
+    <!-- Engineer card -->
     <div class="card card--blue">
       <div class="card-header">
-        <span class="card-icon">&lt;/&gt;</span>
-        <span class="card-label">For Engineers</span>
+        <span class="card-hicon">&lt;/&gt;</span>
+        <span class="card-hlabel">For Engineers</span>
+        <span class="card-htag">Technical</span>
       </div>
+      <div class="card-viz" id="viz-engineer"></div>
       <div class="card-body" id="body-engineer"></div>
     </div>
+    <!-- Marketer card -->
     <div class="card card--green">
       <div class="card-header">
-        <span class="card-icon">📊</span>
-        <span class="card-label">For Marketers</span>
+        <span class="card-hicon">📊</span>
+        <span class="card-hlabel">For Marketers</span>
+        <span class="card-htag">Business</span>
       </div>
+      <div class="card-viz" id="viz-marketer"></div>
       <div class="card-body" id="body-marketer"></div>
     </div>
+    <!-- Business Owner card -->
     <div class="card card--yellow">
       <div class="card-header">
-        <span class="card-icon">💡</span>
-        <span class="card-label">For Business Owners</span>
+        <span class="card-hicon">💡</span>
+        <span class="card-hlabel">For Business Owners</span>
+        <span class="card-htag">Analogy</span>
       </div>
+      <div class="card-viz" id="viz-owner"></div>
       <div class="card-body" id="body-owner"></div>
     </div>
   </div>
 
   <!-- Bottom CTA -->
-  <div class="cta-section text-center py-10 mb-8">
-    <p class="text-base text-[var(--color-text-muted)] mb-4">Want to go deeper? Ask the chatbot any of these concepts.</p>
+  <div class="cta-section">
+    <p>Want to go deeper? Ask the chatbot any of these concepts.</p>
     <a href={base} class="cta-btn">Ask the chatbot &rarr;</a>
   </div>
 
@@ -59,106 +63,136 @@ const base = import.meta.env.BASE_URL;
 <script>
   const concepts = [
     {
-      id: "smart-bidding",
-      label: "Smart Bidding",
+      id: "smart-bidding", label: "Smart Bidding",
+      engViz: `<div class="vflow"><span class="vnode">Auction signals<br/><small>device · location · intent · time</small></span><span class="varrow">→</span><span class="vnode vnode-hl">ML Model<br/><small>70M+ signals/auction</small></span><span class="varrow">→</span><span class="vnode">Optimal bid<br/><small>per auction, in real-time</small></span></div>`,
+      mktViz: `<div class="vstats"><div class="vstat"><span class="vnum green">↓ CPA</span><span class="vlbl">Cost per conversion</span></div><div class="vstat"><span class="vnum blue">↑ Conv.</span><span class="vlbl">Conversions volume</span></div><div class="vstat"><span class="vnum grey">= Budget</span><span class="vlbl">Same spend</span></div></div>`,
+      ownerViz: `<div class="vanalogy"><div class="vbig">🏪</div><div class="vbig-label">The "Smart Cashier"</div><div class="vbig-sub">Knows who will buy before they do</div></div>`,
       engineer: "ML model using auction-time signals — device, location, query intent, audience lists, time of day, browser — to set the optimal bid in real-time for each auction. Strategies: Target CPA, Target ROAS, Maximize Conversions, Maximize Conversion Value. Signals processed per auction: 70M+.",
       marketer: "Your bids automatically adjust based on who is searching and how likely they are to convert — so you pay more to reach high-value customers and less for low-probability clicks. Result: better CPA with the same budget.",
       owner: "Imagine a store with a smart cashier who can instantly tell if a customer is a serious buyer or just browsing — and gives discounts only to the serious buyers. Smart Bidding does the same: it bids higher when someone is likely to buy, lower when they're not.",
     },
     {
-      id: "pmax",
-      label: "Performance Max",
+      id: "pmax", label: "Performance Max",
+      engViz: `<div class="vflow"><span class="vnode">Asset Group<br/><small>headlines · images · video</small></span><span class="varrow">→</span><span class="vnode vnode-hl">Google Inventory<br/><small>Search · YT · Display · Gmail · Maps</small></span><span class="varrow">→</span><span class="vnode">Auto-optimised<br/><small>placement + bid + creative</small></span></div>`,
+      mktViz: `<div class="vstats"><div class="vstat"><span class="vnum blue">1</span><span class="vlbl">Campaign</span></div><div class="vstat"><span class="vnum green">6</span><span class="vlbl">Google channels</span></div><div class="vstat"><span class="vnum grey">Auto</span><span class="vlbl">Placement</span></div></div>`,
+      ownerViz: `<div class="vanalogy"><div class="vbig">👔</div><div class="vbig-label">The "All-Channel Manager"</div><div class="vbig-sub">One hire, handles TV + radio + print + digital</div></div>`,
       engineer: "Single campaign type serving across all Google inventory: Search, Shopping, Display, YouTube, Gmail, Discover, Maps. Uses asset groups (headlines, descriptions, images, videos, audience signals) and automates placement, bidding, and creative selection. Requires conversion data for optimization.",
       marketer: "One campaign that runs your ads everywhere Google operates — search results, YouTube, Gmail, maps — and automatically shows the right format in the right place. You provide assets; Google figures out where and how to show them.",
       owner: "Instead of hiring a separate person to run your TV ads, radio ads, and newspaper ads, you hire one person who handles all channels at once and figures out which works best. That's PMax — one campaign, all of Google.",
     },
     {
-      id: "enhanced-conversions",
-      label: "Enhanced Conversions",
+      id: "enhanced-conversions", label: "Enhanced Conversions",
+      engViz: `<div class="vflow"><span class="vnode">Customer data<br/><small>email · phone · name</small></span><span class="varrow">→</span><span class="vnode vnode-hl">SHA-256 Hash<br/><small>anonymised before sending</small></span><span class="varrow">→</span><span class="vnode">Google match<br/><small>signed-in account</small></span></div>`,
+      mktViz: `<div class="vstats"><div class="vstat"><span class="vnum green">+15%</span><span class="vlbl">Measured conversions</span></div><div class="vstat"><span class="vnum blue">Cross-device</span><span class="vlbl">Attribution</span></div><div class="vstat"><span class="vnum grey">No raw PII</span><span class="vlbl">Privacy safe</span></div></div>`,
+      ownerViz: `<div class="vanalogy"><div class="vbig">💳</div><div class="vbig-label">The "Anonymous Loyalty Card"</div><div class="vbig-sub">Confirms identity without revealing it</div></div>`,
       engineer: "First-party data matching mechanism: hashes customer-provided data (email, phone, name, address) via SHA-256 before sending to Google. Google matches against signed-in Google accounts to improve conversion measurement accuracy, especially across devices and post iOS 14.5.",
       marketer: "When a customer buys something, you send their (hashed/anonymized) email to Google. Google can then match that to someone who clicked your ad — even if they switched devices or cleared cookies. You get more accurate attribution without sharing raw personal data.",
       owner: "Think of it like a loyalty card that's completely anonymous. When someone buys from you, the card confirms they're the same person who saw your ad — without revealing who they are. More accurate tracking, better privacy.",
     },
     {
-      id: "first-party-data",
-      label: "First-Party Data",
+      id: "first-party-data", label: "First-Party Data",
+      engViz: `<div class="vflow"><span class="vnode">Your sources<br/><small>CRM · transactions · app · email</small></span><span class="varrow">→</span><span class="vnode vnode-hl">Google Ads<br/><small>Customer Match · EC · PMax signals</small></span><span class="varrow">→</span><span class="vnode">Better targeting<br/><small>similar audiences · exclusions</small></span></div>`,
+      mktViz: `<div class="vstats"><div class="vstat"><span class="vnum blue">Own it</span><span class="vlbl">You control it</span></div><div class="vstat"><span class="vnum green">No cost</span><span class="vlbl">No data fees</span></div><div class="vstat"><span class="vnum grey">Highest</span><span class="vlbl">Match quality</span></div></div>`,
+      ownerViz: `<div class="vanalogy"><div class="vbig">📇</div><div class="vbig-label">The "Referral Network"</div><div class="vbig-sub">Find new customers who look like your best ones</div></div>`,
       engineer: "Data collected directly from your own touchpoints: CRM records, transaction history, email list signups, app events, loyalty programs. Used in Google Ads via Customer Match (upload lists), Enhanced Conversions (match at conversion), and as audience signals in PMax campaigns.",
       marketer: "Your own customer data — emails, purchase history, app users — used to target similar audiences on Google, exclude existing customers from acquisition campaigns, or re-engage lapsed buyers. The most valuable targeting asset you own.",
       owner: "You've been collecting your customers' information for years — their emails, what they bought, when they last visited. First-party data means using that list to find more people just like your best customers on Google. It's like asking your best customers to refer friends who are similar to them.",
     },
     {
-      id: "audience-segments",
-      label: "Audience Segments",
+      id: "audience-segments", label: "Audience Segments",
+      engViz: `<div class="vtags"><span class="vtag blue">In-Market</span><span class="vtag green">Affinity</span><span class="vtag yellow">Life Events</span><span class="vtag blue">Custom Intent</span><span class="vtag green">RLSA</span><span class="vtag grey">Customer Match</span><span class="vtag grey">Similar</span></div>`,
+      mktViz: `<div class="vstats"><div class="vstat"><span class="vnum blue">Observation</span><span class="vlbl">Monitor only</span></div><div class="vstat"><span class="vnum green">Targeting</span><span class="vlbl">Restrict reach</span></div><div class="vstat"><span class="vnum grey">Bid adj.</span><span class="vlbl">Adjust bids</span></div></div>`,
+      ownerViz: `<div class="vanalogy"><div class="vbig">🎣</div><div class="vbig-label">The "Fish Where the Fish Are"</div><div class="vbig-sub">Show your ad only to people who are actually interested</div></div>`,
       engineer: "Cookie/user-ID based groupings in Google Ads. Types: Affinity (interests), In-Market (active research signals), Life Events, Custom Intent (keywords/URLs), Customer Match (1P data), Similar Segments, Remarketing Lists (RLSA for Search, audiences for Display/YouTube). Can be used for targeting (observation vs. targeting) or bid adjustments.",
       marketer: "Ways to group people based on their interests, behaviors, or relationship with your brand. You can target ads specifically to 'people researching flights' or 'past website visitors who didn't convert' — increasing relevance and reducing wasted spend.",
       owner: "Instead of showing your fish restaurant ad to everyone, you show it to people who searched for 'best seafood near me' last week. Audience segments let you fish where the fish are.",
     },
     {
-      id: "dsa",
-      label: "Dynamic Search Ads",
+      id: "dsa", label: "Dynamic Search Ads",
+      engViz: `<div class="vflow"><span class="vnode">Google crawls<br/><small>your website index</small></span><span class="varrow">→</span><span class="vnode vnode-hl">Auto-matches<br/><small>query → best page</small></span><span class="varrow">→</span><span class="vnode">Dynamic headline<br/><small>generated from page title</small></span></div>`,
+      mktViz: `<div class="vstats"><div class="vstat"><span class="vnum blue">0</span><span class="vlbl">Keywords needed</span></div><div class="vstat"><span class="vnum green">Long-tail</span><span class="vlbl">Queries captured</span></div><div class="vstat"><span class="vnum grey">Auto</span><span class="vlbl">Headline gen.</span></div></div>`,
+      ownerViz: `<div class="vanalogy"><div class="vbig">🧑‍💼</div><div class="vbig-label">The "Self-Briefed Salesperson"</div><div class="vbig-sub">Read your whole catalog — answers any customer question</div></div>`,
       engineer: "Crawls your website to auto-generate headlines and match searches to landing pages without keywords. Uses Google's index of your site. Best for large inventory sites. Control via page feeds or URL targeting. Dynamic headlines generated from page title/content. Pairs well with RLSA.",
       marketer: "Google scans your website and automatically creates ads that match searchers to the most relevant page — without you needing to create keywords for every product. Captures long-tail searches you'd otherwise miss.",
       owner: "Imagine having a salesperson who read your entire product catalog and can answer any customer question by pointing them to the right page — without you briefing them on every item. DSA does that for your website.",
     },
     {
-      id: "rsa",
-      label: "Responsive Search Ads",
+      id: "rsa", label: "Responsive Search Ads",
+      engViz: `<div class="vflow"><span class="vnode">15 headlines<br/>4 descriptions<br/><small>you write</small></span><span class="varrow">→</span><span class="vnode vnode-hl">ML tests<br/><small>permutations per query</small></span><span class="varrow">→</span><span class="vnode">Best combo<br/><small>shown per context</small></span></div>`,
+      mktViz: `<div class="vstats"><div class="vstat"><span class="vnum blue">15</span><span class="vlbl">Max headlines</span></div><div class="vstat"><span class="vnum green">Auto</span><span class="vlbl">A/B testing</span></div><div class="vstat"><span class="vnum grey">Ad strength</span><span class="vlbl">Quality signal</span></div></div>`,
+      ownerViz: `<div class="vanalogy"><div class="vbig">🎭</div><div class="vbig-label">The "15-Pitch Sales Team"</div><div class="vbig-sub">Different pitch for every customer — only the best ones make calls</div></div>`,
       engineer: "Ad format accepting up to 15 headlines (30 chars each) and 4 descriptions (90 chars each). Google's ML tests combinations and learns which permutations perform best for different queries, users, and contexts. Ad strength score indicates asset variety. Minimum: 3 headlines, 2 descriptions.",
       marketer: "You write up to 15 different headlines and 4 descriptions. Google tests different combinations and automatically shows the version most likely to get clicked for each search. Better CTR without manual A/B testing.",
       owner: "Instead of printing one flyer, you write 15 different headlines and Google picks which combination to show each customer based on what they're searching for. Like having 15 salespeople each with a slightly different pitch — and only the best ones make calls.",
     },
     {
-      id: "quality-score",
-      label: "Quality Score",
+      id: "quality-score", label: "Quality Score",
+      engViz: `<div class="vstats"><div class="vstat"><span class="vnum blue">Expected CTR</span><span class="vlbl">vs similar ads</span></div><div class="vstat"><span class="vnum green">Ad Relevance</span><span class="vlbl">keyword match</span></div><div class="vstat"><span class="vnum yellow">Landing Page</span><span class="vlbl">experience</span></div></div>`,
+      mktViz: `<div class="vscale"><div class="vscale-bar"><div class="vscale-fill" style="width:80%"></div></div><div class="vscale-labels"><span>1</span><span style="font-weight:700;color:#34a853">8/10 → lower CPC</span><span>10</span></div></div>`,
+      ownerViz: `<div class="vanalogy"><div class="vbig">🏆</div><div class="vbig-label">The "Helpful Advertiser Reward"</div><div class="vbig-sub">More relevant = cheaper clicks — Google rewards usefulness</div></div>`,
       engineer: "1-10 diagnostic metric (not directly used in auction). Components: Expected CTR, Ad Relevance, Landing Page Experience. Actual auction uses Ad Rank = bid × Quality Score (simplified). Higher QS → lower CPC for same position. Calculated at keyword level, updated dynamically.",
       marketer: "Google's 1-10 score rating how relevant your ad and landing page are to what someone searched. Higher score = lower cost per click for the same position. The shortcut: make your ad match the search, make your landing page match the ad.",
       owner: "Google scores how well your ad matches what people are searching for. High score = you pay less per click. Low score = you pay more, or your ad doesn't show at all. It rewards advertisers who are genuinely helpful to searchers.",
     },
     {
-      id: "ad-rank",
-      label: "Ad Rank",
+      id: "ad-rank", label: "Ad Rank",
+      engViz: `<div class="vformula"><span class="vf-part blue">Bid</span><span class="vf-op">×</span><span class="vf-part green">Quality Score</span><span class="vf-op">×</span><span class="vf-part yellow">Extension impact</span><span class="vf-op">+</span><span class="vf-part grey">Context</span></div>`,
+      mktViz: `<div class="vstats"><div class="vstat"><span class="vnum blue">≠ Highest bid</span><span class="vlbl">Wins</span></div><div class="vstat"><span class="vnum green">Quality</span><span class="vlbl">Can beat budget</span></div><div class="vstat"><span class="vnum grey">Per auction</span><span class="vlbl">Dynamic</span></div></div>`,
+      ownerViz: `<div class="vanalogy"><div class="vbig">⚖️</div><div class="vbig-label">The "Fair Auction"</div><div class="vbig-sub">Relevance can beat a bigger budget — quality wins</div></div>`,
       engineer: "Real-time auction value determining ad position and whether ad shows. Formula: Bid × Quality Score × Expected impact of extensions + context. Calculated per auction. Same ad can have different rank in different auctions. Top ads require minimum Ad Rank thresholds.",
       marketer: "The score Google uses to decide which ads appear and in what order. It's not just about who bids highest — a relevant, high-quality ad can outrank a higher bid. You can win the top spot by improving quality, not just spending more.",
       owner: "It's not an auction where the highest bidder always wins. Google also considers whether your ad is actually useful to the person searching. Good relevance can beat a bigger budget — which rewards businesses that truly serve their customers.",
     },
     {
-      id: "attribution-models",
-      label: "Attribution Models",
+      id: "attribution-models", label: "Attribution Models",
+      engViz: `<div class="vpath"><span class="vpath-node">Ad 1<br/><small>click</small></span><span class="vpath-line"></span><span class="vpath-node">Ad 2<br/><small>click</small></span><span class="vpath-line"></span><span class="vpath-node vpath-conv">Convert<br/><small>💰</small></span></div><div class="vpath-labels"><span>who gets credit?</span></div>`,
+      mktViz: `<div class="vstats"><div class="vstat"><span class="vnum grey">Last click</span><span class="vlbl">100% to last ad</span></div><div class="vstat"><span class="vnum green">Data-driven</span><span class="vlbl">ML splits credit</span></div><div class="vstat"><span class="vnum blue">Affects</span><span class="vlbl">Smart Bidding</span></div></div>`,
+      ownerViz: `<div class="vanalogy"><div class="vbig">🏀</div><div class="vbig-label">The "Assist vs. Score" Question</div><div class="vbig-sub">Did the first pass or the final shot win the game?</div></div>`,
       engineer: "Method for assigning conversion credit across touchpoints. Models: Last Click, First Click, Linear, Time Decay, Position-Based, Data-Driven (requires 300+ conversions/30 days). DDA uses ML to assign fractional credit based on actual path analysis. Impacts automated bidding signals.",
       marketer: "How you decide which ad 'gets credit' when a customer clicks multiple ads before converting. Last-click gives 100% credit to the final ad. Data-driven shares credit based on which touchpoints actually influenced the sale. Affects where Smart Bidding allocates budget.",
       owner: "If a customer sees your ad three times before buying, which ad gets the credit? Attribution models answer this. It's like a basketball assist — did the first pass or the final shot win the game? The answer changes how you invest your budget.",
     },
     {
-      id: "conversion-tracking",
-      label: "Conversion Tracking",
+      id: "conversion-tracking", label: "Conversion Tracking",
+      engViz: `<div class="vflow"><span class="vnode">User action<br/><small>purchase · form · call</small></span><span class="varrow">→</span><span class="vnode vnode-hl">gtag.js / GTM<br/><small>fires conversion tag</small></span><span class="varrow">→</span><span class="vnode">Google Ads<br/><small>records + optimises</small></span></div>`,
+      mktViz: `<div class="vstats"><div class="vstat"><span class="vnum red">No tracking</span><span class="vlbl">= Blind bidding</span></div><div class="vstat"><span class="vnum green">With tracking</span><span class="vlbl">Smart Bidding works</span></div><div class="vstat"><span class="vnum blue">Foundation</span><span class="vlbl">#1 priority</span></div></div>`,
+      ownerViz: `<div class="vanalogy"><div class="vbig">🧾</div><div class="vbig-label">The "Connected Cash Register"</div><div class="vbig-sub">Google learns which ads make you money — and doubles down on them</div></div>`,
       engineer: "Event measurement system using Google Tag (gtag.js) or GTM. Tracks actions: purchases, form submits, phone calls, app installs, page views. Server-side option via Conversion API. Key config: conversion window, value, count (one/all), include in 'conversions' vs 'all conversions'. Required for Smart Bidding.",
       marketer: "The system that tells Google when a valuable action happens — a sale, a lead form, a phone call. Without it, Smart Bidding has no signal to optimize toward. Accurate conversion tracking is the foundation of any high-performing campaign.",
       owner: "Your cash register connected to your ads. When someone buys something after clicking your ad, conversion tracking tells Google 'that ad worked.' Without it, Google is flying blind — it can't learn which ads are making you money.",
     },
     {
-      id: "broad-match",
-      label: "Broad Match",
+      id: "broad-match", label: "Broad Match",
+      engViz: `<div class="vstats"><div class="vstat"><span class="vnum blue">🎯 Exact</span><span class="vlbl">Spear fishing</span></div><div class="vstat"><span class="vnum green">🌐 Broad</span><span class="vlbl">Net fishing</span></div><div class="vstat"><span class="vnum grey">+ Smart Bidding</span><span class="vlbl">= keeps best fish</span></div></div>`,
+      mktViz: `<div class="vstats"><div class="vstat"><span class="vnum green">Expands</span><span class="vlbl">Synonyms + intent</span></div><div class="vstat"><span class="vnum blue">Discovers</span><span class="vlbl">New queries</span></div><div class="vstat"><span class="vnum grey">Lowest CPA</span><span class="vlbl">at scale</span></div></div>`,
+      ownerViz: `<div class="vanalogy"><div class="vbig">🌊</div><div class="vbig-label">The "Smart Fishing Net"</div><div class="vbig-sub">Catches more — Smart Bidding releases the ones not worth keeping</div></div>`,
       engineer: "Keyword match type that expands to semantically related queries including synonyms, misspellings, related searches, and paraphrases. Uses query-user context including user history, landing page content, other keywords in ad group. Performs best when paired with Smart Bidding + audience data. No close-variant limitations.",
       marketer: "Your keyword matches a much wider range of searches — including ones you'd never think to add manually. When combined with Smart Bidding, it finds converting queries you'd miss with exact or phrase match. Often delivers the lowest CPA at scale.",
       owner: "Exact Match is like fishing with a spear — you only catch the fish you're aiming at. Broad Match is a net — it catches more fish, including some you didn't know were nearby. With Smart Bidding, it only keeps the fish worth keeping.",
     },
     {
-      id: "roas",
-      label: "ROAS",
+      id: "roas", label: "ROAS",
+      engViz: `<div class="vformula"><span class="vf-part green">Revenue</span><span class="vf-op">÷</span><span class="vf-part blue">Ad Spend</span><span class="vf-op">=</span><span class="vf-part yellow">ROAS</span></div><div style="text-align:center;font-size:0.78rem;color:#5f6368;margin-top:6px">400% = $4 back per $1 spent</div>`,
+      mktViz: `<div class="vstats"><div class="vstat"><span class="vnum blue">$100</span><span class="vlbl">Ad spend</span></div><div class="vstat"><span class="vnum green">$400</span><span class="vlbl">Revenue</span></div><div class="vstat"><span class="vnum yellow">400%</span><span class="vlbl">ROAS</span></div></div>`,
+      ownerViz: `<div class="vanalogy"><div class="vbig">🧮</div><div class="vbig-label">The "Vending Machine Test"</div><div class="vbig-sub">Put $1 in — do you get $4 out? Stop when the math breaks.</div></div>`,
       engineer: "Conversion value ÷ ad spend × 100. Target ROAS is a Smart Bidding strategy that optimizes bids to achieve a target revenue-to-spend ratio. Requires sufficient conversion value data (50+ conversions recommended). Works at campaign or portfolio level.",
       marketer: "For every dollar you spend on ads, how many dollars in revenue do you get back. 400% ROAS means $4 revenue per $1 spent. Target ROAS bidding tells Google: 'for every dollar I spend, I want $4 back' — and it adjusts bids automatically to hit that target.",
       owner: "Simple math: if you spend $100 on ads and make $400 in sales, your ROAS is 400%. It's your 'return on investment' for advertising. Target ROAS tells Google: 'keep spending as long as I'm getting at least $4 back for every $1.' Stop when the math doesn't work.",
     },
     {
-      id: "customer-match",
-      label: "Customer Match",
+      id: "customer-match", label: "Customer Match",
+      engViz: `<div class="vflow"><span class="vnode">Your list<br/><small>email · phone · name</small></span><span class="varrow">→</span><span class="vnode vnode-hl">SHA-256 hash<br/><small>uploaded securely</small></span><span class="varrow">→</span><span class="vnode">Google matches<br/><small>30–60% match rate</small></span></div>`,
+      mktViz: `<div class="vstats"><div class="vstat"><span class="vnum blue">Target</span><span class="vlbl">Known customers</span></div><div class="vstat"><span class="vnum red">Exclude</span><span class="vlbl">Already buyers</span></div><div class="vstat"><span class="vnum green">Similar</span><span class="vlbl">Lookalike audiences</span></div></div>`,
+      ownerViz: `<div class="vanalogy"><div class="vbig">📬</div><div class="vbig-label">The "Digital Direct Mail"</div><div class="vbig-sub">Reach your exact customer list online — no printing cost</div></div>`,
       engineer: "Upload hashed PII (email, phone, first/last name, country) to Google Ads. Google matches to signed-in accounts. Can target/exclude matched users across Search, Shopping, Display, Gmail, YouTube. Match rates typically 30-60%. Eligible for similar segments. Requires 1,000+ matched users for targeting.",
       marketer: "Upload your existing customer email list to Google. Google finds those people online and lets you show them targeted ads — or exclude them from acquisition campaigns to avoid wasting budget on people who already bought from you.",
       owner: "You give Google your customer list (safely anonymized), and Google finds those exact people when they're on YouTube, Gmail, or searching — so you can show them a special offer. Like direct mail, but digital and without the printing cost.",
     },
     {
-      id: "gtm",
-      label: "Google Tag Manager",
+      id: "gtm", label: "Google Tag Manager",
+      engViz: `<div class="vflow"><span class="vnode">Container snippet<br/><small>1 tag on site</small></span><span class="varrow">→</span><span class="vnode vnode-hl">GTM UI<br/><small>tags · triggers · variables</small></span><span class="varrow">→</span><span class="vnode">All tracking<br/><small>no code deploy needed</small></span></div>`,
+      mktViz: `<div class="vstats"><div class="vstat"><span class="vnum green">0 tickets</span><span class="vlbl">Dev requests</span></div><div class="vstat"><span class="vnum blue">Version</span><span class="vlbl">history + rollback</span></div><div class="vstat"><span class="vnum grey">Debug mode</span><span class="vlbl">Preview before publish</span></div></div>`,
+      ownerViz: `<div class="vanalogy"><div class="vbig">🎛️</div><div class="vbig-label">The "Control Panel"</div><div class="vbig-sub">Marketing turns tracking on/off — no programmer needed</div></div>`,
       engineer: "Tag management system using a container snippet (async JS) deployed on-site. Manages tag firing via triggers and variables without code deploys. Supports server-side containers for GTM Server. Key features: version history, debug mode, built-in Google tag templates, custom HTML/JS.",
       marketer: "A tool that lets you add or update tracking code on your website without asking a developer every time. Add conversion tracking, analytics, A/B test tools, and more through a simple interface. Faster iterations, fewer IT tickets.",
       owner: "Your website has many different measurement tools — Google Analytics, conversion tracking, heatmaps. GTM is like a control panel where your marketing team can turn them on or off without needing a programmer. It saves weeks of development time.",
@@ -174,17 +208,16 @@ const base = import.meta.env.BASE_URL;
       const btn = document.createElement("button");
       btn.className = "chip" + (i === active ? " chip--active" : "");
       btn.textContent = c.label;
-      btn.addEventListener("click", () => {
-        active = i;
-        renderChips();
-        renderCards();
-      });
+      btn.addEventListener("click", () => { active = i; renderChips(); renderCards(); });
       row.appendChild(btn);
     });
   }
 
   function renderCards() {
     const c = concepts[active];
+    document.getElementById("viz-engineer").innerHTML = c.engViz;
+    document.getElementById("viz-marketer").innerHTML = c.mktViz;
+    document.getElementById("viz-owner").innerHTML = c.ownerViz;
     document.getElementById("body-engineer").innerHTML = `<p>${c.engineer}</p>`;
     document.getElementById("body-marketer").innerHTML = `<p>${c.marketer}</p>`;
     document.getElementById("body-owner").innerHTML = `<p>${c.owner}</p>`;
@@ -196,134 +229,127 @@ const base = import.meta.env.BASE_URL;
 
 <style>
   /* Google bar */
-  .google-bar { display: flex; height: 4px; border-radius: 2px; overflow: hidden; }
+  .google-bar { display: flex; height: 4px; border-radius: 2px; overflow: hidden; max-width: 80px; margin: 0 auto 1.5rem; }
   .google-bar span { flex: 1; }
   .google-bar span:nth-child(1) { background: var(--color-google-blue); }
   .google-bar span:nth-child(2) { background: var(--color-google-red); }
   .google-bar span:nth-child(3) { background: var(--color-google-yellow); }
   .google-bar span:nth-child(4) { background: var(--color-google-green); }
 
-  /* Gradient heading */
-  .gradient-text {
-    background: linear-gradient(90deg, #4285f4, #34a853);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
+  /* Hero */
+  .hero { text-align: center; padding: 2.5rem 0 1.5rem; }
+  .hero h1 { font-size: 2.5rem; font-weight: 700; letter-spacing: -0.03em; color: var(--color-text); margin: 0 0 0.75rem; }
+  .grad { background: linear-gradient(90deg, #4285f4, #34a853); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .hero-sub { font-size: 1rem; color: var(--color-text-muted); max-width: 560px; margin: 0 auto; line-height: 1.65; }
 
-  /* Chip row */
-  .chip-row-wrapper {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    padding-bottom: 4px;
+  /* Selector box */
+  .selector-box {
+    background: #f8f9fa;
+    border: 1.5px solid #dadce0;
+    border-radius: 16px;
+    padding: 1rem 1.25rem 1.1rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    margin-bottom: 1.5rem;
   }
-  .chip-row {
-    display: flex;
-    gap: 10px;
-    padding: 4px 2px;
-    min-width: max-content;
+  .selector-label {
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.07em;
+    text-transform: uppercase; color: var(--color-text-muted); margin-bottom: 0.65rem;
   }
+  .chip-row { display: flex; gap: 8px; flex-wrap: wrap; }
   .chip {
-    display: inline-flex;
-    align-items: center;
-    padding: 8px 18px;
-    border-radius: 9999px;
+    padding: 6px 14px; border-radius: 9999px;
     border: 1.5px solid var(--color-border);
-    background: #fff;
-    color: var(--color-text);
-    font-family: var(--font-sans);
-    font-size: 0.875rem;
-    font-weight: 500;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: border-color 0.15s, background 0.15s, color 0.15s, box-shadow 0.15s;
+    background: #fff; color: var(--color-text);
+    font-family: var(--font-sans); font-size: 0.82rem; font-weight: 500;
+    cursor: pointer; white-space: nowrap;
+    transition: border-color 0.13s, background 0.13s, color 0.13s, box-shadow 0.13s;
   }
-  .chip:hover:not(.chip--active) {
-    border-color: var(--color-google-blue);
-    background: #f0f4ff;
-    color: var(--color-google-blue);
-  }
-  .chip--active {
-    background: var(--color-google-blue);
-    border-color: var(--color-google-blue);
-    color: #fff;
-    box-shadow: 0 2px 8px rgba(66, 133, 244, 0.3);
-  }
+  .chip:hover:not(.chip--active) { border-color: var(--color-google-blue); background: #e8f0fe; color: var(--color-google-blue); }
+  .chip--active { background: var(--color-google-blue); border-color: var(--color-google-blue); color: #fff; box-shadow: 0 2px 8px rgba(66,133,244,0.3); }
 
   /* Cards grid */
-  .cards-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-  }
-  @media (max-width: 900px) {
-    .cards-grid { grid-template-columns: 1fr; }
-  }
+  .cards-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-bottom: 2rem; }
+  @media (max-width: 900px) { .cards-grid { grid-template-columns: 1fr; } }
 
-  .card {
-    border-radius: 16px;
-    border: 1.5px solid var(--color-border);
-    background: #fff;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0 1px 6px rgba(0,0,0,0.05);
-    transition: box-shadow 0.2s, transform 0.2s;
-  }
-  .card:hover {
-    box-shadow: 0 6px 24px rgba(0,0,0,0.1);
-    transform: translateY(-2px);
-  }
+  .card { border-radius: 16px; border: 1.5px solid var(--color-border); background: #fff; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 1px 6px rgba(0,0,0,0.05); transition: box-shadow 0.2s, transform 0.2s; }
+  .card:hover { box-shadow: 0 6px 24px rgba(0,0,0,0.09); transform: translateY(-2px); }
 
-  .card-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 16px 20px;
-    font-weight: 700;
-    font-size: 0.9rem;
-    letter-spacing: 0.01em;
-    color: #fff;
-  }
-  .card-icon {
-    font-size: 1.2rem;
-    line-height: 1;
-  }
+  /* Card header */
+  .card-header { display: flex; align-items: center; gap: 8px; padding: 13px 18px; font-weight: 700; font-size: 0.88rem; letter-spacing: 0.01em; color: #fff; }
+  .card--yellow .card-header { color: #1a1a1a; }
+  .card-hicon { font-size: 1.1rem; line-height: 1; }
+  .card-hlabel { flex: 1; }
+  .card-htag { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; opacity: 0.75; background: rgba(255,255,255,0.2); padding: 2px 7px; border-radius: 100px; }
+  .card--yellow .card-htag { background: rgba(0,0,0,0.1); }
   .card--blue .card-header  { background: var(--color-google-blue); }
-  .card--green .card-header { background: var(--color-google-green); }
-  .card--yellow .card-header {
-    background: var(--color-google-yellow);
-    color: #1a1a1a;
-  }
+  .card--green .card-header { background: #34a853; }
+  .card--yellow .card-header { background: var(--color-google-yellow); }
 
-  .card-body {
-    padding: 20px;
-    flex: 1;
-    font-size: 0.92rem;
-    line-height: 1.7;
-    color: var(--color-text);
-  }
+  /* Viz area */
+  .card-viz { padding: 14px 18px 10px; background: var(--color-bg-subtle); border-bottom: 1px solid var(--color-border); min-height: 72px; display: flex; align-items: center; }
+
+  /* Flow diagram */
+  .vflow { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font-size: 0.75rem; }
+  .vnode { background: #fff; border: 1px solid #dadce0; border-radius: 8px; padding: 5px 9px; text-align: center; line-height: 1.35; font-weight: 500; color: var(--color-text); }
+  .vnode small { display: block; font-weight: 400; color: var(--color-text-muted); font-size: 0.7rem; }
+  .vnode-hl { border-color: #4285f4; background: #e8f0fe; color: #1a73e8; }
+  .varrow { color: var(--color-text-muted); font-weight: 700; font-size: 0.9rem; }
+
+  /* Stats row */
+  .vstats { display: flex; gap: 10px; flex-wrap: wrap; }
+  .vstat { background: #fff; border: 1px solid #dadce0; border-radius: 8px; padding: 6px 10px; text-align: center; min-width: 64px; }
+  .vnum { display: block; font-size: 0.8rem; font-weight: 700; margin-bottom: 2px; }
+  .vnum.green { color: #34a853; }
+  .vnum.blue { color: #4285f4; }
+  .vnum.yellow { color: #f9ab00; }
+  .vnum.red { color: #ea4335; }
+  .vnum.grey { color: #5f6368; }
+  .vlbl { font-size: 0.68rem; color: var(--color-text-muted); display: block; }
+
+  /* Tags cloud */
+  .vtags { display: flex; gap: 5px; flex-wrap: wrap; }
+  .vtag { font-size: 0.7rem; font-weight: 600; padding: 3px 8px; border-radius: 100px; }
+  .vtag.blue { background: #e8f0fe; color: #1a73e8; }
+  .vtag.green { background: #e6f4ea; color: #137333; }
+  .vtag.yellow { background: #fef7e0; color: #b06000; }
+  .vtag.grey { background: #f1f3f4; color: #5f6368; }
+
+  /* Formula */
+  .vformula { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font-size: 0.82rem; font-weight: 700; }
+  .vf-part { padding: 4px 10px; border-radius: 6px; color: white; }
+  .vf-part.blue { background: #4285f4; }
+  .vf-part.green { background: #34a853; }
+  .vf-part.yellow { background: #f9ab00; color: #1a1a1a; }
+  .vf-part.grey { background: #9aa0a6; }
+  .vf-op { color: var(--color-text-muted); font-size: 1rem; }
+
+  /* Path */
+  .vpath { display: flex; align-items: center; gap: 0; margin-bottom: 4px; }
+  .vpath-node { background: #fff; border: 1px solid #dadce0; border-radius: 8px; padding: 4px 8px; font-size: 0.72rem; font-weight: 500; text-align: center; }
+  .vpath-node small { display: block; color: var(--color-text-muted); }
+  .vpath-conv { border-color: #34a853; background: #e6f4ea; color: #137333; }
+  .vpath-line { flex: 1; height: 2px; background: #dadce0; }
+  .vpath-labels { font-size: 0.68rem; color: var(--color-text-muted); text-align: center; }
+
+  /* Scale bar */
+  .vscale { width: 100%; }
+  .vscale-bar { height: 8px; background: #e8eaed; border-radius: 4px; overflow: hidden; margin-bottom: 4px; }
+  .vscale-fill { height: 100%; background: linear-gradient(90deg, #ea4335, #fbbc05, #34a853); border-radius: 4px; }
+  .vscale-labels { display: flex; justify-content: space-between; font-size: 0.7rem; color: var(--color-text-muted); }
+
+  /* Analogy visual */
+  .vanalogy { text-align: center; width: 100%; padding: 4px 0; }
+  .vbig { font-size: 2rem; line-height: 1; margin-bottom: 4px; }
+  .vbig-label { font-size: 0.78rem; font-weight: 700; color: var(--color-text); margin-bottom: 2px; }
+  .vbig-sub { font-size: 0.7rem; color: var(--color-text-muted); line-height: 1.4; }
+
+  /* Card body text */
+  .card-body { padding: 16px 18px; flex: 1; font-size: 0.875rem; line-height: 1.7; color: var(--color-text); }
   .card-body p { margin: 0; }
 
   /* CTA */
-  .cta-section {
-    border-top: 1px solid var(--color-border);
-  }
-  .cta-btn {
-    display: inline-block;
-    padding: 12px 28px;
-    border-radius: 9999px;
-    background: var(--color-google-blue);
-    color: #fff;
-    font-family: var(--font-sans);
-    font-weight: 600;
-    font-size: 0.95rem;
-    text-decoration: none;
-    transition: background 0.15s, box-shadow 0.15s, transform 0.15s;
-  }
-  .cta-btn:hover {
-    background: #1a73e8;
-    box-shadow: 0 4px 16px rgba(66, 133, 244, 0.35);
-    transform: translateY(-1px);
-  }
+  .cta-section { text-align: center; padding: 2rem 0 1rem; border-top: 1px solid var(--color-border); }
+  .cta-section p { font-size: 0.95rem; color: var(--color-text-muted); margin-bottom: 1rem; }
+  .cta-btn { display: inline-block; padding: 11px 26px; border-radius: 9999px; background: var(--color-google-blue); color: #fff; font-family: var(--font-sans); font-weight: 600; font-size: 0.92rem; text-decoration: none; transition: background 0.15s, box-shadow 0.15s, transform 0.15s; }
+  .cta-btn:hover { background: #1a73e8; box-shadow: 0 4px 16px rgba(66,133,244,0.35); transform: translateY(-1px); }
 </style>
