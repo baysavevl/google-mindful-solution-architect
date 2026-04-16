@@ -23,19 +23,117 @@ const featuredProjects = projects.filter(p => p.data.featured);
       <span class="hero-highlight">Solutions Architect</span>
     </h1>
     <p class="hero-subtitle">
-      I help you plan, build, and optimize Google Ads campaigns.<br class="hidden sm:block"/>
-      Ask me anything or explore the knowledge base.
+      Strategy, technical expertise, and cross-team collaboration — helping partners grow with Google Ads across Southeast Asia.
     </p>
   </section>
 
-  <!-- Chat -->
+  <!-- What's New banner -->
+  <section class="whats-new-section">
+    <div class="whats-new-header">
+      <span class="new-badge">New</span>
+      <span class="whats-new-title">What's new on this site</span>
+    </div>
+    <div class="whats-new-grid">
+      <a href={`${base}explain`} class="new-card">
+        <span class="new-card-icon">💬</span>
+        <div>
+          <div class="new-card-label">Plain English Explainer</div>
+          <div class="new-card-desc">15 Google Ads concepts explained for engineers, marketers, and business owners — all at once</div>
+        </div>
+      </a>
+      <a href={`${base}diagnose`} class="new-card">
+        <span class="new-card-icon">🔍</span>
+        <div>
+          <div class="new-card-label">Campaign Diagnostic Tool</div>
+          <div class="new-card-desc">Answer 5 questions, get a tailored strategy with root-cause analysis and ROI estimate</div>
+        </div>
+      </a>
+      <a href={`${base}toolkit`} class="new-card">
+        <span class="new-card-icon">🧰</span>
+        <div>
+          <div class="new-card-label">Sales Enablement Toolkit</div>
+          <div class="new-card-desc">Battle cards, objection handlers, and pre-meeting checklists for every stakeholder type</div>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- Chatbot highlight -->
   <section class="chat-section">
-    <ChatBot />
+    <div class="chat-intro">
+      <div class="chat-intro-left">
+        <div class="chat-badge-row">
+          <span class="chat-badge ai">AI-Powered</span>
+          <span class="chat-badge personal">Personal SA Bot</span>
+        </div>
+        <h2 class="chat-intro-title">Your Google Ads Solutions Architect — available right now</h2>
+        <p class="chat-intro-desc">This isn't a generic chatbot. It's trained on Google Ads strategy, Southeast Asian market context, and real campaign architecture. It runs two modes:</p>
+        <div class="chat-modes">
+          <div class="chat-mode">
+            <span class="mode-dot blue"></span>
+            <div>
+              <strong>Solve My Problems</strong>
+              <span> — diagnose your campaign issues and get specific recommendations</span>
+            </div>
+          </div>
+          <div class="chat-mode">
+            <span class="mode-dot green"></span>
+            <div>
+              <strong>Discover Google Ads</strong>
+              <span> — learn any concept, feature, or strategy interactively</span>
+            </div>
+          </div>
+        </div>
+        <div class="chat-starters">
+          <p class="starters-label">Try asking:</p>
+          <div class="starter-chips" id="starterChips">
+            <button class="starter-chip" data-q="My Google Ads CPA is too high — what should I check first?">My CPA is too high — where do I start?</button>
+            <button class="starter-chip" data-q="How does Performance Max work and when should I use it?">How does Performance Max work?</button>
+            <button class="starter-chip" data-q="I'm launching a new e-commerce brand in Vietnam — what's the right Google Ads strategy?">Launching in Vietnam — what's the strategy?</button>
+            <button class="starter-chip" data-q="What's the difference between Smart Bidding strategies?">Smart Bidding strategies explained</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="chat-widget">
+      <ChatBot />
+    </div>
+  </section>
+
+  <!-- New Tools Section -->
+  <section class="tools-section">
+    <div class="section-header">
+      <h2 class="section-heading">Interactive Tools</h2>
+      <span class="section-badge">New</span>
+    </div>
+    <div class="tools-grid">
+      <a href={`${base}explain`} class="tool-card tool-blue">
+        <div class="tool-icon">💬</div>
+        <h3>Plain English Explainer</h3>
+        <p>Pick any Google Ads concept — Smart Bidding, PMax, Enhanced Conversions — and see it explained at 3 audience levels: engineer, marketer, and business owner.</p>
+        <div class="tool-meta">15 concepts · No jargon</div>
+        <span class="tool-link">Explore &rarr;</span>
+      </a>
+      <a href={`${base}diagnose`} class="tool-card tool-green">
+        <div class="tool-icon">🔍</div>
+        <h3>Campaign Diagnostic</h3>
+        <p>Answer 5 questions about your goal, situation, and challenges. Get a root-cause diagnosis, recommended solution path, and ROI estimate — instantly.</p>
+        <div class="tool-meta">5 questions · Instant result</div>
+        <span class="tool-link">Diagnose now &rarr;</span>
+      </a>
+      <a href={`${base}toolkit`} class="tool-card tool-yellow">
+        <div class="tool-icon">🧰</div>
+        <h3>Sales Toolkit</h3>
+        <p>Battle cards vs Meta & TikTok, objection handlers for 6 common pushbacks, and pre-meeting prep for CEOs, marketing managers, IT leads, and agencies.</p>
+        <div class="tool-meta">3 tools · Sales-ready</div>
+        <span class="tool-link">Open toolkit &rarr;</span>
+      </a>
+    </div>
   </section>
 
   <!-- Featured Resources -->
   <section class="resources-section">
-    <h2 class="section-heading">Featured Resources</h2>
+    <h2 class="section-heading">Knowledge Base</h2>
     <div class="resources-grid">
       <a href={`${base}projects/google-ads/`} class="resource-card resource-primary">
         <span class="resource-icon">📖</span>
@@ -87,6 +185,14 @@ const featuredProjects = projects.filter(p => p.data.featured);
       </div>
     </section>
   )}
+
+  <!-- News link strip -->
+  <section class="news-strip">
+    <span class="news-strip-label">📰 Latest from Google Ads</span>
+    <span class="news-strip-sep">·</span>
+    <span class="news-strip-text">New product updates, feature launches, and campaign best practices</span>
+    <a href={`${base}news`} class="news-strip-link">Read the news &rarr;</a>
+  </section>
 </BaseLayout>
 
 <style>
@@ -96,14 +202,9 @@ const featuredProjects = projects.filter(p => p.data.featured);
   }
 
   .google-bar {
-    display: flex;
-    height: 4px;
-    border-radius: 2px;
-    overflow: hidden;
-    max-width: 80px;
-    margin: 0 auto 2rem;
+    display: flex; height: 4px; border-radius: 2px; overflow: hidden;
+    max-width: 80px; margin: 0 auto 2rem;
   }
-
   .google-bar span { flex: 1; }
   .google-bar span:nth-child(1) { background: var(--color-google-blue); }
   .google-bar span:nth-child(2) { background: var(--color-google-red); }
@@ -111,182 +212,205 @@ const featuredProjects = projects.filter(p => p.data.featured);
   .google-bar span:nth-child(4) { background: var(--color-google-green); }
 
   .hero-title {
-    font-size: 2.75rem;
-    font-weight: 700;
-    line-height: 1.15;
-    letter-spacing: -0.03em;
-    color: var(--color-text);
-    margin: 0;
+    font-size: 2.75rem; font-weight: 700; line-height: 1.15;
+    letter-spacing: -0.03em; color: var(--color-text); margin: 0;
   }
-
   .hero-highlight {
     background: linear-gradient(135deg, #4285f4, #34a853);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
   }
-
   .hero-subtitle {
-    margin: 1rem auto 0;
-    font-size: 1.1rem;
-    color: var(--color-text-muted);
-    max-width: 480px;
-    line-height: 1.6;
+    margin: 1rem auto 0; font-size: 1.05rem; color: var(--color-text-muted);
+    max-width: 520px; line-height: 1.6;
   }
 
-  .chat-section {
-    max-width: 700px;
-    margin: 2rem auto 0;
-  }
-
-  .resources-section {
-    margin-top: 4rem;
-  }
-
-  .section-heading {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--color-text);
-    margin: 0 0 1.25rem;
-  }
-
-  .resources-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 1rem;
-  }
-
-  .resource-card {
-    background: white;
-    border: 1px solid var(--color-border);
-    border-radius: 12px;
-    padding: 1.5rem;
-    text-decoration: none;
-    transition: box-shadow 0.2s, transform 0.2s;
-    display: block;
-  }
-
-  .resource-card:hover {
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    transform: translateY(-2px);
-  }
-
-  .resource-primary {
-    border-color: var(--color-google-blue);
-    border-width: 2px;
-  }
-
-  .resource-icon {
-    font-size: 1.75rem;
-    display: block;
-    margin-bottom: 0.75rem;
-  }
-
-  .resource-card h3 {
-    font-size: 1.05rem;
-    font-weight: 600;
-    color: var(--color-text);
-    margin: 0 0 0.5rem;
-  }
-
-  .resource-card p {
-    font-size: 0.875rem;
-    color: var(--color-text-muted);
-    margin: 0 0 0.75rem;
-    line-height: 1.6;
-  }
-
-  .resource-link {
-    font-size: 0.85rem;
-    font-weight: 500;
-    color: var(--color-google-blue);
-  }
-
-  .recent-section {
-    margin-top: 3.5rem;
-  }
-
-  .section-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 1.25rem;
-  }
-
-  .section-header .section-heading {
-    margin: 0;
-  }
-
-  .section-link {
-    font-size: 0.9rem;
-    font-weight: 500;
-    color: var(--color-google-blue);
-    text-decoration: none;
-  }
-
-  .section-link:hover {
-    text-decoration: underline;
-  }
-
-  .recent-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 1rem;
-  }
-
-  .recent-card {
-    background: var(--color-bg-subtle);
-    border: 1px solid var(--color-border);
-    border-radius: 12px;
+  /* What's New */
+  .whats-new-section {
+    margin-top: 2rem;
+    background: linear-gradient(135deg, #e8f0fe 0%, #e6f4ea 100%);
+    border: 1px solid #aecbfa;
+    border-radius: 16px;
     padding: 1.25rem 1.5rem;
-    text-decoration: none;
-    transition: border-color 0.15s;
-    display: block;
   }
-
-  .recent-card:hover {
-    border-color: var(--color-google-blue);
+  .whats-new-header {
+    display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.85rem;
   }
+  .new-badge {
+    background: #1a73e8; color: white; font-size: 0.7rem; font-weight: 700;
+    padding: 0.15rem 0.5rem; border-radius: 100px; letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .whats-new-title {
+    font-size: 0.85rem; font-weight: 600; color: var(--color-text);
+  }
+  .whats-new-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.75rem;
+  }
+  .new-card {
+    display: flex; gap: 0.75rem; align-items: flex-start;
+    background: white; border: 1px solid rgba(66,133,244,0.2);
+    border-radius: 10px; padding: 0.85rem 1rem;
+    text-decoration: none; transition: box-shadow 0.15s, border-color 0.15s;
+  }
+  .new-card:hover { box-shadow: 0 2px 10px rgba(0,0,0,0.06); border-color: #4285f4; }
+  .new-card-icon { font-size: 1.25rem; flex-shrink: 0; }
+  .new-card-label { font-size: 0.85rem; font-weight: 600; color: var(--color-text); margin-bottom: 0.2rem; }
+  .new-card-desc { font-size: 0.78rem; color: var(--color-text-muted); line-height: 1.45; }
 
+  /* Chat section */
+  .chat-section {
+    margin-top: 2.5rem;
+  }
+  .chat-intro {
+    max-width: 700px; margin: 0 auto 1rem;
+  }
+  .chat-badge-row {
+    display: flex; gap: 0.5rem; margin-bottom: 0.75rem;
+  }
+  .chat-badge {
+    font-size: 0.7rem; font-weight: 700; padding: 0.2rem 0.6rem;
+    border-radius: 100px; letter-spacing: 0.04em; text-transform: uppercase;
+  }
+  .chat-badge.ai { background: #e8f0fe; color: #1a73e8; }
+  .chat-badge.personal { background: #e6f4ea; color: #137333; }
+  .chat-intro-title {
+    font-size: 1.2rem; font-weight: 700; color: var(--color-text);
+    margin: 0 0 0.5rem; letter-spacing: -0.02em;
+  }
+  .chat-intro-desc {
+    font-size: 0.875rem; color: var(--color-text-muted); margin: 0 0 0.85rem; line-height: 1.6;
+  }
+  .chat-modes { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 1rem; }
+  .chat-mode {
+    display: flex; align-items: flex-start; gap: 0.6rem;
+    font-size: 0.85rem; color: var(--color-text-muted);
+  }
+  .mode-dot {
+    width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 0.35rem;
+  }
+  .mode-dot.blue { background: #4285f4; }
+  .mode-dot.green { background: #34a853; }
+  .chat-mode strong { color: var(--color-text); }
+  .starters-label { font-size: 0.78rem; color: var(--color-text-muted); margin: 0 0 0.4rem; font-weight: 500; }
+  .starter-chips { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+  .starter-chip {
+    background: var(--color-bg-subtle); border: 1px solid var(--color-border);
+    border-radius: 100px; padding: 0.3rem 0.75rem;
+    font-size: 0.78rem; color: var(--color-text-muted); cursor: pointer;
+    transition: all 0.15s; font-family: inherit;
+  }
+  .starter-chip:hover { background: #e8f0fe; border-color: #4285f4; color: #1a73e8; }
+  .chat-widget { max-width: 700px; margin: 0 auto; }
+
+  /* Tools section */
+  .tools-section { margin-top: 3.5rem; }
+  .section-header {
+    display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem;
+  }
+  .section-badge {
+    background: #ea4335; color: white; font-size: 0.68rem; font-weight: 700;
+    padding: 0.15rem 0.5rem; border-radius: 100px; letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .tools-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem;
+  }
+  .tool-card {
+    background: white; border: 1px solid var(--color-border); border-radius: 14px;
+    padding: 1.5rem; text-decoration: none;
+    transition: box-shadow 0.2s, transform 0.2s; display: block;
+  }
+  .tool-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.08); transform: translateY(-2px); }
+  .tool-blue { border-top: 3px solid #4285f4; }
+  .tool-green { border-top: 3px solid #34a853; }
+  .tool-yellow { border-top: 3px solid #fbbc05; }
+  .tool-icon { font-size: 1.75rem; margin-bottom: 0.75rem; display: block; }
+  .tool-card h3 { font-size: 1rem; font-weight: 600; color: var(--color-text); margin: 0 0 0.5rem; }
+  .tool-card p { font-size: 0.85rem; color: var(--color-text-muted); margin: 0 0 0.75rem; line-height: 1.6; }
+  .tool-meta {
+    font-size: 0.75rem; color: var(--color-text-muted); margin-bottom: 0.5rem;
+    padding: 0.2rem 0; border-top: 1px solid var(--color-border);
+  }
+  .tool-link { font-size: 0.85rem; font-weight: 500; color: var(--color-google-blue); }
+
+  /* Resources */
+  .resources-section { margin-top: 3.5rem; }
+  .section-heading { font-size: 1.5rem; font-weight: 700; color: var(--color-text); margin: 0 0 1.25rem; }
+  .resources-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem;
+  }
+  .resource-card {
+    background: white; border: 1px solid var(--color-border); border-radius: 12px;
+    padding: 1.5rem; text-decoration: none; transition: box-shadow 0.2s, transform 0.2s; display: block;
+  }
+  .resource-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.08); transform: translateY(-2px); }
+  .resource-primary { border-color: var(--color-google-blue); border-width: 2px; }
+  .resource-icon { font-size: 1.75rem; display: block; margin-bottom: 0.75rem; }
+  .resource-card h3 { font-size: 1.05rem; font-weight: 600; color: var(--color-text); margin: 0 0 0.5rem; }
+  .resource-card p { font-size: 0.875rem; color: var(--color-text-muted); margin: 0 0 0.75rem; line-height: 1.6; }
+  .resource-link { font-size: 0.85rem; font-weight: 500; color: var(--color-google-blue); }
+
+  /* Recent */
+  .recent-section { margin-top: 3.5rem; }
+  .section-link { font-size: 0.9rem; font-weight: 500; color: var(--color-google-blue); text-decoration: none; }
+  .section-link:hover { text-decoration: underline; }
+  .recent-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; }
+  .recent-card {
+    background: var(--color-bg-subtle); border: 1px solid var(--color-border);
+    border-radius: 12px; padding: 1.25rem 1.5rem; text-decoration: none;
+    transition: border-color 0.15s; display: block;
+  }
+  .recent-card:hover { border-color: var(--color-google-blue); }
   .recent-metric {
-    display: inline-block;
-    background: #e6f4ea;
-    color: #137333;
-    font-size: 0.75rem;
-    font-weight: 600;
-    padding: 0.2rem 0.6rem;
-    border-radius: 100px;
-    margin-bottom: 0.5rem;
+    display: inline-block; background: #e6f4ea; color: #137333;
+    font-size: 0.75rem; font-weight: 600; padding: 0.2rem 0.6rem;
+    border-radius: 100px; margin-bottom: 0.5rem;
   }
-
-  .recent-card h3 {
-    font-size: 0.95rem;
-    font-weight: 600;
-    color: var(--color-text);
-    margin: 0 0 0.35rem;
-    line-height: 1.4;
-  }
-
+  .recent-card h3 { font-size: 0.95rem; font-weight: 600; color: var(--color-text); margin: 0 0 0.35rem; line-height: 1.4; }
   .recent-card p {
-    font-size: 0.825rem;
-    color: var(--color-text-muted);
-    margin: 0 0 0.5rem;
-    line-height: 1.5;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+    font-size: 0.825rem; color: var(--color-text-muted); margin: 0 0 0.5rem; line-height: 1.5;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
   }
+  .recent-country { font-size: 0.75rem; color: var(--color-text-muted); font-weight: 500; }
 
-  .recent-country {
-    font-size: 0.75rem;
-    color: var(--color-text-muted);
-    font-weight: 500;
+  /* News strip */
+  .news-strip {
+    margin-top: 3rem; padding: 1rem 1.5rem;
+    background: var(--color-bg-subtle); border: 1px solid var(--color-border);
+    border-radius: 12px; display: flex; align-items: center; gap: 0.6rem;
+    flex-wrap: wrap; font-size: 0.875rem;
   }
+  .news-strip-label { font-weight: 600; color: var(--color-text); }
+  .news-strip-sep { color: var(--color-border); }
+  .news-strip-text { color: var(--color-text-muted); flex: 1; min-width: 180px; }
+  .news-strip-link { font-weight: 500; color: var(--color-google-blue); text-decoration: none; white-space: nowrap; }
+  .news-strip-link:hover { text-decoration: underline; }
 
   @media (max-width: 640px) {
-    .hero-title {
-      font-size: 2rem;
-    }
+    .hero-title { font-size: 2rem; }
+    .whats-new-grid { grid-template-columns: 1fr; }
+    .tools-grid { grid-template-columns: 1fr; }
   }
 </style>
+
+<script>
+  // Starter chips: inject text into the chatbot's input
+  document.querySelectorAll('.starter-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      const q = chip.getAttribute('data-q');
+      if (!q) return;
+      // Try to find the chatbot input and populate it
+      const input = document.querySelector('#ms-input') as HTMLInputElement | null;
+      if (input) {
+        input.value = q;
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        input.focus();
+        // Scroll to chat
+        document.querySelector('.chat-widget')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } else {
+        // Fallback: scroll to chatbot
+        document.querySelector('.chat-widget')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    });
+  });
+</script>

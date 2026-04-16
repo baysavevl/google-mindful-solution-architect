@@ -1,0 +1,329 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+const base = import.meta.env.BASE_URL;
+---
+
+<BaseLayout title="Plain English Explainer" description="Pick any Google Ads concept and see it explained for engineers, marketers, and business owners — all at once." wide={true}>
+
+  <!-- Hero -->
+  <section class="hero text-center py-12">
+    <div class="google-bar mx-auto mb-6" style="max-width:80px"><span></span><span></span><span></span><span></span></div>
+    <h1 class="text-4xl font-bold tracking-tight text-[var(--color-text)] mb-4">
+      Plain English <span class="gradient-text">Explainer</span>
+    </h1>
+    <p class="text-lg text-[var(--color-text-muted)] max-w-2xl mx-auto leading-relaxed">
+      Pick any Google Ads concept. See it explained for engineers, marketers, and business owners — all at once.
+    </p>
+  </section>
+
+  <!-- Concept Selector Chips -->
+  <div class="chip-row-wrapper mb-10">
+    <div class="chip-row" id="chip-row">
+      <!-- chips rendered by JS -->
+    </div>
+  </div>
+
+  <!-- 3-Column Cards -->
+  <div class="cards-grid mb-12" id="cards-grid">
+    <div class="card card--blue">
+      <div class="card-header">
+        <span class="card-icon">&lt;/&gt;</span>
+        <span class="card-label">For Engineers</span>
+      </div>
+      <div class="card-body" id="body-engineer"></div>
+    </div>
+    <div class="card card--green">
+      <div class="card-header">
+        <span class="card-icon">📊</span>
+        <span class="card-label">For Marketers</span>
+      </div>
+      <div class="card-body" id="body-marketer"></div>
+    </div>
+    <div class="card card--yellow">
+      <div class="card-header">
+        <span class="card-icon">💡</span>
+        <span class="card-label">For Business Owners</span>
+      </div>
+      <div class="card-body" id="body-owner"></div>
+    </div>
+  </div>
+
+  <!-- Bottom CTA -->
+  <div class="cta-section text-center py-10 mb-8">
+    <p class="text-base text-[var(--color-text-muted)] mb-4">Want to go deeper? Ask the chatbot any of these concepts.</p>
+    <a href={base} class="cta-btn">Ask the chatbot &rarr;</a>
+  </div>
+
+</BaseLayout>
+
+<script>
+  const concepts = [
+    {
+      id: "smart-bidding",
+      label: "Smart Bidding",
+      engineer: "ML model using auction-time signals — device, location, query intent, audience lists, time of day, browser — to set the optimal bid in real-time for each auction. Strategies: Target CPA, Target ROAS, Maximize Conversions, Maximize Conversion Value. Signals processed per auction: 70M+.",
+      marketer: "Your bids automatically adjust based on who is searching and how likely they are to convert — so you pay more to reach high-value customers and less for low-probability clicks. Result: better CPA with the same budget.",
+      owner: "Imagine a store with a smart cashier who can instantly tell if a customer is a serious buyer or just browsing — and gives discounts only to the serious buyers. Smart Bidding does the same: it bids higher when someone is likely to buy, lower when they're not.",
+    },
+    {
+      id: "pmax",
+      label: "Performance Max",
+      engineer: "Single campaign type serving across all Google inventory: Search, Shopping, Display, YouTube, Gmail, Discover, Maps. Uses asset groups (headlines, descriptions, images, videos, audience signals) and automates placement, bidding, and creative selection. Requires conversion data for optimization.",
+      marketer: "One campaign that runs your ads everywhere Google operates — search results, YouTube, Gmail, maps — and automatically shows the right format in the right place. You provide assets; Google figures out where and how to show them.",
+      owner: "Instead of hiring a separate person to run your TV ads, radio ads, and newspaper ads, you hire one person who handles all channels at once and figures out which works best. That's PMax — one campaign, all of Google.",
+    },
+    {
+      id: "enhanced-conversions",
+      label: "Enhanced Conversions",
+      engineer: "First-party data matching mechanism: hashes customer-provided data (email, phone, name, address) via SHA-256 before sending to Google. Google matches against signed-in Google accounts to improve conversion measurement accuracy, especially across devices and post iOS 14.5.",
+      marketer: "When a customer buys something, you send their (hashed/anonymized) email to Google. Google can then match that to someone who clicked your ad — even if they switched devices or cleared cookies. You get more accurate attribution without sharing raw personal data.",
+      owner: "Think of it like a loyalty card that's completely anonymous. When someone buys from you, the card confirms they're the same person who saw your ad — without revealing who they are. More accurate tracking, better privacy.",
+    },
+    {
+      id: "first-party-data",
+      label: "First-Party Data",
+      engineer: "Data collected directly from your own touchpoints: CRM records, transaction history, email list signups, app events, loyalty programs. Used in Google Ads via Customer Match (upload lists), Enhanced Conversions (match at conversion), and as audience signals in PMax campaigns.",
+      marketer: "Your own customer data — emails, purchase history, app users — used to target similar audiences on Google, exclude existing customers from acquisition campaigns, or re-engage lapsed buyers. The most valuable targeting asset you own.",
+      owner: "You've been collecting your customers' information for years — their emails, what they bought, when they last visited. First-party data means using that list to find more people just like your best customers on Google. It's like asking your best customers to refer friends who are similar to them.",
+    },
+    {
+      id: "audience-segments",
+      label: "Audience Segments",
+      engineer: "Cookie/user-ID based groupings in Google Ads. Types: Affinity (interests), In-Market (active research signals), Life Events, Custom Intent (keywords/URLs), Customer Match (1P data), Similar Segments, Remarketing Lists (RLSA for Search, audiences for Display/YouTube). Can be used for targeting (observation vs. targeting) or bid adjustments.",
+      marketer: "Ways to group people based on their interests, behaviors, or relationship with your brand. You can target ads specifically to 'people researching flights' or 'past website visitors who didn't convert' — increasing relevance and reducing wasted spend.",
+      owner: "Instead of showing your fish restaurant ad to everyone, you show it to people who searched for 'best seafood near me' last week. Audience segments let you fish where the fish are.",
+    },
+    {
+      id: "dsa",
+      label: "Dynamic Search Ads",
+      engineer: "Crawls your website to auto-generate headlines and match searches to landing pages without keywords. Uses Google's index of your site. Best for large inventory sites. Control via page feeds or URL targeting. Dynamic headlines generated from page title/content. Pairs well with RLSA.",
+      marketer: "Google scans your website and automatically creates ads that match searchers to the most relevant page — without you needing to create keywords for every product. Captures long-tail searches you'd otherwise miss.",
+      owner: "Imagine having a salesperson who read your entire product catalog and can answer any customer question by pointing them to the right page — without you briefing them on every item. DSA does that for your website.",
+    },
+    {
+      id: "rsa",
+      label: "Responsive Search Ads",
+      engineer: "Ad format accepting up to 15 headlines (30 chars each) and 4 descriptions (90 chars each). Google's ML tests combinations and learns which permutations perform best for different queries, users, and contexts. Ad strength score indicates asset variety. Minimum: 3 headlines, 2 descriptions.",
+      marketer: "You write up to 15 different headlines and 4 descriptions. Google tests different combinations and automatically shows the version most likely to get clicked for each search. Better CTR without manual A/B testing.",
+      owner: "Instead of printing one flyer, you write 15 different headlines and Google picks which combination to show each customer based on what they're searching for. Like having 15 salespeople each with a slightly different pitch — and only the best ones make calls.",
+    },
+    {
+      id: "quality-score",
+      label: "Quality Score",
+      engineer: "1-10 diagnostic metric (not directly used in auction). Components: Expected CTR, Ad Relevance, Landing Page Experience. Actual auction uses Ad Rank = bid × Quality Score (simplified). Higher QS → lower CPC for same position. Calculated at keyword level, updated dynamically.",
+      marketer: "Google's 1-10 score rating how relevant your ad and landing page are to what someone searched. Higher score = lower cost per click for the same position. The shortcut: make your ad match the search, make your landing page match the ad.",
+      owner: "Google scores how well your ad matches what people are searching for. High score = you pay less per click. Low score = you pay more, or your ad doesn't show at all. It rewards advertisers who are genuinely helpful to searchers.",
+    },
+    {
+      id: "ad-rank",
+      label: "Ad Rank",
+      engineer: "Real-time auction value determining ad position and whether ad shows. Formula: Bid × Quality Score × Expected impact of extensions + context. Calculated per auction. Same ad can have different rank in different auctions. Top ads require minimum Ad Rank thresholds.",
+      marketer: "The score Google uses to decide which ads appear and in what order. It's not just about who bids highest — a relevant, high-quality ad can outrank a higher bid. You can win the top spot by improving quality, not just spending more.",
+      owner: "It's not an auction where the highest bidder always wins. Google also considers whether your ad is actually useful to the person searching. Good relevance can beat a bigger budget — which rewards businesses that truly serve their customers.",
+    },
+    {
+      id: "attribution-models",
+      label: "Attribution Models",
+      engineer: "Method for assigning conversion credit across touchpoints. Models: Last Click, First Click, Linear, Time Decay, Position-Based, Data-Driven (requires 300+ conversions/30 days). DDA uses ML to assign fractional credit based on actual path analysis. Impacts automated bidding signals.",
+      marketer: "How you decide which ad 'gets credit' when a customer clicks multiple ads before converting. Last-click gives 100% credit to the final ad. Data-driven shares credit based on which touchpoints actually influenced the sale. Affects where Smart Bidding allocates budget.",
+      owner: "If a customer sees your ad three times before buying, which ad gets the credit? Attribution models answer this. It's like a basketball assist — did the first pass or the final shot win the game? The answer changes how you invest your budget.",
+    },
+    {
+      id: "conversion-tracking",
+      label: "Conversion Tracking",
+      engineer: "Event measurement system using Google Tag (gtag.js) or GTM. Tracks actions: purchases, form submits, phone calls, app installs, page views. Server-side option via Conversion API. Key config: conversion window, value, count (one/all), include in 'conversions' vs 'all conversions'. Required for Smart Bidding.",
+      marketer: "The system that tells Google when a valuable action happens — a sale, a lead form, a phone call. Without it, Smart Bidding has no signal to optimize toward. Accurate conversion tracking is the foundation of any high-performing campaign.",
+      owner: "Your cash register connected to your ads. When someone buys something after clicking your ad, conversion tracking tells Google 'that ad worked.' Without it, Google is flying blind — it can't learn which ads are making you money.",
+    },
+    {
+      id: "broad-match",
+      label: "Broad Match",
+      engineer: "Keyword match type that expands to semantically related queries including synonyms, misspellings, related searches, and paraphrases. Uses query-user context including user history, landing page content, other keywords in ad group. Performs best when paired with Smart Bidding + audience data. No close-variant limitations.",
+      marketer: "Your keyword matches a much wider range of searches — including ones you'd never think to add manually. When combined with Smart Bidding, it finds converting queries you'd miss with exact or phrase match. Often delivers the lowest CPA at scale.",
+      owner: "Exact Match is like fishing with a spear — you only catch the fish you're aiming at. Broad Match is a net — it catches more fish, including some you didn't know were nearby. With Smart Bidding, it only keeps the fish worth keeping.",
+    },
+    {
+      id: "roas",
+      label: "ROAS",
+      engineer: "Conversion value ÷ ad spend × 100. Target ROAS is a Smart Bidding strategy that optimizes bids to achieve a target revenue-to-spend ratio. Requires sufficient conversion value data (50+ conversions recommended). Works at campaign or portfolio level.",
+      marketer: "For every dollar you spend on ads, how many dollars in revenue do you get back. 400% ROAS means $4 revenue per $1 spent. Target ROAS bidding tells Google: 'for every dollar I spend, I want $4 back' — and it adjusts bids automatically to hit that target.",
+      owner: "Simple math: if you spend $100 on ads and make $400 in sales, your ROAS is 400%. It's your 'return on investment' for advertising. Target ROAS tells Google: 'keep spending as long as I'm getting at least $4 back for every $1.' Stop when the math doesn't work.",
+    },
+    {
+      id: "customer-match",
+      label: "Customer Match",
+      engineer: "Upload hashed PII (email, phone, first/last name, country) to Google Ads. Google matches to signed-in accounts. Can target/exclude matched users across Search, Shopping, Display, Gmail, YouTube. Match rates typically 30-60%. Eligible for similar segments. Requires 1,000+ matched users for targeting.",
+      marketer: "Upload your existing customer email list to Google. Google finds those people online and lets you show them targeted ads — or exclude them from acquisition campaigns to avoid wasting budget on people who already bought from you.",
+      owner: "You give Google your customer list (safely anonymized), and Google finds those exact people when they're on YouTube, Gmail, or searching — so you can show them a special offer. Like direct mail, but digital and without the printing cost.",
+    },
+    {
+      id: "gtm",
+      label: "Google Tag Manager",
+      engineer: "Tag management system using a container snippet (async JS) deployed on-site. Manages tag firing via triggers and variables without code deploys. Supports server-side containers for GTM Server. Key features: version history, debug mode, built-in Google tag templates, custom HTML/JS.",
+      marketer: "A tool that lets you add or update tracking code on your website without asking a developer every time. Add conversion tracking, analytics, A/B test tools, and more through a simple interface. Faster iterations, fewer IT tickets.",
+      owner: "Your website has many different measurement tools — Google Analytics, conversion tracking, heatmaps. GTM is like a control panel where your marketing team can turn them on or off without needing a programmer. It saves weeks of development time.",
+    },
+  ];
+
+  let active = 0;
+
+  function renderChips() {
+    const row = document.getElementById("chip-row");
+    row.innerHTML = "";
+    concepts.forEach((c, i) => {
+      const btn = document.createElement("button");
+      btn.className = "chip" + (i === active ? " chip--active" : "");
+      btn.textContent = c.label;
+      btn.addEventListener("click", () => {
+        active = i;
+        renderChips();
+        renderCards();
+      });
+      row.appendChild(btn);
+    });
+  }
+
+  function renderCards() {
+    const c = concepts[active];
+    document.getElementById("body-engineer").innerHTML = `<p>${c.engineer}</p>`;
+    document.getElementById("body-marketer").innerHTML = `<p>${c.marketer}</p>`;
+    document.getElementById("body-owner").innerHTML = `<p>${c.owner}</p>`;
+  }
+
+  renderChips();
+  renderCards();
+</script>
+
+<style>
+  /* Google bar */
+  .google-bar { display: flex; height: 4px; border-radius: 2px; overflow: hidden; }
+  .google-bar span { flex: 1; }
+  .google-bar span:nth-child(1) { background: var(--color-google-blue); }
+  .google-bar span:nth-child(2) { background: var(--color-google-red); }
+  .google-bar span:nth-child(3) { background: var(--color-google-yellow); }
+  .google-bar span:nth-child(4) { background: var(--color-google-green); }
+
+  /* Gradient heading */
+  .gradient-text {
+    background: linear-gradient(90deg, #4285f4, #34a853);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Chip row */
+  .chip-row-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 4px;
+  }
+  .chip-row {
+    display: flex;
+    gap: 10px;
+    padding: 4px 2px;
+    min-width: max-content;
+  }
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 18px;
+    border-radius: 9999px;
+    border: 1.5px solid var(--color-border);
+    background: #fff;
+    color: var(--color-text);
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: border-color 0.15s, background 0.15s, color 0.15s, box-shadow 0.15s;
+  }
+  .chip:hover:not(.chip--active) {
+    border-color: var(--color-google-blue);
+    background: #f0f4ff;
+    color: var(--color-google-blue);
+  }
+  .chip--active {
+    background: var(--color-google-blue);
+    border-color: var(--color-google-blue);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(66, 133, 244, 0.3);
+  }
+
+  /* Cards grid */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  @media (max-width: 900px) {
+    .cards-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border-radius: 16px;
+    border: 1.5px solid var(--color-border);
+    background: #fff;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.05);
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+  .card:hover {
+    box-shadow: 0 6px 24px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 20px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    letter-spacing: 0.01em;
+    color: #fff;
+  }
+  .card-icon {
+    font-size: 1.2rem;
+    line-height: 1;
+  }
+  .card--blue .card-header  { background: var(--color-google-blue); }
+  .card--green .card-header { background: var(--color-google-green); }
+  .card--yellow .card-header {
+    background: var(--color-google-yellow);
+    color: #1a1a1a;
+  }
+
+  .card-body {
+    padding: 20px;
+    flex: 1;
+    font-size: 0.92rem;
+    line-height: 1.7;
+    color: var(--color-text);
+  }
+  .card-body p { margin: 0; }
+
+  /* CTA */
+  .cta-section {
+    border-top: 1px solid var(--color-border);
+  }
+  .cta-btn {
+    display: inline-block;
+    padding: 12px 28px;
+    border-radius: 9999px;
+    background: var(--color-google-blue);
+    color: #fff;
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: background 0.15s, box-shadow 0.15s, transform 0.15s;
+  }
+  .cta-btn:hover {
+    background: #1a73e8;
+    box-shadow: 0 4px 16px rgba(66, 133, 244, 0.35);
+    transform: translateY(-1px);
+  }
+</style>

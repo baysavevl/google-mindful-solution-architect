@@ -1,0 +1,1060 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+const base = import.meta.env.BASE_URL;
+---
+
+<BaseLayout
+  title="Campaign Diagnostic Tool"
+  wide={true}
+  description="Answer 5 questions. Get a tailored Google Ads strategy — instantly."
+>
+  <!-- Hero -->
+  <section class="text-center py-10">
+    <div class="google-bar mx-auto mb-6" style="max-width:80px">
+      <span></span><span></span><span></span><span></span>
+    </div>
+    <h1 class="text-4xl font-bold tracking-tight text-[var(--color-text)] mb-4">
+      Campaign <span class="bg-gradient-to-r from-[#4285f4] to-[#34a853] bg-clip-text text-transparent">Diagnostic Tool</span>
+    </h1>
+    <p class="text-lg text-[var(--color-text-muted)] max-w-xl mx-auto leading-relaxed">
+      Answer 5 questions. Get a tailored Google Ads strategy — instantly.
+    </p>
+  </section>
+
+  <!-- Wizard -->
+  <div id="wizard" class="wizard-wrap">
+    <!-- Progress Bar -->
+    <div class="progress-bar-wrap">
+      <div class="progress-steps">
+        <div class="progress-step active" data-step="1">
+          <div class="step-dot"><span>1</span></div>
+          <div class="step-label">Goal</div>
+        </div>
+        <div class="progress-line"></div>
+        <div class="progress-step" data-step="2">
+          <div class="step-dot"><span>2</span></div>
+          <div class="step-label">Situation</div>
+        </div>
+        <div class="progress-line"></div>
+        <div class="progress-step" data-step="3">
+          <div class="step-dot"><span>3</span></div>
+          <div class="step-label">Challenge</div>
+        </div>
+        <div class="progress-line"></div>
+        <div class="progress-step" data-step="4">
+          <div class="step-dot"><span>4</span></div>
+          <div class="step-label">Budget</div>
+        </div>
+        <div class="progress-line"></div>
+        <div class="progress-step" data-step="5">
+          <div class="step-dot"><span>5</span></div>
+          <div class="step-label">Industry</div>
+        </div>
+      </div>
+      <div class="progress-track">
+        <div id="progress-fill" class="progress-fill" style="width:0%"></div>
+      </div>
+    </div>
+
+    <!-- Step 1: Goal -->
+    <div class="step-card" id="step-1">
+      <div class="step-header">
+        <span class="step-num">Step 1 of 5</span>
+        <h2 class="step-title">What's your primary goal?</h2>
+      </div>
+      <div class="options-grid">
+        <button class="option-btn" data-step="1" data-value="sales">
+          <span class="option-icon">🎯</span>
+          <span class="option-label">Drive Sales</span>
+          <span class="option-sub">E-commerce</span>
+        </button>
+        <button class="option-btn" data-step="1" data-value="leads">
+          <span class="option-icon">📋</span>
+          <span class="option-label">Generate Leads</span>
+          <span class="option-sub">B2B / Services</span>
+        </button>
+        <button class="option-btn" data-step="1" data-value="app">
+          <span class="option-icon">📱</span>
+          <span class="option-label">App Downloads</span>
+          <span class="option-sub">Mobile growth</span>
+        </button>
+        <button class="option-btn" data-step="1" data-value="awareness">
+          <span class="option-icon">📣</span>
+          <span class="option-label">Build Awareness</span>
+          <span class="option-sub">Brand reach</span>
+        </button>
+        <button class="option-btn" data-step="1" data-value="store">
+          <span class="option-icon">🛒</span>
+          <span class="option-label">Boost Store Visits</span>
+          <span class="option-sub">Local / retail</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Step 2: Situation -->
+    <div class="step-card hidden" id="step-2">
+      <div class="step-header">
+        <span class="step-num">Step 2 of 5</span>
+        <h2 class="step-title">Where are you right now?</h2>
+      </div>
+      <div class="options-grid options-grid--3">
+        <button class="option-btn option-btn--wide" data-step="2" data-value="new">
+          <span class="option-icon">🚀</span>
+          <span class="option-label">Just launching</span>
+          <span class="option-sub">New to Google Ads</span>
+        </button>
+        <button class="option-btn option-btn--wide" data-step="2" data-value="struggling">
+          <span class="option-icon">⚠️</span>
+          <span class="option-label">Running but underperforming</span>
+          <span class="option-sub">Need to fix what's broken</span>
+        </button>
+        <button class="option-btn option-btn--wide" data-step="2" data-value="scaling">
+          <span class="option-icon">📈</span>
+          <span class="option-label">Performing well, want to scale</span>
+          <span class="option-sub">Ready to invest more</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Step 3: Challenge -->
+    <div class="step-card hidden" id="step-3">
+      <div class="step-header">
+        <span class="step-num">Step 3 of 5</span>
+        <h2 class="step-title">What's your biggest challenge?</h2>
+      </div>
+      <div class="options-grid">
+        <button class="option-btn" data-step="3" data-value="traffic">
+          <span class="option-icon">🔍</span>
+          <span class="option-label">Not enough traffic</span>
+          <span class="option-sub">Low reach / impressions</span>
+        </button>
+        <button class="option-btn" data-step="3" data-value="cpa">
+          <span class="option-icon">💸</span>
+          <span class="option-label">CPA too high</span>
+          <span class="option-sub">Cost per acquisition</span>
+        </button>
+        <button class="option-btn" data-step="3" data-value="conversion">
+          <span class="option-icon">📉</span>
+          <span class="option-label">Low conversion rate</span>
+          <span class="option-sub">Clicks don't convert</span>
+        </button>
+        <button class="option-btn" data-step="3" data-value="visibility">
+          <span class="option-icon">📊</span>
+          <span class="option-label">Poor visibility</span>
+          <span class="option-sub">Can't see what's working</span>
+        </button>
+        <button class="option-btn" data-step="3" data-value="competition">
+          <span class="option-icon">🏆</span>
+          <span class="option-label">Losing to competitors</span>
+          <span class="option-sub">Market share eroding</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Step 4: Budget -->
+    <div class="step-card hidden" id="step-4">
+      <div class="step-header">
+        <span class="step-num">Step 4 of 5</span>
+        <h2 class="step-title">What's your monthly ad budget?</h2>
+      </div>
+      <div class="options-grid options-grid--4">
+        <button class="option-btn option-btn--wide" data-step="4" data-value="small">
+          <span class="option-icon">💼</span>
+          <span class="option-label">Under $1,000</span>
+          <span class="option-sub">Getting started</span>
+        </button>
+        <button class="option-btn option-btn--wide" data-step="4" data-value="mid">
+          <span class="option-icon">📊</span>
+          <span class="option-label">$1,000 – $10,000</span>
+          <span class="option-sub">Growing business</span>
+        </button>
+        <button class="option-btn option-btn--wide" data-step="4" data-value="large">
+          <span class="option-icon">🚀</span>
+          <span class="option-label">$10,000 – $50,000</span>
+          <span class="option-sub">Scaling up</span>
+        </button>
+        <button class="option-btn option-btn--wide" data-step="4" data-value="enterprise">
+          <span class="option-icon">🏢</span>
+          <span class="option-label">Over $50,000</span>
+          <span class="option-sub">Enterprise level</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Step 5: Industry -->
+    <div class="step-card hidden" id="step-5">
+      <div class="step-header">
+        <span class="step-num">Step 5 of 5</span>
+        <h2 class="step-title">What's your industry?</h2>
+      </div>
+      <div class="options-grid options-grid--industry">
+        <button class="option-btn" data-step="5" data-value="ecommerce">
+          <span class="option-icon">🛍️</span>
+          <span class="option-label">E-commerce / Retail</span>
+        </button>
+        <button class="option-btn" data-step="5" data-value="travel">
+          <span class="option-icon">✈️</span>
+          <span class="option-label">Travel & Tourism</span>
+        </button>
+        <button class="option-btn" data-step="5" data-value="finance">
+          <span class="option-icon">💳</span>
+          <span class="option-label">Finance & Insurance</span>
+        </button>
+        <button class="option-btn" data-step="5" data-value="app">
+          <span class="option-icon">📱</span>
+          <span class="option-label">Mobile App</span>
+        </button>
+        <button class="option-btn" data-step="5" data-value="b2b">
+          <span class="option-icon">🏢</span>
+          <span class="option-label">B2B / SaaS</span>
+        </button>
+        <button class="option-btn" data-step="5" data-value="local">
+          <span class="option-icon">🏪</span>
+          <span class="option-label">Local Business</span>
+        </button>
+        <button class="option-btn" data-step="5" data-value="education">
+          <span class="option-icon">🎓</span>
+          <span class="option-label">Education</span>
+        </button>
+        <button class="option-btn" data-step="5" data-value="healthcare">
+          <span class="option-icon">🏥</span>
+          <span class="option-label">Healthcare</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Result Card (hidden until wizard complete) -->
+  <div id="result-card" class="result-card hidden">
+    <div class="result-header">
+      <div class="google-bar" style="max-width:60px;margin-bottom:1rem"><span></span><span></span><span></span><span></span></div>
+      <h2 class="result-title">Your Diagnosis</h2>
+      <p class="result-subtitle">Based on your answers, here is our architect's assessment.</p>
+      <div id="result-tags" class="result-tags"></div>
+    </div>
+
+    <!-- Root Cause -->
+    <div class="result-section">
+      <div class="result-section-label">
+        <span class="section-icon section-icon--red">🔎</span>
+        Root Cause Hypothesis
+      </div>
+      <p id="result-cause" class="result-cause-text"></p>
+    </div>
+
+    <!-- Recommended Solution Path -->
+    <div class="result-section">
+      <div class="result-section-label">
+        <span class="section-icon section-icon--blue">🗺️</span>
+        Recommended Solution Path
+      </div>
+      <div id="result-steps" class="result-steps"></div>
+      <div class="timeline-row">
+        <span class="timeline-badge blue">Week 1–2</span>
+        <span class="timeline-badge yellow">Month 1</span>
+        <span class="timeline-badge green">Month 2–3</span>
+      </div>
+    </div>
+
+    <!-- Key Metrics -->
+    <div class="result-section">
+      <div class="result-section-label">
+        <span class="section-icon section-icon--green">📊</span>
+        Key Metrics to Watch
+      </div>
+      <ul id="result-metrics" class="result-metrics"></ul>
+    </div>
+
+    <!-- ROI Estimate -->
+    <div class="result-section roi-section">
+      <div class="result-section-label">
+        <span class="section-icon section-icon--yellow">💰</span>
+        ROI Estimate Calculator
+      </div>
+      <div class="roi-inputs">
+        <div class="roi-field">
+          <label for="roi-spend">Current monthly spend ($)</label>
+          <input id="roi-spend" type="number" placeholder="e.g. 5000" min="0" />
+        </div>
+        <div class="roi-field">
+          <label for="roi-cpa">Current CPA ($)</label>
+          <input id="roi-cpa" type="number" placeholder="e.g. 120" min="0" />
+        </div>
+      </div>
+      <button id="roi-calc-btn" class="roi-calc-btn">Calculate Potential Impact</button>
+      <div id="roi-output" class="roi-output hidden"></div>
+    </div>
+
+    <!-- CTA -->
+    <div class="result-cta">
+      <p class="result-cta-text">Want a personalised deep-dive?</p>
+      <a id="result-cta-link" href={base} class="cta-btn">
+        Ask the chatbot →
+      </a>
+    </div>
+
+    <!-- Start Over -->
+    <div class="start-over-wrap">
+      <button id="start-over-btn" class="start-over-btn">Start Over</button>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  /* Google bar */
+  .google-bar { display:flex; height:4px; border-radius:2px; overflow:hidden; }
+  .google-bar span { flex:1; }
+  .google-bar span:nth-child(1) { background:var(--color-google-blue); }
+  .google-bar span:nth-child(2) { background:var(--color-google-red); }
+  .google-bar span:nth-child(3) { background:var(--color-google-yellow); }
+  .google-bar span:nth-child(4) { background:var(--color-google-green); }
+
+  /* Wizard wrap */
+  .wizard-wrap {
+    max-width: 780px;
+    margin: 0 auto 3rem;
+  }
+
+  /* Progress bar */
+  .progress-bar-wrap {
+    margin-bottom: 2.5rem;
+  }
+  .progress-steps {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    margin-bottom: 0.75rem;
+  }
+  .progress-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.35rem;
+  }
+  .step-dot {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--color-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--color-text-muted);
+    transition: background 0.3s, color 0.3s;
+  }
+  .progress-step.active .step-dot,
+  .progress-step.done .step-dot {
+    background: var(--color-google-blue);
+    color: #fff;
+  }
+  .progress-step.done .step-dot {
+    background: var(--color-google-green);
+  }
+  .step-label {
+    font-size: 0.7rem;
+    color: var(--color-text-muted);
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .progress-step.active .step-label {
+    color: var(--color-google-blue);
+    font-weight: 700;
+  }
+  .progress-line {
+    flex: 1;
+    height: 2px;
+    background: var(--color-border);
+    min-width: 40px;
+    max-width: 80px;
+    margin-bottom: 20px;
+    transition: background 0.3s;
+  }
+  .progress-line.done {
+    background: var(--color-google-green);
+  }
+  .progress-track {
+    height: 4px;
+    background: var(--color-border);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-top: 0.5rem;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #4285f4, #34a853);
+    border-radius: 2px;
+    transition: width 0.4s ease;
+  }
+
+  /* Step card */
+  .step-card {
+    background: #fff;
+    border: 1px solid var(--color-border);
+    border-radius: 20px;
+    padding: 2.5rem 2rem;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+  .step-card.hidden { display: none; }
+
+  .step-header {
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+  .step-num {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-google-blue);
+    background: rgba(66,133,244,0.08);
+    border-radius: 999px;
+    padding: 0.2rem 0.9rem;
+    margin-bottom: 0.75rem;
+  }
+  .step-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-text);
+    margin: 0;
+  }
+
+  /* Option grid */
+  .options-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 1rem;
+  }
+  .options-grid--3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .options-grid--4 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .options-grid--industry {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  @media (max-width: 640px) {
+    .options-grid--3,
+    .options-grid--4,
+    .options-grid--industry {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .options-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  /* Option button */
+  .option-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.4rem;
+    padding: 1.25rem 1rem;
+    background: var(--color-bg-subtle);
+    border: 2px solid var(--color-border);
+    border-radius: 14px;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s, transform 0.15s, box-shadow 0.2s;
+    font-family: inherit;
+  }
+  .option-btn:hover {
+    border-color: var(--color-google-blue);
+    background: rgba(66,133,244,0.06);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(66,133,244,0.12);
+  }
+  .option-btn.selected {
+    border-color: var(--color-google-blue);
+    background: rgba(66,133,244,0.10);
+    box-shadow: 0 0 0 3px rgba(66,133,244,0.18);
+  }
+  .option-btn--wide {
+    align-items: flex-start;
+    text-align: left;
+    padding: 1.25rem 1.25rem;
+  }
+  .option-icon {
+    font-size: 1.75rem;
+    line-height: 1;
+  }
+  .option-label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-text);
+    line-height: 1.3;
+  }
+  .option-sub {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    line-height: 1.2;
+  }
+
+  /* Hidden utility */
+  .hidden { display: none !important; }
+
+  /* Result card */
+  .result-card {
+    max-width: 780px;
+    margin: 0 auto 3rem;
+    background: #fff;
+    border: 1px solid var(--color-border);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  }
+  .result-header {
+    background: linear-gradient(135deg, #4285f4 0%, #1557b0 100%);
+    padding: 2.5rem 2rem 2rem;
+    text-align: center;
+    color: #fff;
+  }
+  .result-title {
+    font-size: 1.8rem;
+    font-weight: 800;
+    margin: 0 0 0.4rem;
+  }
+  .result-subtitle {
+    font-size: 0.95rem;
+    opacity: 0.85;
+    margin: 0 0 1rem;
+  }
+  .result-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+    margin-top: 0.5rem;
+  }
+  .result-tag {
+    background: rgba(255,255,255,0.2);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 999px;
+    padding: 0.2rem 0.85rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+  }
+
+  /* Result sections */
+  .result-section {
+    padding: 1.75rem 2rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .result-section:last-child {
+    border-bottom: none;
+  }
+  .result-section-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    margin-bottom: 1rem;
+  }
+  .section-icon {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+  }
+  .section-icon--red { background: rgba(234,67,53,0.1); }
+  .section-icon--blue { background: rgba(66,133,244,0.1); }
+  .section-icon--green { background: rgba(52,168,83,0.1); }
+  .section-icon--yellow { background: rgba(251,188,5,0.12); }
+
+  .result-cause-text {
+    font-size: 0.97rem;
+    color: var(--color-text);
+    line-height: 1.7;
+    margin: 0;
+  }
+
+  /* Steps */
+  .result-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+  .result-step-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    background: var(--color-bg-subtle);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+  }
+  .step-num-badge {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.78rem;
+    font-weight: 800;
+    flex-shrink: 0;
+    color: #fff;
+  }
+  .step-num-badge.blue { background: var(--color-google-blue); }
+  .step-num-badge.yellow { background: var(--color-google-yellow); color: #202124; }
+  .step-num-badge.green { background: var(--color-google-green); }
+  .step-item-text {
+    font-size: 0.9rem;
+    color: var(--color-text);
+    line-height: 1.5;
+  }
+  .timeline-row {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .timeline-badge {
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 0.2rem 0.75rem;
+    border-radius: 999px;
+  }
+  .timeline-badge.blue { background: rgba(66,133,244,0.1); color: var(--color-google-blue); }
+  .timeline-badge.yellow { background: rgba(251,188,5,0.12); color: #b06000; }
+  .timeline-badge.green { background: rgba(52,168,83,0.1); color: var(--color-google-green); }
+
+  /* Metrics */
+  .result-metrics {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+  .result-metrics li {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.92rem;
+    color: var(--color-text);
+  }
+  .result-metrics li::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--color-google-green);
+    flex-shrink: 0;
+  }
+
+  /* ROI Section */
+  .roi-section { background: var(--color-bg-subtle); }
+  .roi-inputs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  @media (max-width: 480px) {
+    .roi-inputs { grid-template-columns: 1fr; }
+  }
+  .roi-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .roi-field label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+  }
+  .roi-field input {
+    padding: 0.6rem 0.9rem;
+    border: 1.5px solid var(--color-border);
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    background: #fff;
+    color: var(--color-text);
+    transition: border-color 0.2s;
+    outline: none;
+  }
+  .roi-field input:focus {
+    border-color: var(--color-google-blue);
+  }
+  .roi-calc-btn {
+    background: var(--color-google-blue);
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    padding: 0.65rem 1.75rem;
+    font-size: 0.9rem;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .roi-calc-btn:hover {
+    background: #1557b0;
+    transform: translateY(-1px);
+  }
+  .roi-output {
+    margin-top: 1rem;
+    background: linear-gradient(135deg, rgba(52,168,83,0.08), rgba(66,133,244,0.06));
+    border: 1px solid rgba(52,168,83,0.25);
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+  }
+  .roi-output p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: var(--color-text);
+    line-height: 1.6;
+  }
+  .roi-highlight {
+    font-weight: 800;
+    color: var(--color-google-green);
+    font-size: 1.1rem;
+  }
+
+  /* CTA */
+  .result-cta {
+    padding: 2rem;
+    text-align: center;
+    background: linear-gradient(135deg, rgba(66,133,244,0.04), rgba(52,168,83,0.04));
+  }
+  .result-cta-text {
+    font-size: 1rem;
+    color: var(--color-text-muted);
+    margin: 0 0 1rem;
+  }
+  .cta-btn {
+    display: inline-block;
+    background: var(--color-google-blue);
+    color: #fff !important;
+    padding: 0.75rem 2rem;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+  }
+  .cta-btn:hover {
+    background: #1557b0;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(66,133,244,0.28);
+  }
+
+  /* Start over */
+  .start-over-wrap {
+    padding: 0 2rem 2rem;
+    text-align: center;
+  }
+  .start-over-btn {
+    background: transparent;
+    border: 1.5px solid var(--color-border);
+    border-radius: 999px;
+    padding: 0.55rem 1.5rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    font-family: inherit;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .start-over-btn:hover {
+    border-color: var(--color-google-red);
+    color: var(--color-google-red);
+  }
+</style>
+
+<script define:vars={{ base }}>
+  const recommendations = {
+    sales_new: {
+      cause: "Your campaigns need a strong foundation before optimizing. Most new advertisers underinvest in conversion tracking setup, which limits Smart Bidding from day one.",
+      steps: [
+        "Set up Google Tag Manager + Enhanced Conversions (Week 1–2)",
+        "Launch Search campaigns with broad match + Target CPA (Month 1)",
+        "Add Performance Max after 30 conversion actions (Month 2)"
+      ],
+      metrics: ["Conversion rate", "Cost per conversion", "Impression share", "Search term report quality"]
+    },
+    sales_struggling_traffic: {
+      cause: "Insufficient reach is usually caused by keyword strategy being too narrow or bids being too low for top-of-funnel terms. Your competitors are capturing demand you're not.",
+      steps: [
+        "Expand to Broad Match + Smart Bidding to capture missed queries (Week 1)",
+        "Add Performance Max to reach across all Google channels (Week 2–3)",
+        "Implement audience signals to guide PMax toward best customers (Month 1)"
+      ],
+      metrics: ["Impression share lost to rank", "Search volume vs impressions", "New vs returning customer ratio", "PMax asset group performance"]
+    },
+    sales_struggling_cpa: {
+      cause: "High CPA typically signals a bidding-data mismatch: either Smart Bidding lacks enough conversions to optimize, the conversion window is too short, or there's a landing page quality issue.",
+      steps: [
+        "Audit conversion tracking setup for accuracy (Week 1)",
+        "Consolidate campaigns to give Smart Bidding more data per strategy (Week 1–2)",
+        "Implement landing page A/B test targeting 20%+ conversion rate improvement (Month 1)"
+      ],
+      metrics: ["Conversion lag report", "Impression-weighted Quality Score", "Landing page bounce rate", "CPA trend week-over-week"]
+    },
+    leads_conversionRate: {
+      cause: "When traffic is adequate but leads are low, the problem is between click and form submit. Ad-to-landing-page message mismatch or form friction are the most common culprits.",
+      steps: [
+        "Run message-match audit: does every ad headline match the landing page H1? (Week 1)",
+        "Reduce form fields to essential 3 — name, email, phone (Week 1–2)",
+        "Set up Google Ads lead form extensions as fallback (Month 1)"
+      ],
+      metrics: ["Form start rate", "Form completion rate", "Time on landing page", "Lead quality score from CRM"]
+    },
+    awareness: {
+      cause: "Awareness campaigns that run on Search are fundamentally misaligned. Search captures existing demand; awareness creates new demand. You need reach-based formats.",
+      steps: [
+        "Shift budget to YouTube non-skippable or bumper ads for awareness (Week 1–2)",
+        "Add Demand Gen campaigns targeting relevant interest audiences (Week 2–3)",
+        "Set up brand Search campaigns to capture intent you generate (Month 1)"
+      ],
+      metrics: ["Reach and frequency", "View rate", "Brand search volume lift", "Assisted conversions from YouTube"]
+    },
+    visibility: {
+      cause: "Without complete conversion measurement, every optimization decision is based on incomplete data. This is the highest-priority fix regardless of any other issue.",
+      steps: [
+        "Implement Google Tag Manager with Enhanced Conversions (Week 1)",
+        "Set up GA4 + Google Ads linking for full-funnel attribution (Week 1–2)",
+        "Migrate to Data-Driven Attribution once 300+ conversions/month (Month 2)"
+      ],
+      metrics: ["Conversion coverage rate", "Tag health in GTM", "Attribution path analysis", "Modeled conversions %"]
+    },
+    scaling: {
+      cause: "Scaling often stalls because campaign fragmentation limits Smart Bidding's learning. Too many small campaigns mean each strategy gets too few conversions to optimize effectively.",
+      steps: [
+        "Consolidate campaigns: one campaign per goal, not per product (Week 1–2)",
+        "Migrate to Performance Max to unlock all inventory at scale (Month 1)",
+        "Build a first-party data strategy: Customer Match + enhanced conversions (Month 1–2)"
+      ],
+      metrics: ["Conversions per campaign per day (target: 10+)", "Budget utilization rate", "Impression share vs budget-limited %", "PMax vs Search revenue mix"]
+    },
+    default: {
+      cause: "A comprehensive audit will identify the highest-leverage improvements. Most accounts have 3–4 structural issues that, when fixed, unlock 30–50% performance improvement.",
+      steps: [
+        "Run a 4-layer audit: tracking, structure, bidding, creative (Week 1)",
+        "Prioritize fixes by impact/effort matrix (Week 2)",
+        "Implement top 3 changes with measurement plan (Month 1)"
+      ],
+      metrics: ["Overall conversion rate", "CPA vs industry benchmark", "Impression share", "Budget utilization"]
+    }
+  };
+
+  function getDiagnosis(answers) {
+    const [goal, situation, challenge] = answers;
+    if (challenge === 'visibility') return recommendations.visibility;
+    if (situation === 'scaling') return recommendations.scaling;
+    if (goal === 'awareness') return recommendations.awareness;
+    if (goal === 'sales' && situation === 'new') return recommendations.sales_new;
+    if (goal === 'sales' && challenge === 'traffic') return recommendations.sales_struggling_traffic;
+    if (goal === 'sales' && challenge === 'cpa') return recommendations.sales_struggling_cpa;
+    if (goal === 'leads' && challenge === 'conversion') return recommendations.leads_conversionRate;
+    return recommendations.default;
+  }
+
+  const goalLabels = {
+    sales: 'Drive Sales',
+    leads: 'Generate Leads',
+    app: 'App Downloads',
+    awareness: 'Build Awareness',
+    store: 'Boost Store Visits'
+  };
+  const situationLabels = {
+    new: 'Just Launching',
+    struggling: 'Underperforming',
+    scaling: 'Scaling Up'
+  };
+  const challengeLabels = {
+    traffic: 'Low Traffic',
+    cpa: 'High CPA',
+    conversion: 'Low Conversion Rate',
+    visibility: 'Poor Visibility',
+    competition: 'Competitor Pressure'
+  };
+  const budgetLabels = {
+    small: 'Under $1,000/mo',
+    mid: '$1,000–$10,000/mo',
+    large: '$10,000–$50,000/mo',
+    enterprise: 'Over $50,000/mo'
+  };
+  const industryLabels = {
+    ecommerce: 'E-commerce',
+    travel: 'Travel & Tourism',
+    finance: 'Finance & Insurance',
+    app: 'Mobile App',
+    b2b: 'B2B / SaaS',
+    local: 'Local Business',
+    education: 'Education',
+    healthcare: 'Healthcare'
+  };
+
+  const stepBadgeColors = ['blue', 'yellow', 'green'];
+
+  let answers = [];
+  let currentStep = 1;
+  const totalSteps = 5;
+
+  function updateProgress(step) {
+    const fill = (step - 1) / totalSteps * 100;
+    document.getElementById('progress-fill').style.width = fill + '%';
+
+    document.querySelectorAll('.progress-step').forEach((el, i) => {
+      const s = i + 1;
+      el.classList.remove('active', 'done');
+      if (s < step) el.classList.add('done');
+      else if (s === step) el.classList.add('active');
+    });
+
+    document.querySelectorAll('.progress-line').forEach((el, i) => {
+      el.classList.toggle('done', i + 1 < step);
+    });
+  }
+
+  function showStep(step) {
+    document.querySelectorAll('.step-card').forEach(el => el.classList.add('hidden'));
+    const card = document.getElementById('step-' + step);
+    if (card) {
+      card.classList.remove('hidden');
+      card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    updateProgress(step);
+  }
+
+  function showResult() {
+    document.getElementById('wizard').classList.add('hidden');
+    const result = document.getElementById('result-card');
+    result.classList.remove('hidden');
+
+    const [goal, situation, challenge, budget, industry] = answers;
+    const diag = getDiagnosis([goal, situation, challenge]);
+
+    // Tags
+    const tags = document.getElementById('result-tags');
+    const tagData = [
+      goalLabels[goal] || goal,
+      situationLabels[situation] || situation,
+      challengeLabels[challenge] || challenge,
+      budgetLabels[budget] || budget,
+      industryLabels[industry] || industry
+    ];
+    tags.innerHTML = tagData.map(t => `<span class="result-tag">${t}</span>`).join('');
+
+    // Cause
+    document.getElementById('result-cause').textContent = diag.cause;
+
+    // Steps
+    const stepsEl = document.getElementById('result-steps');
+    stepsEl.innerHTML = diag.steps.map((s, i) => `
+      <div class="result-step-item">
+        <span class="step-num-badge ${stepBadgeColors[i] || 'blue'}">${i + 1}</span>
+        <span class="step-item-text">${s}</span>
+      </div>
+    `).join('');
+
+    // Metrics
+    const metricsEl = document.getElementById('result-metrics');
+    metricsEl.innerHTML = diag.metrics.map(m => `<li>${m}</li>`).join('');
+
+    result.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function handleOptionClick(btn) {
+    const step = parseInt(btn.dataset.step);
+    const value = btn.dataset.value;
+
+    // Highlight selected
+    btn.closest('.step-card').querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+
+    // Record answer (index = step - 1)
+    answers[step - 1] = value;
+
+    setTimeout(() => {
+      if (step < totalSteps) {
+        currentStep = step + 1;
+        showStep(currentStep);
+      } else {
+        // Wizard complete
+        document.getElementById('progress-fill').style.width = '100%';
+        document.querySelectorAll('.progress-step').forEach(el => el.classList.add('done'));
+        document.querySelectorAll('.progress-line').forEach(el => el.classList.add('done'));
+        setTimeout(showResult, 300);
+      }
+    }, 180);
+  }
+
+  function resetWizard() {
+    answers = [];
+    currentStep = 1;
+
+    document.getElementById('result-card').classList.add('hidden');
+    document.getElementById('wizard').classList.remove('hidden');
+
+    document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+    document.getElementById('roi-spend').value = '';
+    document.getElementById('roi-cpa').value = '';
+    document.getElementById('roi-output').classList.add('hidden');
+    document.getElementById('roi-output').innerHTML = '';
+
+    showStep(1);
+    document.getElementById('wizard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  // Attach listeners
+  document.querySelectorAll('.option-btn').forEach(btn => {
+    btn.addEventListener('click', () => handleOptionClick(btn));
+  });
+
+  document.getElementById('start-over-btn').addEventListener('click', resetWizard);
+
+  document.getElementById('roi-calc-btn').addEventListener('click', () => {
+    const spend = parseFloat(document.getElementById('roi-spend').value);
+    const cpa = parseFloat(document.getElementById('roi-cpa').value);
+    const output = document.getElementById('roi-output');
+
+    if (!spend || spend <= 0) {
+      output.classList.remove('hidden');
+      output.innerHTML = '<p style="color:var(--color-google-red)">Please enter your current monthly spend to calculate.</p>';
+      return;
+    }
+
+    const reduction = 0.20;
+    const savings = Math.round(spend * reduction);
+    const savingsLow = Math.round(spend * 0.15);
+    const savingsHigh = Math.round(spend * 0.25);
+
+    let cpaLine = '';
+    if (cpa && cpa > 0) {
+      const newCpaLow = Math.round(cpa * 0.75);
+      const newCpaHigh = Math.round(cpa * 0.85);
+      cpaLine = `<br>Your CPA of <strong>$${cpa.toLocaleString()}</strong> could drop to <span class="roi-highlight">$${newCpaLow}–$${newCpaHigh}</span> with Smart Bidding + consolidated structure.`;
+    }
+
+    output.classList.remove('hidden');
+    output.innerHTML = `
+      <p>
+        With Smart Bidding + proper structure, expect a <strong>15–25% CPA reduction</strong>.<br>
+        On your <strong>$${spend.toLocaleString()}/mo</strong> spend, that's
+        <span class="roi-highlight">$${savingsLow.toLocaleString()}–$${savingsHigh.toLocaleString()} saved per month</span>
+        — or reinvested for more conversions at the same cost.${cpaLine}
+      </p>
+    `;
+  });
+
+  // Init
+  updateProgress(1);
+</script>

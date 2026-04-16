@@ -8,6 +8,7 @@ function isActive(path: string) {
 }
 
 const isLearnActive = isActive(`${base}learn`) || isActive(`${base}projects`) || isActive(`${base}tips-and-tricks`) || isActive(`${base}success-story`) || isActive(`${base}news`) || isActive(`${base}solutions`);
+const isToolsActive = isActive(`${base}explain`) || isActive(`${base}diagnose`) || isActive(`${base}toolkit`);
 ---
 
 <header class="w-full border-b border-[var(--color-border)] bg-white/80 backdrop-blur-md sticky top-0 z-50">
@@ -49,6 +50,33 @@ const isLearnActive = isActive(`${base}learn`) || isActive(`${base}projects`) ||
       >
         Why Google Ads
       </a>
+
+      <!-- Tools dropdown -->
+      <div class="nav-dropdown">
+        <a
+          href={`${base}diagnose`}
+          class:list={[
+            "nav-item nav-dropdown-trigger transition-colors",
+            isToolsActive
+              ? "text-[var(--color-google-blue)]"
+              : "text-[var(--color-text-muted)] hover:text-[var(--color-text)]",
+          ]}
+        >
+          Tools
+          <svg class="dropdown-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </a>
+        <div class="nav-dropdown-menu">
+          <a href={`${base}explain`} class:list={["dropdown-item", isActive(`${base}explain`) ? "active" : ""]}>
+            <span class="dropdown-icon">💬</span> Plain English Explainer
+          </a>
+          <a href={`${base}diagnose`} class:list={["dropdown-item", isActive(`${base}diagnose`) ? "active" : ""]}>
+            <span class="dropdown-icon">🔍</span> Campaign Diagnostic
+          </a>
+          <a href={`${base}toolkit`} class:list={["dropdown-item", isActive(`${base}toolkit`) ? "active" : ""]}>
+            <span class="dropdown-icon">🧰</span> Sales Toolkit
+          </a>
+        </div>
+      </div>
 
       <!-- Learn dropdown -->
       <div class="nav-dropdown">
@@ -167,11 +195,14 @@ const isLearnActive = isActive(`${base}learn`) || isActive(`${base}projects`) ||
     document.getElementById('nav-links')?.classList.toggle('open');
   });
 
-  // Mobile: toggle dropdown on click
-  document.querySelector('.nav-dropdown-trigger')?.addEventListener('click', (e) => {
-    if (window.innerWidth <= 768) {
-      e.preventDefault();
-      document.querySelector('.nav-dropdown')?.classList.toggle('open');
-    }
+  // Mobile: toggle each dropdown independently
+  document.querySelectorAll('.nav-dropdown-trigger').forEach((trigger) => {
+    trigger.addEventListener('click', (e) => {
+      if (window.innerWidth <= 768) {
+        e.preventDefault();
+        const dropdown = trigger.closest('.nav-dropdown');
+        dropdown?.classList.toggle('open');
+      }
+    });
   });
 </script>

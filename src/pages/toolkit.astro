@@ -1,0 +1,877 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+const base = import.meta.env.BASE_URL;
+---
+
+<BaseLayout
+  title="Sales Enablement Toolkit"
+  wide={true}
+  description="Tools for winning client conversations — battle cards, objection handler, and pre-meeting checklists for Google Ads sales conversations."
+>
+
+  <!-- Hero -->
+  <section class="text-center py-12">
+    <div class="google-bar mx-auto mb-6" style="max-width:80px"><span></span><span></span><span></span><span></span></div>
+    <h1 class="text-4xl font-bold tracking-tight text-[var(--color-text)] mb-4">
+      Sales Enablement <span class="bg-gradient-to-r from-[#4285f4] to-[#34a853] bg-clip-text text-transparent">Toolkit</span>
+    </h1>
+    <p class="text-lg text-[var(--color-text-muted)] max-w-2xl mx-auto leading-relaxed">
+      Tools for winning client conversations — whether you're in a discovery call, handling objections, or preparing for a C-suite meeting.
+    </p>
+    <!-- Section jump links -->
+    <div class="flex flex-wrap justify-center gap-3 mt-8">
+      <a href="#battle-cards" class="jump-link">Battle Cards</a>
+      <a href="#objections" class="jump-link">Objection Handler</a>
+      <a href="#checklist" class="jump-link">Pre-Meeting Checklist</a>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────────────────────── -->
+  <!-- SECTION 1: BATTLE CARDS -->
+  <!-- ─────────────────────────────────────────────── -->
+  <section id="battle-cards" class="toolkit-section">
+    <div class="section-header">
+      <span class="section-badge" style="background:#e8f0fe;color:#4285f4;">Battle Cards</span>
+      <h2 class="section-title">Platform Comparison</h2>
+      <p class="section-subtitle">Head-to-head breakdowns for the conversations you'll have most often.</p>
+    </div>
+
+    <!-- Tab selector -->
+    <div class="tab-bar" role="tablist" aria-label="Battle card selector">
+      <button class="tab-btn active" role="tab" aria-selected="true" data-tab="meta" data-group="battle">Google vs Meta Ads</button>
+      <button class="tab-btn" role="tab" aria-selected="false" data-tab="tiktok" data-group="battle">Google vs TikTok Ads</button>
+    </div>
+
+    <!-- Google vs Meta -->
+    <div class="tab-panel" id="tab-meta" data-panel="meta" data-group="battle">
+      <div class="comparison-table-wrap">
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th class="row-label-col"></th>
+              <th class="google-col">
+                <div class="platform-header google-header">Google Ads</div>
+              </th>
+              <th class="competitor-col">
+                <div class="platform-header meta-header">Meta Ads</div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="row-label">Audience Targeting</td>
+              <td class="google-cell">Intent-based: keywords, in-market segments, search queries</td>
+              <td class="competitor-cell">Interest/demographic-based: age, interests, lookalikes, behavior</td>
+            </tr>
+            <tr class="alt-row">
+              <td class="row-label">Ad Format Strengths</td>
+              <td class="google-cell">Text (Search), Shopping, Video (YouTube), App, Performance Max</td>
+              <td class="competitor-cell">Image, video, carousel, Stories, Reels — highly visual</td>
+            </tr>
+            <tr>
+              <td class="row-label">Intent Signal</td>
+              <td class="google-cell">High-intent: user is actively searching for a solution</td>
+              <td class="competitor-cell">Passive: user is browsing social, not in buying mode</td>
+            </tr>
+            <tr class="alt-row">
+              <td class="row-label">Measurement</td>
+              <td class="google-cell">Direct conversion tracking, offline conversion import, GA4</td>
+              <td class="competitor-cell">Pixel-based, impacted by iOS privacy changes, attribution window issues</td>
+            </tr>
+            <tr>
+              <td class="row-label">Best For</td>
+              <td class="google-cell">Capturing demand that already exists (bottom-funnel)</td>
+              <td class="competitor-cell">Creating demand, brand awareness, social proof, retargeting</td>
+            </tr>
+            <tr class="alt-row">
+              <td class="row-label">Key Weakness</td>
+              <td class="google-cell weakness">Limited reach for top-of-funnel brand building</td>
+              <td class="competitor-cell weakness">Lower purchase intent; conversion rates typically lower for direct response</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="pitch-angle">
+        <span class="pitch-icon">💡</span>
+        <p><strong>Pitch angle:</strong> "Google captures people who are already looking to buy. Meta creates the desire to buy. The strongest strategy uses both."</p>
+      </div>
+    </div>
+
+    <!-- Google vs TikTok -->
+    <div class="tab-panel hidden" id="tab-tiktok" data-panel="tiktok" data-group="battle">
+      <div class="comparison-table-wrap">
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th class="row-label-col"></th>
+              <th class="google-col">
+                <div class="platform-header google-header">Google Ads</div>
+              </th>
+              <th class="competitor-col">
+                <div class="platform-header tiktok-header">TikTok Ads</div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="row-label">Audience Targeting</td>
+              <td class="google-cell">Intent signals + first-party data + audience segments</td>
+              <td class="competitor-cell">Interest, behavior, hashtag engagement, creator lookalikes</td>
+            </tr>
+            <tr class="alt-row">
+              <td class="row-label">Ad Format Strengths</td>
+              <td class="google-cell">Full-funnel: Search to YouTube to Shopping to Display</td>
+              <td class="competitor-cell">Short-form video: TopView, In-Feed Ads, Branded Effects</td>
+            </tr>
+            <tr>
+              <td class="row-label">Intent Signal</td>
+              <td class="google-cell">Strongest available: active search queries</td>
+              <td class="competitor-cell">Entertainment-based: low active intent, high discovery potential</td>
+            </tr>
+            <tr class="alt-row">
+              <td class="row-label">Measurement</td>
+              <td class="google-cell">Mature ecosystem: GA4, GTM, enhanced conversions, offline</td>
+              <td class="competitor-cell">Pixel still maturing; attribution less reliable than Google</td>
+            </tr>
+            <tr>
+              <td class="row-label">Best For</td>
+              <td class="google-cell">Any stage of funnel; strongest at conversion</td>
+              <td class="competitor-cell">Awareness with Gen Z/Millennial audiences, product discovery</td>
+            </tr>
+            <tr class="alt-row">
+              <td class="row-label">Key Weakness</td>
+              <td class="google-cell weakness">Creative production can be expensive for video</td>
+              <td class="competitor-cell weakness">Purchase intent low; long path to conversion</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="pitch-angle">
+        <span class="pitch-icon">💡</span>
+        <p><strong>Pitch angle:</strong> "TikTok builds cultural awareness. Google converts it. For Southeast Asian brands, Google Search still owns the moment of purchase decision."</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────────────────────── -->
+  <!-- SECTION 2: OBJECTION HANDLER -->
+  <!-- ─────────────────────────────────────────────── -->
+  <section id="objections" class="toolkit-section">
+    <div class="section-header">
+      <span class="section-badge" style="background:#fce8e6;color:#ea4335;">Objection Handler</span>
+      <h2 class="section-title">Objection Handler</h2>
+      <p class="section-subtitle">Select an objection you're hearing. Get a structured 3-step response.</p>
+    </div>
+
+    <div class="objection-selector-wrap">
+      <label for="objection-select" class="sr-only">Select an objection</label>
+      <select id="objection-select" class="objection-select">
+        <option value="" disabled selected>Choose an objection...</option>
+        <option value="didnt-work">We tried Google Ads before and it didn't work</option>
+        <option value="budget-small">Our budget is too small for Google Ads</option>
+        <option value="have-agency">We already have a digital agency managing our ads</option>
+        <option value="too-expensive">Google Ads is too expensive — CPCs are too high</option>
+        <option value="facebook-works">We get most of our customers from Facebook/Instagram already</option>
+        <option value="no-time">We don't have time to manage Google Ads campaigns</option>
+      </select>
+    </div>
+
+    <div id="objection-cards-container">
+      <!-- Placeholder -->
+      <div id="objection-placeholder" class="objection-placeholder">
+        <div class="placeholder-icon">🎯</div>
+        <p>Select an objection above to see your structured response.</p>
+      </div>
+
+      <!-- Cards rendered by JS -->
+      <div id="objection-card-output" class="hidden"></div>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────────────────────── -->
+  <!-- SECTION 3: PRE-MEETING CHECKLIST -->
+  <!-- ─────────────────────────────────────────────── -->
+  <section id="checklist" class="toolkit-section">
+    <div class="section-header">
+      <span class="section-badge" style="background:#e6f4ea;color:#34a853;">Pre-Meeting Prep</span>
+      <h2 class="section-title">Pre-Meeting Prep</h2>
+      <p class="section-subtitle">Select who you're meeting. Get the right questions, preparation, and talking points.</p>
+    </div>
+
+    <!-- Role selector -->
+    <div class="role-btn-group" role="group" aria-label="Select meeting role">
+      <button class="role-btn" data-role="ceo">CEO / Business Owner</button>
+      <button class="role-btn" data-role="marketing">Marketing Manager</button>
+      <button class="role-btn" data-role="it">IT / Tech Lead</button>
+      <button class="role-btn" data-role="agency">Media Agency</button>
+    </div>
+
+    <!-- Role placeholder -->
+    <div id="role-placeholder" class="objection-placeholder">
+      <div class="placeholder-icon">📋</div>
+      <p>Select a role above to see the prep checklist.</p>
+    </div>
+
+    <!-- Role card output -->
+    <div id="role-card-output" class="hidden"></div>
+  </section>
+
+  <!-- ─────────────────────────────────────────────── -->
+  <!-- BOTTOM LINKS -->
+  <!-- ─────────────────────────────────────────────── -->
+  <section class="also-explore">
+    <p class="explore-label">Also explore:</p>
+    <div class="explore-links">
+      <a href={`${base}tips-and-tricks`} class="explore-link">Plain English Explainer &rarr;</a>
+      <a href={`${base}projects`} class="explore-link">Campaign Diagnostic &rarr;</a>
+    </div>
+  </section>
+
+</BaseLayout>
+
+<!-- ─────────────────────────────────────────────── -->
+<!-- STYLES -->
+<!-- ─────────────────────────────────────────────── -->
+<style>
+  /* Google bar */
+  .google-bar { display:flex; gap:6px; justify-content:center; }
+  .google-bar span { display:block; height:6px; border-radius:3px; flex:1; }
+  .google-bar span:nth-child(1) { background:var(--color-google-blue); }
+  .google-bar span:nth-child(2) { background:var(--color-google-red); }
+  .google-bar span:nth-child(3) { background:var(--color-google-yellow); }
+  .google-bar span:nth-child(4) { background:var(--color-google-green); }
+
+  /* Jump links */
+  .jump-link {
+    display:inline-block;
+    padding:0.4rem 1rem;
+    border:1.5px solid var(--color-border);
+    border-radius:9999px;
+    font-size:0.85rem;
+    font-weight:500;
+    color:var(--color-text-muted);
+    text-decoration:none;
+    transition:border-color 0.15s, color 0.15s, background 0.15s;
+  }
+  .jump-link:hover {
+    border-color:#4285f4;
+    color:#4285f4;
+    background:#f0f5ff;
+  }
+
+  /* Section layout */
+  .toolkit-section {
+    margin-bottom:5rem;
+    scroll-margin-top:5rem;
+  }
+  .section-header { margin-bottom:1.75rem; }
+  .section-badge {
+    display:inline-block;
+    padding:0.2rem 0.75rem;
+    border-radius:9999px;
+    font-size:0.78rem;
+    font-weight:600;
+    letter-spacing:0.04em;
+    text-transform:uppercase;
+    margin-bottom:0.75rem;
+  }
+  .section-title {
+    font-size:1.75rem;
+    font-weight:700;
+    color:var(--color-text);
+    margin-bottom:0.4rem;
+  }
+  .section-subtitle {
+    color:var(--color-text-muted);
+    font-size:1rem;
+    line-height:1.6;
+  }
+
+  /* ── Battle cards ── */
+  .tab-bar {
+    display:flex;
+    gap:0.5rem;
+    margin-bottom:1.5rem;
+    border-bottom:2px solid var(--color-border);
+    padding-bottom:0;
+  }
+  .tab-btn {
+    padding:0.55rem 1.25rem;
+    border:none;
+    border-bottom:3px solid transparent;
+    background:transparent;
+    font-size:0.9rem;
+    font-weight:500;
+    color:var(--color-text-muted);
+    cursor:pointer;
+    margin-bottom:-2px;
+    border-radius:0;
+    transition:color 0.15s, border-color 0.15s;
+  }
+  .tab-btn:hover { color:var(--color-text); }
+  .tab-btn.active {
+    color:#4285f4;
+    border-bottom-color:#4285f4;
+    font-weight:600;
+  }
+
+  .comparison-table-wrap { overflow-x:auto; margin-bottom:1.25rem; }
+  .comparison-table {
+    width:100%;
+    border-collapse:collapse;
+    font-size:0.88rem;
+    line-height:1.5;
+  }
+  .comparison-table thead th {
+    padding:0.75rem 1rem;
+    text-align:left;
+    font-weight:600;
+  }
+  .comparison-table tbody td {
+    padding:0.85rem 1rem;
+    vertical-align:top;
+    border-top:1px solid var(--color-border);
+  }
+  .row-label-col { width:18%; min-width:130px; }
+  .google-col, .competitor-col { width:41%; }
+
+  .platform-header {
+    display:inline-block;
+    padding:0.3rem 0.9rem;
+    border-radius:9999px;
+    font-size:0.82rem;
+    font-weight:700;
+    letter-spacing:0.02em;
+  }
+  .google-header { background:#e8f0fe; color:#4285f4; }
+  .meta-header   { background:#e5deff; color:#1877f2; }
+  .tiktok-header { background:#ffe0e0; color:#ff0050; }
+
+  .row-label {
+    font-weight:600;
+    color:var(--color-text);
+    font-size:0.82rem;
+  }
+  .google-cell {
+    color:var(--color-text);
+    background:#fafcff;
+  }
+  .competitor-cell {
+    color:var(--color-text-muted);
+  }
+  .alt-row td { background:#f8f9fa; }
+  .alt-row .google-cell { background:#f0f5ff; }
+  .weakness { font-style:italic; opacity:0.85; }
+
+  .pitch-angle {
+    display:flex;
+    align-items:flex-start;
+    gap:0.75rem;
+    background:#fffde7;
+    border:1.5px solid #fbbc05;
+    border-radius:0.75rem;
+    padding:1rem 1.25rem;
+    font-size:0.9rem;
+    color:var(--color-text);
+    line-height:1.6;
+  }
+  .pitch-icon { font-size:1.2rem; flex-shrink:0; margin-top:0.05rem; }
+
+  /* ── Objection handler ── */
+  .objection-selector-wrap { margin-bottom:1.5rem; }
+  .objection-select {
+    width:100%;
+    max-width:580px;
+    padding:0.75rem 1rem;
+    border:1.5px solid var(--color-border);
+    border-radius:0.6rem;
+    font-size:0.95rem;
+    color:var(--color-text);
+    background:#fff;
+    appearance:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%235f6368' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;
+    background-position:right 0.9rem center;
+    cursor:pointer;
+    transition:border-color 0.15s;
+  }
+  .objection-select:focus {
+    outline:none;
+    border-color:#4285f4;
+    box-shadow:0 0 0 3px rgba(66,133,244,0.15);
+  }
+
+  .objection-placeholder {
+    text-align:center;
+    padding:3rem 1rem;
+    color:var(--color-text-muted);
+    font-size:0.95rem;
+    border:1.5px dashed var(--color-border);
+    border-radius:0.75rem;
+  }
+  .placeholder-icon { font-size:2rem; margin-bottom:0.5rem; }
+
+  .objection-card {
+    border:1.5px solid var(--color-border);
+    border-radius:0.9rem;
+    overflow:hidden;
+  }
+  .objection-card-header {
+    padding:1rem 1.5rem;
+    background:var(--color-bg-subtle);
+    border-bottom:1px solid var(--color-border);
+    font-size:0.88rem;
+    font-weight:600;
+    color:var(--color-text-muted);
+    letter-spacing:0.04em;
+    text-transform:uppercase;
+  }
+  .objection-quote {
+    padding:1rem 1.5rem;
+    background:#fff;
+    border-bottom:1.5px solid var(--color-border);
+    font-size:1rem;
+    font-weight:600;
+    color:var(--color-text);
+  }
+  .objection-quote::before { content:'"'; color:#ea4335; margin-right:2px; }
+  .objection-quote::after  { content:'"'; color:#ea4335; margin-left:2px; }
+
+  .objection-steps { display:grid; grid-template-columns:1fr 1fr 1fr; }
+  @media (max-width:700px) { .objection-steps { grid-template-columns:1fr; } }
+
+  .objection-step {
+    padding:1.25rem 1.25rem 1.5rem;
+    border-right:1px solid var(--color-border);
+  }
+  .objection-step:last-child { border-right:none; }
+  @media (max-width:700px) {
+    .objection-step { border-right:none; border-bottom:1px solid var(--color-border); }
+    .objection-step:last-child { border-bottom:none; }
+  }
+  .step-label {
+    display:inline-flex;
+    align-items:center;
+    gap:0.4rem;
+    font-size:0.75rem;
+    font-weight:700;
+    letter-spacing:0.07em;
+    text-transform:uppercase;
+    margin-bottom:0.75rem;
+    padding:0.2rem 0.6rem;
+    border-radius:9999px;
+  }
+  .step-acknowledge { background:#e8f0fe; color:#4285f4; }
+  .step-reframe     { background:#e6f4ea; color:#34a853; }
+  .step-evidence    { background:#fff3e0; color:#f9ab00; }
+
+  .step-text {
+    font-size:0.88rem;
+    color:var(--color-text);
+    line-height:1.65;
+  }
+
+  /* ── Pre-meeting checklist ── */
+  .role-btn-group {
+    display:flex;
+    flex-wrap:wrap;
+    gap:0.5rem;
+    margin-bottom:1.5rem;
+  }
+  .role-btn {
+    padding:0.55rem 1.1rem;
+    border:1.5px solid var(--color-border);
+    border-radius:9999px;
+    background:#fff;
+    font-size:0.88rem;
+    font-weight:500;
+    color:var(--color-text-muted);
+    cursor:pointer;
+    transition:border-color 0.15s, color 0.15s, background 0.15s;
+  }
+  .role-btn:hover {
+    border-color:#4285f4;
+    color:#4285f4;
+  }
+  .role-btn.active {
+    background:#4285f4;
+    border-color:#4285f4;
+    color:#fff;
+    font-weight:600;
+  }
+
+  .role-card {
+    border:1.5px solid var(--color-border);
+    border-radius:0.9rem;
+    overflow:hidden;
+  }
+  .role-card-header {
+    padding:1rem 1.5rem;
+    background:#4285f4;
+    color:#fff;
+  }
+  .role-card-header h3 {
+    font-size:1.1rem;
+    font-weight:700;
+    margin:0;
+  }
+  .role-grid {
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:0;
+  }
+  @media (max-width:640px) { .role-grid { grid-template-columns:1fr; } }
+
+  .role-block {
+    padding:1.25rem 1.5rem;
+    border-right:1px solid var(--color-border);
+    border-bottom:1px solid var(--color-border);
+  }
+  .role-block:nth-child(even) { border-right:none; }
+  @media (max-width:640px) {
+    .role-block { border-right:none; }
+  }
+  .role-block-label {
+    font-size:0.75rem;
+    font-weight:700;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:var(--color-text-muted);
+    margin-bottom:0.75rem;
+  }
+  .role-block ul {
+    margin:0;
+    padding:0;
+    list-style:none;
+  }
+  .role-block ul li {
+    font-size:0.875rem;
+    color:var(--color-text);
+    line-height:1.6;
+    padding:0.2rem 0 0.2rem 1.1rem;
+    position:relative;
+  }
+  .role-block ul li::before {
+    content:'';
+    position:absolute;
+    left:0;
+    top:0.55rem;
+    width:6px;
+    height:6px;
+    border-radius:50%;
+    background:#4285f4;
+  }
+  .role-block.warning-block .role-block-label { color:#ea4335; }
+  .role-block.warning-block ul li { color:#c5221f; }
+  .role-block.warning-block ul li::before { background:#ea4335; }
+
+  /* Also explore */
+  .also-explore {
+    margin-top:4rem;
+    padding:1.5rem 2rem;
+    border:1.5px solid var(--color-border);
+    border-radius:0.9rem;
+    background:var(--color-bg-subtle);
+    display:flex;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:1rem;
+  }
+  .explore-label {
+    font-size:0.88rem;
+    font-weight:600;
+    color:var(--color-text-muted);
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+    margin:0;
+    white-space:nowrap;
+  }
+  .explore-links { display:flex; gap:1rem; flex-wrap:wrap; }
+  .explore-link {
+    font-size:0.9rem;
+    font-weight:500;
+    color:#4285f4;
+    text-decoration:none;
+    transition:color 0.15s;
+  }
+  .explore-link:hover { color:#1a73e8; text-decoration:underline; }
+
+  /* Utility */
+  .hidden { display:none !important; }
+  .sr-only {
+    position:absolute;
+    width:1px;height:1px;
+    padding:0;margin:-1px;
+    overflow:hidden;
+    clip:rect(0,0,0,0);
+    white-space:nowrap;
+    border:0;
+  }
+</style>
+
+<!-- ─────────────────────────────────────────────── -->
+<!-- SCRIPT -->
+<!-- ─────────────────────────────────────────────── -->
+<script>
+  // ── DATA ────────────────────────────────────────
+
+  const objections = {
+    "didnt-work": {
+      quote: "We tried Google Ads before and it didn't work",
+      acknowledge: "That's actually the most common thing I hear — and it's almost never the platform's fault. Bad results usually come from one of 3 things: wrong bidding strategy, poor conversion tracking, or misaligned landing pages.",
+      reframe: "Google Ads isn't a 'set and forget' channel. The campaigns that failed probably ran without proper optimization signals. The question isn't whether Google Ads works — it's whether it was set up correctly.",
+      evidence: "Of the accounts I audit, 80% have at least one fundamental tracking issue. Fix that alone and performance typically improves 30–50%. Would you like me to run a quick audit on your previous setup?"
+    },
+    "budget-small": {
+      quote: "Our budget is too small for Google Ads",
+      acknowledge: "Budget concern makes total sense — and it's worth being honest about. Google Ads can be expensive if structured wrong.",
+      reframe: "The minimum viable budget depends entirely on your CPA target and industry. For a local service business targeting $50 CPA, $500/month is enough to gather data. The goal in month 1 is learning, not profit.",
+      evidence: "Case: a Ho Chi Minh City travel agency started at $800/month, focused only on 3 high-intent keyword clusters. Within 60 days they were profitable and scaled to $5,000/month. Small budgets work — they just need tighter focus."
+    },
+    "have-agency": {
+      quote: "We already have a digital agency managing our ads",
+      acknowledge: "Having an agency is great — agencies are valuable for execution and day-to-day management.",
+      reframe: "A Solutions Architect works differently: we focus on strategy, technical architecture, and making sure the agency has the right brief, tracking setup, and performance targets. Think of it as a technical QA layer above the agency.",
+      evidence: "Common gap: agencies often run campaigns with last-click attribution and manual bidding. An SA audit typically finds 15–20% CPA improvement just from switching attribution models and bidding strategies — changes most agencies don't prioritize."
+    },
+    "too-expensive": {
+      quote: "Google Ads is too expensive — CPCs are too high",
+      acknowledge: "High CPCs are real — especially in competitive categories like finance or insurance in Southeast Asia.",
+      reframe: "CPC is the wrong metric to optimize. What matters is CPA (cost per acquisition) and ROAS. A $5 CPC that converts at 10% gives a $50 CPA. A $1 CPC that converts at 0.5% gives a $200 CPA. Which is better?",
+      evidence: "Smart Bidding optimizes for CPA/ROAS, not CPC. Clients who switch from manual bidding to Target CPA typically see CPCs go up but CPA go down — because Google bids higher on high-intent, high-converting searches and lower on everything else."
+    },
+    "facebook-works": {
+      quote: "We get most of our customers from Facebook/Instagram already",
+      acknowledge: "If Facebook is working, that's genuinely great — that means your creative and offer resonate with your audience. Don't fix what isn't broken.",
+      reframe: "Facebook captures people who might be interested. Google captures people actively trying to buy right now. They're different moments in the customer journey. The strongest accounts use Facebook for discovery and Google for conversion.",
+      evidence: "A Shopee seller in Vietnam used Facebook for top-of-funnel video ads and Google Shopping for bottom-funnel. Google Shopping generated 3x higher ROAS than Facebook for the same products — because searchers had purchase intent Facebook couldn't match."
+    },
+    "no-time": {
+      quote: "We don't have time to manage Google Ads campaigns",
+      acknowledge: "Time is the most common reason good campaigns never get started — or stay mediocre. It's a legitimate constraint.",
+      reframe: "Modern Google Ads with Smart Bidding + Performance Max is designed to run with minimal ongoing management. Once set up correctly (2–3 weeks of work), a well-structured campaign needs 1–2 hours per week of oversight, not 10.",
+      evidence: "The setup phase is where time matters most. After proper conversion tracking, Smart Bidding, and campaign structure are in place, the system handles bid decisions automatically. Your time drops to reviewing dashboards and adjusting budgets seasonally."
+    }
+  };
+
+  const roles = {
+    ceo: {
+      label: "CEO / Business Owner",
+      cares: [
+        "Revenue growth and ROI on every dollar spent",
+        "Competitive positioning — are we winning market share?",
+        "Business risk — what happens if this doesn't work?"
+      ],
+      questions: [
+        "What does your best customer look like — where do they come from today?",
+        "What's your revenue target for the next 12 months?",
+        "What's the biggest bottleneck to growth right now?",
+        "Who is your biggest competitor and how do you think they're winning?"
+      ],
+      prepare: [
+        "Revenue impact model showing projected ROI at 3 budget scenarios",
+        "2–3 case studies from same industry in SEA region",
+        "One-slide summary of your recommendation (not a deck)",
+        "Clear risk mitigation: what you'll do if first 30 days don't hit targets"
+      ],
+      dont: [
+        "\"We need 3–6 months to see results\" (say \"Here's what you'll see in week 1, month 1, and month 3\")",
+        "Technical jargon: QS, ROAS, PMax (translate everything to revenue)",
+        "\"It depends\" without a follow-up answer"
+      ]
+    },
+    marketing: {
+      label: "Marketing Manager",
+      cares: [
+        "Campaign performance metrics and hitting KPIs",
+        "Cross-channel attribution — which channels get credit?",
+        "Team workload — how much extra work does this create?"
+      ],
+      questions: [
+        "What does your current measurement setup look like — GA4, CRM, offline data?",
+        "Which campaigns are you most proud of right now and why?",
+        "What's your biggest reporting pain point?",
+        "What does the ideal weekly reporting dashboard look like for you?"
+      ],
+      prepare: [
+        "Audit of their current Google Ads account (if accessible)",
+        "Attribution model comparison showing potential impact",
+        "Sample weekly report template showing what you'll track",
+        "List of integrations: GA4, CRM, offline conversions"
+      ],
+      dont: [
+        "\"Your current setup is wrong\" (say \"here's an opportunity to improve\")",
+        "\"You need to rebuild everything\" (start with highest-impact changes)",
+        "Oversell automation (be honest about the ramp-up period)"
+      ]
+    },
+    it: {
+      label: "IT / Tech Lead",
+      cares: [
+        "Data security and privacy compliance (PDPA in SEA)",
+        "Clean implementation that doesn't slow the site",
+        "Clear handoff documentation and maintenance requirements"
+      ],
+      questions: [
+        "What's your current tag management setup — GTM or hardcoded?",
+        "Do you have server-side infrastructure or CDN that would support server-side tagging?",
+        "What's your data retention and privacy policy?",
+        "How are releases deployed — can marketing make tag changes without a code deploy?"
+      ],
+      prepare: [
+        "Technical spec for conversion tracking implementation",
+        "Server-side GTM architecture diagram if relevant",
+        "Data flow diagram showing what data leaves the site and where it goes",
+        "Privacy impact assessment summary"
+      ],
+      dont: [
+        "\"Just add this script to your site\" (provide full technical spec)",
+        "\"It's easy, shouldn't take long\" (estimate properly)",
+        "\"You don't need server-side\" without first understanding their infrastructure"
+      ]
+    },
+    agency: {
+      label: "Media Agency",
+      cares: [
+        "Protecting their account access and client relationship",
+        "Learning new techniques that make them look good",
+        "Understanding what value the SA adds vs. what they already do"
+      ],
+      questions: [
+        "What's your current bidding strategy across major accounts?",
+        "How are you handling attribution across client accounts?",
+        "What's the biggest blocker to performance in your top accounts?",
+        "What does your standard campaign launch process look like?"
+      ],
+      prepare: [
+        "Clear positioning: SA adds strategy/architecture, agency adds execution",
+        "Specific technical improvements they can implement immediately",
+        "Training offer on Smart Bidding + PMax best practices",
+        "Co-ownership framework: who makes which decisions"
+      ],
+      dont: [
+        "\"You've been doing it wrong\" (say \"here's a new approach worth testing\")",
+        "\"The client brought us in because...\" (never position against the agency)",
+        "Anything that implies taking over their account management"
+      ]
+    }
+  };
+
+  // ── BATTLE CARD TABS ─────────────────────────────
+  document.querySelectorAll('.tab-btn[data-group="battle"]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const group = btn.dataset.group;
+      const target = btn.dataset.tab;
+
+      // Update buttons
+      document.querySelectorAll(`.tab-btn[data-group="${group}"]`).forEach(b => {
+        b.classList.remove('active');
+        b.setAttribute('aria-selected', 'false');
+      });
+      btn.classList.add('active');
+      btn.setAttribute('aria-selected', 'true');
+
+      // Update panels
+      document.querySelectorAll(`.tab-panel[data-group="${group}"]`).forEach(panel => {
+        if (panel.dataset.panel === target) {
+          panel.classList.remove('hidden');
+        } else {
+          panel.classList.add('hidden');
+        }
+      });
+    });
+  });
+
+  // ── OBJECTION HANDLER ────────────────────────────
+  function renderObjectionCard(key) {
+    const d = objections[key];
+    if (!d) return '';
+    return `
+      <div class="objection-card">
+        <div class="objection-card-header">Objection</div>
+        <div class="objection-quote">${d.quote}</div>
+        <div class="objection-steps">
+          <div class="objection-step">
+            <div class="step-label step-acknowledge">&#128336; Acknowledge</div>
+            <p class="step-text">${d.acknowledge}</p>
+          </div>
+          <div class="objection-step">
+            <div class="step-label step-reframe">&#8635; Reframe</div>
+            <p class="step-text">${d.reframe}</p>
+          </div>
+          <div class="objection-step">
+            <div class="step-label step-evidence">&#128202; Evidence</div>
+            <p class="step-text">${d.evidence}</p>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  const objSelect = document.getElementById('objection-select');
+  const objPlaceholder = document.getElementById('objection-placeholder');
+  const objOutput = document.getElementById('objection-card-output');
+
+  objSelect.addEventListener('change', () => {
+    const key = objSelect.value;
+    if (!key) return;
+    objPlaceholder.classList.add('hidden');
+    objOutput.innerHTML = renderObjectionCard(key);
+    objOutput.classList.remove('hidden');
+  });
+
+  // ── PRE-MEETING CHECKLIST ────────────────────────
+  function escapeHtml(str) {
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function listItems(arr) {
+    return arr.map(item => `<li>${escapeHtml(item)}</li>`).join('');
+  }
+
+  function renderRoleCard(key) {
+    const d = roles[key];
+    if (!d) return '';
+    return `
+      <div class="role-card">
+        <div class="role-card-header">
+          <h3>${escapeHtml(d.label)}</h3>
+        </div>
+        <div class="role-grid">
+          <div class="role-block">
+            <div class="role-block-label">What they care about</div>
+            <ul>${listItems(d.cares)}</ul>
+          </div>
+          <div class="role-block">
+            <div class="role-block-label">Questions to ask them</div>
+            <ul>${listItems(d.questions)}</ul>
+          </div>
+          <div class="role-block">
+            <div class="role-block-label">What to prepare</div>
+            <ul>${listItems(d.prepare)}</ul>
+          </div>
+          <div class="role-block warning-block">
+            <div class="role-block-label">What NOT to say</div>
+            <ul>${listItems(d.dont)}</ul>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  const rolePlaceholder = document.getElementById('role-placeholder');
+  const roleOutput = document.getElementById('role-card-output');
+
+  document.querySelectorAll('.role-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      // Update buttons
+      document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const key = btn.dataset.role;
+      rolePlaceholder.classList.add('hidden');
+      roleOutput.innerHTML = renderRoleCard(key);
+      roleOutput.classList.remove('hidden');
+    });
+  });
+</script>
